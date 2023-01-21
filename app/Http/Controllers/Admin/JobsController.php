@@ -150,4 +150,10 @@ class JobsController extends Controller
     public function applicants(Request $request){
         return view('admin.jobs.applicants');
     }
+    public function rollSetting(Request $request){
+        return view('admin.jobs.rollSetting');
+    }
+    public function seatPlan(Request $request){
+        return view('admin.jobs.seatPlan');
+    }
 }

@@ -8,12 +8,12 @@
  */
 ?>
 @extends('layouts.vertical')
-@section('title', 'Applicant List')
+@section('title', 'Exam Seat Plan')
 
 @section('content')
     <div class="row page-title align-items-center">
         <div class="col-md-3 col-xl-6">
-            <h4 class="mb-1 mt-0">Applicant List</h4>
+            <h4 class="mb-1 mt-0">Exam Seat Plan</h4>
         </div>
         <div class="col-md-9 col-xl-6 text-md-right">
             <div class="mt-4 mt-md-0">

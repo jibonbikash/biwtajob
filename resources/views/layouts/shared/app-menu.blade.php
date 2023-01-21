@@ -21,20 +21,20 @@
         </a>
     </li>
     <li>
-        <a href="/apps/calendar">
+        <a href="{{route('applicants')}}">
             <i data-feather="users"></i>
             <span> Applicant List</span>
         </a>
     </li>
 
     <li>
-        <a href="/apps/calendar">
+        <a href="{{route('rollSetting')}}">
             <i data-feather="sliders"></i>
             <span>Roll Setting </span>
         </a>
     </li>
     <li>
-        <a href="/apps/calendar">
+        <a href="{{route('seatPlan')}}">
             <i data-feather="columns"></i>
             <span>Exam Seat Plan </span>
         </a>
