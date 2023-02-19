@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\JobsController;
+use App\Http\Controllers\HomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,12 +15,19 @@ use App\Http\Controllers\Admin\JobsController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('jobs/{uuid}', [HomeController::class, 'details'])->name('details');
+Route::get('jobs/apply/{uuid}', [HomeController::class, 'applyform'])->name('applyform');
+Route::get('exam/subject', [HomeController::class, 'examSubject'])->name('examSubject');
+Route::post('jobApply', [HomeController::class, 'jobApply'])->name('jobApply');
+Route::get('applicant/preview/{uuid}', [HomeController::class, 'applicantPreview'])->name('applicantPreview');
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
-Auth::routes();
+Auth::routes([
+    'register' => false, // Registration Routes...
+  //  'reset' => false, // Password Reset Routes...
+    'verify' => false, // Email Verification Routes...
+]);
 
 
 Route::group(['middleware' => ['auth'], "prefix" => "admin"], function() {
@@ -35,5 +43,6 @@ Route::group(['middleware' => ['auth'], "prefix" => "admin"], function() {
     Route::get('/applicants', [JobsController::class, 'applicants'])->name('applicants');
     Route::get('/roll-setting', [JobsController::class, 'rollSetting'])->name('rollSetting');
     Route::get('/seat-plan', [JobsController::class, 'seatPlan'])->name('seatPlan');
+    Route::get('/education', [JobsController::class, 'educationtype'])->name('educationtype');
 
 });

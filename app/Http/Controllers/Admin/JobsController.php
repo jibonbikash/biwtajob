@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\JobCreateRequest;
+use App\Models\Examlevel;
 use App\Models\Job;
+use App\Models\JobExam;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -41,10 +43,15 @@ class JobsController extends Controller
      */
     public function store(JobCreateRequest $request)
     {
+         //  dd($request->all());
+      //  dd(count((array)$request->input('JSC')));
+      //  dd(count($request->input('JSC') > 0));
+
         try {
             DB::beginTransaction();
 
             try {
+
                 $newJob = Job::create([
                     'uuid' => (string)Str::orderedUuid(),
                     'title' => $request->input('title'),
@@ -64,9 +71,65 @@ class JobsController extends Controller
                     'freedom_fighter' => $request->input('freedom_fighter'),
                     'petition_age' => $request->input('petition_age'),
                     'salary_range' => $request->input('salary_range'),
+                    'jsc' => $request->input('JSCExam') == 'JSC' ? true : false,
+                    'ssc' => $request->input('SSCExam') == 'SSC' ? true : false,
+                    'hsc' => $request->input('HSCExam') == 'HSC' ? true : false,
+                    'graduation	' => $request->input('GradExam') == 'Grad' ? true : false,
+                    'masters	' => $request->input('MastersExam') == 'Masters' ? true : false,
                 ]);
+                if (count((array)$request->input('JSC')) > 0) {
+                    foreach ($request->input('JSC') as $key => $value) {
+                        JobExam::create([
+                            'job_id' => $newJob->id,
+                            'examlevel_group_id' => $value,
+                            'type' => 'jsc',
+                        ]);
+                    }
+                }
+                if (count((array)$request->input('SSC')) > 0) {
+                    foreach ($request->input('SSC') as $key => $value) {
+                        JobExam::create([
+                            'job_id' => $newJob->id,
+                            'examlevel_group_id' => $value,
+                            'type' => 'ssc',
+                        ]);
+                    }
+                }
+
+                if (count((array)$request->input('HSC')) > 0) {
+                    foreach ($request->input('HSC') as $key => $value) {
+                        JobExam::create([
+                            'job_id' => $newJob->id,
+                            'examlevel_group_id' => $value,
+                            'type' => 'hsc',
+                        ]);
+                    }
+                }
+                if (count((array)$request->input('Grad')) > 0) {
+                    foreach ($request->input('Grad') as $key => $value) {
+                        JobExam::create([
+                            'job_id' => $newJob->id,
+                            'examlevel_group_id' => $value,
+                            'type' => 'grad',
+                        ]);
+                    }
+                }
+                if (count((array)$request->input('Masters')) > 0) {
+                    foreach ($request->input('Masters') as $key => $value) {
+                        JobExam::create([
+                            'job_id' => $newJob->id,
+                            'examlevel_group_id' => $value,
+                            'type' => 'masters',
+                        ]);
+                    }
+                }
+
 
                 DB::commit();
+                if ($newJob) {
+                    return redirect()->route('jobs.index')
+                        ->with('success', 'Data save successfully!!');
+                }
             } catch (\Exception $e) {
                 DB::rollback();
                 return $e->getMessage();
@@ -156,4 +219,26 @@ class JobsController extends Controller
     public function seatPlan(Request $request){
         return view('admin.jobs.seatPlan');
     }
+
+    public function educationtype(Request $request)
+    {
+        $examlevel = Examlevel::with(['examGroups'])->where('name', $request->type)->first();
+
+        if ($examlevel) {
+            if (count($examlevel->examGroups) > 0) {
+
+                $view = view('admin.jobs._education', ['examlevel'=>collect($examlevel->examGroups)->pluck('name','id')])->render();
+                return response()->json(['success' => true, 'data' => $view]);
+
+            } else {
+
+                return response()->json(['success' => false, 'data' => []]);
+            }
+
+        }
+
+      // dd($examlevel);
+        //return $request->all();
+    }
+
 }

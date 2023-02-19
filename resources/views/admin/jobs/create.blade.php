@@ -51,7 +51,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <strong>Application Deadline</strong>
-                                {!! Form::text('application_deadline', null, array('placeholder' => '','class' => 'form-control', 'id'=>'application_deadline')) !!}
+                                {!! Form::text('application_deadline', null, array('placeholder' => '','class' => 'form-control', 'id'=>'application_deadline','autocomplete'=>'off')) !!}
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -66,16 +66,16 @@
                                 {!! Form::text('apply_fee', null, array('placeholder' => '','class' => 'form-control')) !!}
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <strong>Minimum Education</strong>
-                                {!! Form::select('min_education',\App\Helpers\StaticValue::MINEDUCATION,null,['class'=>'form-control','placeholder'=>'Select Minimum Education']) !!}
-                            </div>
-                        </div>
+{{--                        <div class="col-md-6">--}}
+{{--                            <div class="form-group">--}}
+{{--                                <strong>Minimum Education</strong>--}}
+{{--                                {!! Form::select('min_education',\App\Helpers\StaticValue::MINEDUCATION,null,['class'=>'form-control','placeholder'=>'Select Minimum Education']) !!}--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
                         <div class="col-md-6">
                             <div class="form-group">
                                 <strong>Age Calculation Date</strong>
-                                {!! Form::text('age_calculation', null, array('placeholder' => '','class' => 'form-control','id'=>'age_calculation')) !!}
+                                {!! Form::text('age_calculation', null, array('placeholder' => '','class' => 'form-control','id'=>'age_calculation','autocomplete'=>'off')) !!}
                             </div>
                         </div>
 
@@ -139,7 +139,62 @@
                                 {!! Form::text('divisioncaplicant_age', null, array('placeholder' => '','class' => 'form-control')) !!}
                             </div>
                         </div>
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Required Education Setting</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row mt-2">
+                                        <div class="col-md-3">
 
+                                            {{ Form::checkbox('JSCExam', 'JSC', false, array('id'=>'jsc')) }}
+                                            {!! Form::label('JSC',  "JSC") !!}
+                                        </div>
+                                        <div class="col-md-6" id="JSCshow">
+
+                                        </div>
+                                    </div>
+
+
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            {{ Form::checkbox('SSCExam', 'SSC', false, array('id'=>'SSC')) }}
+                                            {!! Form::label('SSC',  "SSC") !!}
+                                        </div>
+                                        <div class="col-md-6" id="SSCshow">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            {{ Form::checkbox('HSCExam', 'HSC', false, array( 'id'=>'HSC')) }}
+                                            {!! Form::label('HSC',  "HSC") !!}
+                                        </div>
+                                        <div class="col-md-3" id="HSCshow">
+                                            HSC
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            {{ Form::checkbox('GradExam', 'Grad', false, array( 'id'=>'Grad')) }}
+                                            {!! Form::label('Graduation/Equivalent Level',  "Graduation/Equivalent Level") !!}
+                                        </div>
+                                        <div class="col-md-3" id="Grad">
+                                            Grad
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            {{ Form::checkbox('MastersExam', 'Masters', false, array( 'id'=>'Masters')) }}
+                                            {!! Form::label('Masters/Equivalent Level',  "Masters/Equivalent Level") !!}
+                                        </div>
+                                        <div class="col-md-3" id="Masters">
+                                            Masters
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6">
@@ -185,7 +240,40 @@
                 changeYear: true,
                 dateFormat: "yy-mm-dd"
             });
+//             $('#jsc').on('click',function(e) {
+// alert('dfdfd ffgf')
+//             });
+            // <input id="jsc" name="JSC" type="checkbox" value="JSC">
+            $('#jsc, #SSC, #HSC, #Grad, #Masters').on('change', function() {
+                if(this.checked) {
+                    var val = this.checked ? this.value : '';
+                    $.ajax({
+                        url:"{{ route('educationtype') }}",
+                        type:"GET",
+                        data: {
+                            type: val
+                        },
+                        success:function (data) {
+                          //  console.log(data.data);
+                          //  $("#"+val+'show').empty();
+                           // console.log(val+'show');
+                            $("#"+val+'show').html(data.data);
+
+                            // $.each(data.data, function (i, ex) {
+                            //     $('<div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" id="'+val+'--'+ex.id+'" value="'+ex.id+'" name="'+val+'[]"><label class="form-check-label" for="'+val+'--'+ex.id+'" >' + ex.name + '</label></div>').appendTo($("div#"+val+'show'));
+                            // });
+                        }
+                    })
+                }
+                else{
+                    //alert($("div#"+$(this).val()+'show'));
+                    $("div#"+$(this).val()+'show').empty();
+                  // alert('uncheckd ' + $(this).val()+'show');
+                }
+            });
+
         } );
+
     </script>
 
 @endsection
