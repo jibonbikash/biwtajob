@@ -396,8 +396,10 @@ dd($e->getMessage());
     }
     public function applicantPreview(Request $request, $uuid){
 
-       $applicationinfo= Applicant::with(['educations'])->where('uuid', $uuid)->first();
-       dd($applicationinfo);
+       $applicationinfo= Applicant::with(['educations','job','zila','upozilla','permanentzila','permanentupozilla'])->where('uuid', $uuid)->first();
+        // dd($applicationinfo->educations);
+        return view('jobs.applyformPreview',['applicationinfo'=>$applicationinfo]);
+
 
     }
 }

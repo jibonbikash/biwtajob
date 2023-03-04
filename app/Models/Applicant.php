@@ -14,5 +14,27 @@ class Applicant extends Model
     {
         return $this->hasMany(ApplicantEducation::class,'applicants_id','id');
     }
+    public function job()
+    {
+        return $this->belongsTo(Job::class);
+    }
+    public function zila()
+    {
+        return $this->belongsTo(DistrictUpozilla::class,'pa_zilla','id');
+    }
+
+    public function upozilla()
+    {
+        return $this->belongsTo(DistrictUpozilla::class,'pa_upozilla','id');
+    }
+    public function permanentzila()
+    {
+        return $this->belongsTo(DistrictUpozilla::class,'pr_zilla','id');
+    }
+    public function permanentupozilla()
+    {
+        return $this->belongsTo(DistrictUpozilla::class,'pr_upozilla','id');
+    }
+
 
 }
