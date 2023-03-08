@@ -19,4 +19,6 @@ class ApplicantEducation extends Model
     {
         return $this->belongsTo(ExamlevelSubject::class,'group_subject');
     }
+
+
 }

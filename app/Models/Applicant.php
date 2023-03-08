@@ -23,6 +23,12 @@ class Applicant extends Model
         return $this->belongsTo(DistrictUpozilla::class,'pa_zilla','id');
     }
 
+    public function birthplace()
+    {
+        return $this->belongsTo(DistrictUpozilla::class,'bplace','id');
+    }
+
+
     public function upozilla()
     {
         return $this->belongsTo(DistrictUpozilla::class,'pa_upozilla','id');

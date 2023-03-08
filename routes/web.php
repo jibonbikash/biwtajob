@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\JobsController;
+use App\Http\Controllers\Admin\ExamLevelController;
 use App\Http\Controllers\HomeController;
 
 /*
@@ -44,5 +45,8 @@ Route::group(['middleware' => ['auth'], "prefix" => "admin"], function() {
     Route::get('/roll-setting', [JobsController::class, 'rollSetting'])->name('rollSetting');
     Route::get('/seat-plan', [JobsController::class, 'seatPlan'])->name('seatPlan');
     Route::get('/education', [JobsController::class, 'educationtype'])->name('educationtype');
+    Route::resource('examlevels', ExamLevelController::class);
+    Route::get('examlevels/group/add/{id}', [ExamLevelController::class, 'groupadd'])->name('examlevels.groupadd');
+    Route::post('examlevels/group/add/{id}', [ExamLevelController::class, 'groupaddsave'])->name('examlevels.groupaddsave');
 
 });

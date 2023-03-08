@@ -226,7 +226,8 @@ class HomeController extends Controller
             StaticValue::createDirecrotory($jobinfo->job_id);
             $image->move(public_path('assets/applicants/'.date("Y-d-m").'/'.$jobinfo->job_id), $nameimage);
             $signature->move(public_path('assets/applicants/'.date("Y-d-m").'/'.$jobinfo->job_id), $namesignature);
-
+            $nameimage=date("Y-d-m").'/'.$jobinfo->job_id.'/'.$nameimage;
+            $namesignature=date("Y-d-m").'/'.$jobinfo->job_id.'/'.$namesignature;
 
 
             DB::beginTransaction();
@@ -396,7 +397,7 @@ dd($e->getMessage());
     }
     public function applicantPreview(Request $request, $uuid){
 
-       $applicationinfo= Applicant::with(['educations','job','zila','upozilla','permanentzila','permanentupozilla'])->where('uuid', $uuid)->first();
+       $applicationinfo= Applicant::with(['educations','job', 'birthplace','zila','upozilla','permanentzila','permanentupozilla'])->where('uuid', $uuid)->first();
         // dd($applicationinfo->educations);
         return view('jobs.applyformPreview',['applicationinfo'=>$applicationinfo]);
 

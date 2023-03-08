@@ -50,7 +50,7 @@
                                     <table class="table table-bordered">
                                         <tbody>
                                         <tr>
-                                            <td>প্রার্থীর নাম ইংরেজীতে (বড় অক্ষরে) </td>
+                                            <td style="width: 30%">প্রার্থীর নাম ইংরেজীতে (বড় অক্ষরে) </td>
                                             <td>
                                                 {{ $applicationinfo->name_en }}
                                             </td>
@@ -64,7 +64,7 @@
                                         </tr>
 
                                         <tr>
-                                            <td>পিতার নাম <span class="text-danger">*</span></td>
+                                            <td>পিতার নাম </td>
                                             <td>
                                                 {{ $applicationinfo->father_name }}
 
@@ -72,13 +72,13 @@
                                         </tr>
 
                                         <tr>
-                                            <td>মাতার নাম <span class="text-danger">*</span></td>
+                                            <td>মাতার নাম </td>
                                             <td> {{ $applicationinfo->mother_name }}
                                             </td>
                                         </tr>
 
                                         <tr>
-                                            <td>জন্ম তারিখ <span class="text-danger">*</span></td>
+                                            <td>জন্ম তারিখ </td>
                                             <td>
                                                 {{ Carbon\Carbon::parse($applicationinfo->bday)->format('F j, Y') }}
 
@@ -86,21 +86,21 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>মোবাইল/টেলিফোন নম্বর <span class="text-danger">*</span></td>
+                                            <td>মোবাইল/টেলিফোন নম্বর </td>
                                             <td>
                                                 {{ $applicationinfo->mother_name }}
 
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>জাতীয় পরিচয় নম্বর <span class="text-danger">*</span></td>
+                                            <td>জাতীয় পরিচয় নম্বর </td>
                                             <td>
                                                 {{ $applicationinfo->nid }}
 
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>জাতীয়তা <span class="text-danger">*</span></td>
+                                            <td>জাতীয়তা </td>
                                             <td>
                                                 {{ $applicationinfo->nationality }}
 
@@ -108,22 +108,22 @@
                                         </tr>
 
                                         <tr>
-                                            <td>ধর্ম <span class="text-danger">*</span></td>
+                                            <td>ধর্ম </td>
                                             <td>
                                                 {{ $applicationinfo->religious }}
                                             </td>
                                         </tr>
 
                                         <tr>
-                                            <td>জেন্ডার <span class="text-danger">*</span></td>
+                                            <td>জেন্ডার </td>
                                             <td>
                                                 {{ $applicationinfo->gender }}
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>জন্ম স্থান (জেলা)<span class="text-danger">*</span></td>
+                                            <td>জন্ম স্থান (জেলা)</td>
                                             <td>
-                                                {{ $applicationinfo->bplace }}
+                                                {{ $applicationinfo->birthplace? $applicationinfo->birthplace->zilla_name:'' }}
                                             </td>
                                         </tr>
                                         <tr>
@@ -165,26 +165,26 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>ডাকঘর <span class="text-danger">*</span></td>
+                                            <td>ডাকঘর </td>
                                             <td>
                                                 {{ $applicationinfo->pa_postoffice }}
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>পোস্টকোড নম্বর <span class="text-danger">*</span></td>
+                                            <td>পোস্টকোড নম্বর </td>
                                             <td>
                                                 {{ $applicationinfo->pa_postcode }}
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>জেলা <span class="text-danger">*</span></td>
+                                            <td>জেলা </td>
                                             <td>
                                                 {{ $applicationinfo->zila ? $applicationinfo->zila->zilla_name:'' }}
                                             </td>
                                         </tr>
 
                                         <tr>
-                                            <td>উপজেলা/থানা <span class="text-danger">*</span></td>
+                                            <td>উপজেলা/থানা </td>
                                             <td>
                                                 {{ $applicationinfo->upozilla ? $applicationinfo->upozilla->upozilla:'' }}
                                             </td>
@@ -219,26 +219,26 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>ডাকঘর <span class="text-danger">*</span></td>
+                                            <td>ডাকঘর </td>
                                             <td>
                                                 {{ $applicationinfo->pr_postoffice }}
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>পোস্টকোড নম্বর <span class="text-danger">*</span></td>
+                                            <td>পোস্টকোড নম্বর </td>
                                             <td>
                                                 {{ $applicationinfo->pr_postcode }}
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>জেলা <span class="text-danger">*</span></td>
+                                            <td>জেলা </td>
                                             <td>
                                                 {{ $applicationinfo->permanentzila ? $applicationinfo->permanentzila->zilla_name:'' }}
                                             </td>
                                         </tr>
 
                                         <tr>
-                                            <td>উপজেলা/থানা <span class="text-danger">*</span></td>
+                                            <td>উপজেলা/থানা </td>
                                             <td>
                                                 {{ $applicationinfo->permanentzila ? $applicationinfo->permanentzila->upozilla:'' }}
                                             </td>
@@ -271,16 +271,29 @@
                                                 </tr>
                                                 </thead>
                                                 <tbody>
-@foreach($applicationinfo->educations as $education)
-    <tr>
-        <td>{{ $education->examLevelGroups ? $education->examLevelGroups->name :'---' }}</td>
-        <td>{{ $education->ExamlevelSubject ? $education->ExamlevelSubject->name :'' }}</td>
-        <td>{{ $education->institute_name }} </td>
-        <td>{{ $education->passing_year }} </td>
-        <td>{{ $education->board_university }}</td>
-        <td>{{ $education->result }}</td>
-    </tr>
-@endforeach
+                                                @foreach($applicationinfo->educations as $education)
+                                                    <tr>
+                                                        <td>{{ $education->examLevelGroups ? $education->examLevelGroups->name :'---' }}</td>
+                                                        <td>{{ $education->ExamlevelSubject ? $education->ExamlevelSubject->name :'' }}</td>
+                                                        <td>{{ $education->institute_name }} </td>
+                                                        <td>{{ $education->passing_year }} </td>
+                                                        <td>
+                                                            @php
+                                                                if(in_array($education->examLevelGroups ? $education->examLevelGroups->examlevel_id:0, range(1, 3))) {
+   echo \App\Models\Board::find($education->board_university)->name;
+
+    }
+    else{
+        echo 'university';
+
+    }
+
+                                                            @endphp
+{{--                                                            {{ $education->board_university }}--}}
+                                                        </td>
+                                                        <td>{{ $education->result }}</td>
+                                                    </tr>
+                                                @endforeach
                                                 </tbody>
                                             </table>
 
@@ -303,52 +316,45 @@
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-md-3">
-                                            <label for="extrq" class="form-label"> অতিরিক্ত যোগ্যতা (যদি থাকে)</label>
-                                            {!! Form::textarea('extQualification', null, array('placeholder' => '', 'rows'=>'2', 'class' => 'form-control','id'=>'extQualification')) !!}
+                                            <label for="extrq" class="form-label"> অতিরিক্ত যোগ্যতা (যদি থাকে)</label><br />
+                                            {{ $applicationinfo->extra_qualification }}
 
                                         </div>
 
                                         <div class="col-md-3">
-                                            <label for="extrq1" class="form-label"> সংশ্লিষ্ট ক্ষেত্রে অভিজ্ঞতা</label>
-                                            {!! Form::select('Experience',['আছে'=>'আছে '],null,['class'=>'form-control','placeholder'=>'','id'=>'Experience']) !!}
+                                            <label for="extrq1" class="form-label"> সংশ্লিষ্ট ক্ষেত্রে অভিজ্ঞতা</label> <br />
+                                            {{ $applicationinfo->experience }}
                                         </div>
                                         <div class="col-md-3">
                                             <label for="extrq" class="form-label"> অভিজ্ঞতার বিবরণ (যদি থাকে)</label>
                                             {!! Form::textarea('experiencemonth', null, array('placeholder' => '', 'rows'=>'2', 'class' => 'form-control','id'=>'experiencemonth')) !!}
                                         </div>
                                         <div class="col-md-3">
-                                            <label for="extrq" class="form-label">অভিজ্ঞতার মেয়াদ (বৎসর )</label>
-                                            {!! Form::select('experienceyear',\App\Helpers\StaticValue::EXPERIENCE,null,['class'=>'form-control','placeholder'=>'','id'=>'experienceyear']) !!}
+                                            <label for="extrq" class="form-label">অভিজ্ঞতার মেয়াদ (বৎসর )</label><br />
+                                            {{ $applicationinfo->experienceyear }}
+
 
                                         </div>
                                     </div>
                                     <div class="row" style="margin-top: 5px">
                                         <div class="col-md-3">
-                                            <label for="extrq" class="form-label"> কোটা</label>
-                                            {!! Form::select('quota',\App\Helpers\StaticValue::QTOTA,null,['class'=>'form-control','placeholder'=>'','id'=>'experienceyear']) !!}
+                                            <label for="extrq" class="form-label"> কোটা</label><br />
+                                            {{ $applicationinfo->quota }}
                                         </div>
                                         <div class="col-md-3">
-                                            <label for="extrq" class="form-label">বিভাগীয় প্রার্থী কিনা</label>
-                                            {!! Form::select('divisioncaplicant',\App\Helpers\StaticValue::DIVISIONAPPLIANT,null,['class'=>'form-control','placeholder'=>'','id'=>'divisioncaplicant']) !!}
+                                            <label for="extrq" class="form-label">বিভাগীয় প্রার্থী কিনা</label><br />
+                                            {{ $applicationinfo->division_appli }}
                                         </div>
                                     </div>
 
                                     <div class="row" style="margin-top: 5px">
                                         <div class="col-md-6">
-                                            <label for="formFile" class="form-label">প্রার্থীর ছবি <span class="text-danger">*</span></label>
-                                            {!! Form::file('image', ['class'=>'form-control file-input','accept'=>'.jpg,.jpeg,.png,.gif']) !!}
-                                            <div id="divImageMediaPreview"></div>
-                                            @if ($errors->has('image'))
-                                                <span class="text-danger">{{ $errors->first('image') }}</span>
-                                            @endif
+                                            <label for="formFile" class="form-label">প্রার্থীর ছবি </label><br />
+
                                         </div>
                                         <div class="col-md-6">
-                                            <label for="formFile1" class="form-label">প্রার্থীর স্বাক্ষর <span class="text-danger">*</span></label>
-                                            {!! Form::file('signature', ['class'=>'form-control signature','accept'=>'.jpg,.jpeg,.png,.gif',]) !!}
-                                            <div id="divImagesignaturePreview"></div>
-                                            @if ($errors->has('signature'))
-                                                <span class="text-danger">{{ $errors->first('signature') }}</span>
-                                            @endif
+                                            <label for="formFile1" class="form-label">প্রার্থীর স্বাক্ষর </label><br />
+
                                         </div>
 
                                     </div>
@@ -357,8 +363,11 @@
                         </div>
                     </div>
                     <div class="row mb-5">
-                        <div class="col-md-7 ">
-                            <button type="submit" class="btn btn-primary mt-4 btn-lg float-end">Submit Registration</button>
+                        <div class="col-md-6 ">
+                            <a href="#" class="btn btn-primary mt-4 btn-lg float-start"><i data-feather="edit"></i> Edit Information</a> &nbsp;&nbsp;
+                        </div>
+                        <div class="col-md-6 ">
+                            <button type="submit" class="btn btn-success mt-4 btn-lg float-end"><i data-feather="send"></i> Submit Application</button>
                         </div>
 
                     </div>
