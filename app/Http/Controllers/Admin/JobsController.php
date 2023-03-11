@@ -241,4 +241,11 @@ class JobsController extends Controller
         //return $request->all();
     }
 
+    public function setting(Request $request, $uuid)
+    {
+
+        $joninfo = Job::active()->where('uuid', $uuid)->first();
+      //  dd($joninfo);
+        return view('admin.jobs.setting',['joninfo'=>$joninfo]);
+    }
 }

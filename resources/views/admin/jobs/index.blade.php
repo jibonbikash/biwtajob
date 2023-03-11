@@ -55,11 +55,13 @@
                                         <td>{{ $job->applicants_count }}</td>
                                         <td>
                                             <a class="btn btn-success  btn-sm" title="Edit" href="{{ route('jobs.edit',$job->id) }}"><i data-feather="edit" class="text-white"></i></a>
-
+                                            <a class="btn btn-warning  btn-sm" title="Setting" href="{{ route('jobs.setting',['uuid'=>$job->uuid]) }}"><i data-feather="settings" class="text-white"></i></a>
+                                        @if($job->applicants_count < 1)
                                             {!! Form::open(['method' => 'DELETE','route' => ['jobs.destroy', $job->id],'style'=>'display:inline']) !!}
                                             {!! Form::button('<i data-feather="trash-2"></i>', ['type' => 'submit', 'class' => 'btn btn-danger  btn-sm', 'onclick'=>'return confirm("Are you sure you want to delete this item?");']) !!}
 
                                             {!! Form::close() !!}
+                                            @endif
                                             <a class="btn btn-info  btn-sm" title="Applicant Lits({{ $job->applicants_count }})" href="{{ route('jobs.edit',$job->id) }}"><i data-feather="users" class="text-white"></i></a>
                                         </td>
                                     </tr>

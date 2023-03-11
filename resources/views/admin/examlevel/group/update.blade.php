@@ -2,8 +2,8 @@
 /**
  * Created by  jibon Bikash Roy.
  * User: jibon
- * Date: ৮/৩/২৩
- * Time: ৯:১৪ PM
+ * Date: ১১/৩/২৩
+ * Time: ১:০৫ PM
  * Copyright jibon <jibon.bikash@gmail.com>
  */
 ?>
@@ -18,9 +18,11 @@
 @section('breadcrumb')
     <div class="row page-title align-items-center">
         <div class="col-sm-4 col-xl-6">
-            <h4 class="mb-1 mt-0">Exam Levels group add </h4>
+            <h4 class="mb-1 mt-0">Update Exam Levels group </h4>
         </div>
-
+        <div class="col-sm-6 col-xl-6">
+            <a href="{{route('examlevelgroups.create')}}" class="btn btn-info btn-lg float-right"><i data-feather="arrow-left-circle"></i> Back</a>
+        </div>
     </div>
 @endsection
 
@@ -32,9 +34,14 @@
                     @include('layouts.shared.message')
                     <div class="row">
                         <div class="col-md-12">
-                            <strong>Exam Levels: {{ $examLevel->name }}</strong>
-                            {!! Form::open(array('route' => ['examlevels.groupaddsave', $examLevel->id] ,'method'=>'POST', 'files' => false)) !!}
+                            {!! Form::model($group, array('route' => ['examlevelgroups.update', $group->id] ,'method'=>'PUT', 'files' => false)) !!}
                             <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <strong>Exam Level</strong>
+                                        {!! Form::select('examlevel_id',\App\Models\Examlevel::pluck('name','id'),null,['class'=>'form-control','placeholder'=>'Select ']) !!}
+                                    </div>
+                                </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <strong>Name</strong>
@@ -83,4 +90,5 @@
     </script>
 
 @endsection
+
 

@@ -42,7 +42,7 @@
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <strong>Job Description</strong>
+                                        <strong>Status</strong>
                                         {!! Form::select('status',\App\Helpers\StaticValue::STATUS,$examLevel->status,['class'=>'form-control','placeholder'=>'Select ']) !!}
                                     </div>
                                 </div>

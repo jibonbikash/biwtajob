@@ -2,8 +2,8 @@
 /**
  * Created by  jibon Bikash Roy.
  * User: jibon
- * Date: ৮/৩/২৩
- * Time: ৮:৫৩ PM
+ * Date: ১০/৩/২৩
+ * Time: ১১:২০ PM
  * Copyright jibon <jibon.bikash@gmail.com>
  */
 ?>
@@ -18,10 +18,10 @@
 @section('breadcrumb')
     <div class="row page-title align-items-center">
         <div class="col-sm-4 col-xl-6">
-            <h4 class="mb-1 mt-0">Exam Levels</h4>
+            <h4 class="mb-1 mt-0">Exam Level Group</h4>
         </div>
         <div class="col-sm-6 col-xl-6">
-            <a href="{{route('examlevels.create')}}" class="btn btn-info btn-lg float-right"><i data-feather="plus-circle"></i> Level</a>
+            <a href="{{route('examlevelgroups.create')}}" class="btn btn-info btn-lg float-right"><i data-feather="plus-circle"></i> Group</a>
         </div>
     </div>
 @endsection
@@ -41,38 +41,35 @@
                                     <tr>
                                         <th scope="col">#</th>
                                         <th scope="col">Title</th>
+                                        <th scope="col">Exam Level</th>
                                         <th scope="col">Action</th>
                                     </tr>
-                                    {!! Form::open(array('route' => 'examlevels.index' ,'method'=>'get')) !!}
+                                    {!! Form::open(array('route' => 'examlevelgroups.index' ,'method'=>'get')) !!}
                                     <tr>
                                         <th scope="col"></th>
+                                        <th scope="col"> {!! Form::text('name', app('request')->input('name'), array('placeholder' => '','class' => 'form-control')) !!}</th>
                                         <th scope="col">
-                                            {!! Form::text('name', app('request')->input('name'), array('placeholder' => '','class' => 'form-control')) !!}
-
+                                            {!! Form::select('examlevel_id',\App\Models\Examlevel::pluck('name','id'),app('request')->input('examlevel_id'),['class'=>'form-control','placeholder'=>'Select Level']) !!}
                                         </th>
                                         <th scope="col">
                                             <button type="submit" class="btn btn-primary btn-lg"><i data-feather="search"></i> Search</button>
-                                            <a href="{{route('examlevels.index')}}" class="btn btn-dark btn-lg"><i data-feather="refresh-ccw"></i> Reset</a>
+                                            <a href="{{route('examlevelgroups.index')}}" class="btn btn-dark btn-lg"><i data-feather="refresh-ccw"></i> Reset</a>
                                         </th>
                                     </tr>
                                     {!! Form::close() !!}
-
                                     </thead>
                                     <tbody>
-                                    @foreach($examLevels as $examLevel)
+                                    @foreach($ExamlevelGroups as $examgroup)
                                         <tr>
-                                            <th scope="row">{{ $loop->iteration + $examLevels->firstItem() - 1 }}</th>
-                                            <td>{{ $examLevel->name }}</td>
+                                            <th scope="row">{{ $loop->iteration + $ExamlevelGroups->firstItem() - 1 }}</th>
+                                            <td>{{ $examgroup->name }}</td>
+                                            <td>{{ $examgroup->examLevel ? $examgroup->examLevel->name : '' }}</td>
 
                                             <td>
-                                                <a class="btn btn-success  btn-sm" title="Edit" href="{{ route('examlevels.edit',$examLevel->id) }}"><i data-feather="edit" class="text-white"></i></a>
+                                                <a class="btn btn-success  btn-sm" title="Edit" href="{{ route('examlevelgroups.edit',$examgroup->id) }}"><i data-feather="edit" class="text-white"></i></a>
 
-                                                <a class="btn btn-info  btn-sm" title="Group" href="{{ route('examlevels.groupadd',$examLevel->id) }}"><i data-feather="grid" class="text-white"></i></a>
-
-
-                                                {!! Form::open(['method' => 'DELETE','route' => ['examlevels.destroy', $examLevel->id],'style'=>'display:inline']) !!}
+                                                {!! Form::open(['method' => 'DELETE','route' => ['examlevelgroups.destroy', $examgroup->id],'style'=>'display:inline']) !!}
                                                 {!! Form::button('<i data-feather="trash-2"></i>', ['type' => 'submit', 'class' => 'btn btn-danger  btn-sm', 'onclick'=>'return confirm("Are you sure you want to delete this item?");']) !!}
-
                                                 {!! Form::close() !!}
 
                                             </td>
@@ -82,7 +79,7 @@
                                 </table>
 
                             </div>
-                            {{ $examLevels->onEachSide(5)->appends(Request::all())->links() }}
+                            {{ $ExamlevelGroups->onEachSide(5)->appends(Request::all())->links('pagination::bootstrap-4') }}
                         </div>
                     </div>
 
@@ -108,3 +105,4 @@
     </script>
 
 @endsection
+

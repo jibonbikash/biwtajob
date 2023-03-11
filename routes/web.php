@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\JobsController;
 use App\Http\Controllers\Admin\ExamLevelController;
+use App\Http\Controllers\Admin\ExamLevelGroupController;
+use App\Http\Controllers\Admin\ExamLevelGroupSubjectController;
 use App\Http\Controllers\HomeController;
 
 /*
@@ -40,6 +42,8 @@ Route::group(['middleware' => ['auth'], "prefix" => "admin"], function() {
     Route::resource('users', UserController::class);
     Route::resource('products', ProductController::class);
     Route::resource('jobs', JobsController::class);
+    Route::get('/jobs/setting/{uuid}', [JobsController::class, 'setting'])->name('jobs.setting');
+    Route::post('/jobs/setting/{uuid}', [JobsController::class, 'setting'])->name('jobs.settingsave');
     Route::post('ckeditor/upload', [JobsController::class, 'imageupload'])->name('ckeditor.upload');
     Route::get('/applicants', [JobsController::class, 'applicants'])->name('applicants');
     Route::get('/roll-setting', [JobsController::class, 'rollSetting'])->name('rollSetting');
@@ -48,5 +52,8 @@ Route::group(['middleware' => ['auth'], "prefix" => "admin"], function() {
     Route::resource('examlevels', ExamLevelController::class);
     Route::get('examlevels/group/add/{id}', [ExamLevelController::class, 'groupadd'])->name('examlevels.groupadd');
     Route::post('examlevels/group/add/{id}', [ExamLevelController::class, 'groupaddsave'])->name('examlevels.groupaddsave');
+    Route::resource('examlevelgroups', ExamLevelGroupController::class);
+    Route::resource('examlevelgroupsubjects', ExamLevelGroupSubjectController::class);
+    Route::get('examgroup', [ExamLevelGroupController::class,'examgroup'])->name('examgroup');
 
 });

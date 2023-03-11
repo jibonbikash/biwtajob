@@ -39,6 +39,27 @@
             <span>Exam Seat Plan </span>
         </a>
     </li>
+    <li class="menu-title">Education Exam Setting</li>
+
+    <li>
+        <a href="{{route('examlevels.index')}}">
+            <i data-feather="package"></i>
+            <span> Exam Level </span>
+        </a>
+    </li>
+    <li>
+        <a href="{{route('examlevelgroups.index')}}">
+            <i data-feather="package"></i>
+            <span> Exam Group </span>
+        </a>
+    </li>
+
+    <li>
+        <a href="{{route('examlevelgroupsubjects.index')}}">
+            <i data-feather="package"></i>
+            <span> Exam Subject </span>
+        </a>
+    </li>
     <li class="menu-title">Custom</li>
     <li>
         <a href="javascript: void(0);">
