@@ -43,7 +43,7 @@ Route::group(['middleware' => ['auth'], "prefix" => "admin"], function() {
     Route::resource('products', ProductController::class);
     Route::resource('jobs', JobsController::class);
     Route::get('/jobs/setting/{uuid}', [JobsController::class, 'setting'])->name('jobs.setting');
-    Route::post('/jobs/setting/{uuid}', [JobsController::class, 'setting'])->name('jobs.settingsave');
+    Route::post('/jobs/setting/{uuid}', [JobsController::class, 'settingSave'])->name('jobs.settingsave');
     Route::post('ckeditor/upload', [JobsController::class, 'imageupload'])->name('ckeditor.upload');
     Route::get('/applicants', [JobsController::class, 'applicants'])->name('applicants');
     Route::get('/roll-setting', [JobsController::class, 'rollSetting'])->name('rollSetting');

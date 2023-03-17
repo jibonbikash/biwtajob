@@ -42,87 +42,194 @@
                                       Education Setting
                                     </div>
                                     <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="card border mt-4">
-                                                    <div class="card-header bg-soft-secondary">
-                                                        H.S.C Equivalent
-                                                    </div>
-                                                    <div class="card-body">
-                                                        <?php
-                                                        $hsc = \App\Models\ExamlevelGroup::where('examlevel_id',3)
-                                                            ->get();
-
-                                                        ?>
-                                                        @foreach($hsc as $examHSC)
-                                                        <div class="row border border-primary rounded pt-2 mb-2">
-                                                            <div class="col-md-3">
-                                                                {{ Form::checkbox('HSCExam[]', $examHSC->id, false, array( 'id'=>'HSC')) }}
-                                                                {!! Form::label('HSC',  $examHSC->name) !!}
-                                                            </div>
-                                                            <div class="col-md-9" id="{{\App\Helpers\StaticValue::clean($examHSC->name)}}">
-<?php
-                                                                $hscsubjects = \App\Models\ExamlevelSubject::where('examlevel_id',3)->where('examlevel_group_id',$examHSC->id)
-                                                                    ->get();
-?>
-                                                                @foreach($hscsubjects as $subjects)
-    {{ Form::checkbox('HSCExamsubject[]', $subjects->id, false, array( 'id'=>'HSCExamsubject')) }}
-    {!! Form::label('HSCSubject',  $subjects->name) !!}
-                                                                   @endforeach
-
-                                                            </div>
+                                        @if($joninfo->ssc)
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="card border mt-4 rounded">
+                                                        <div class="card-header bg-soft-secondary">
+                                                            SSC Equivalent
                                                         </div>
+                                                        <div class="card-body">
+                                                            <?php
+                                                            $SSC = \App\Models\ExamlevelGroup::where('examlevel_id', 2)
+                                                                ->get();
+
+                                                            ?>
+                                                            @foreach($SSC as $examssc)
+                                                                <div
+                                                                    class="row border border-primary rounded pt-2 mb-2">
+                                                                    <div class="col-md-3">
+                                                                        {{ Form::checkbox('SSCExam[]', $examssc->id, false, array( 'id'=>'SSC')) }}
+                                                                        {!! Form::label('SSC',  $examssc->name) !!}
+                                                                    </div>
+                                                                    <div class="col-md-8"
+                                                                         id="{{\App\Helpers\StaticValue::clean($examssc->name)}}">
+                                                                        <?php
+                                                                        $sscsubjects = \App\Models\ExamlevelSubject::where('examlevel_id', 2)->where('examlevel_group_id', $examssc->id)
+                                                                            ->get();
+                                                                        ?>
+                                                                        @foreach($sscsubjects as $subjects)
+                                                                            {{ Form::checkbox('sscExamsubject[]', $subjects->id, false, array( 'id'=>'HSCExamsubject')) }}
+                                                                            {!! Form::label('SSCSubject',  $subjects->name) !!}
+                                                                        @endforeach
+
+                                                                    </div>
+                                                                    <div class="col-md-1">
+@if(count($sscsubjects) > 0)
+                                                                        <button type="button" class="btn btn-success btn-lg mb-2"><i data-feather="save"></i> Save</button>
+                                                                        @endif
+                                                                </div>
+                                                                </div>
                                                             @endforeach
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="card mt-4 border">
-                                                    <div class="card-header bg-soft-secondary">
-                                                        Graduation
-                                                    </div>
-                                                    <div class="card-body">
-                                                        <?php
-                                                        $Graduation = \App\Models\ExamlevelGroup::where('examlevel_id',4)
-                                                            ->get();
+                                        @endif
+                                        @if($joninfo->hsc)
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="card border mt-4 rounded">
+                                                        <div class="card-header bg-soft-secondary">
+                                                            H.S.C Equivalent
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <?php
+                                                            $hsc = \App\Models\ExamlevelGroup::where('examlevel_id', 3)
+                                                                ->get();
 
-                                                        ?>
-                                                        @foreach($Graduation as $examGraduation)
-                                                            <div class="row border border-primary rounded pt-2 mb-2">
-                                                                <div class="col-md-3">
-                                                                    {{ Form::checkbox('HSCExam[]', $examGraduation->id, false, array( 'id'=>'Graduation')) }}
-                                                                    {!! Form::label('Graduation',  $examGraduation->name) !!}
+                                                            ?>
+                                                            @foreach($hsc as $examHSC)
+                                                                <div
+                                                                    class="row border border-primary rounded pt-2 mb-2">
+                                                                    <div class="col-md-3">
+                                                                        {{ Form::checkbox('HSCExam[]', $examHSC->id, false, array( 'id'=>'HSC')) }}
+                                                                        {!! Form::label('HSC',  $examHSC->name) !!}
+                                                                    </div>
+                                                                    <div class="col-md-8"
+                                                                         id="{{\App\Helpers\StaticValue::clean($examHSC->name)}}">
+                                                                        <?php
+                                                                        $hscsubjects = \App\Models\ExamlevelSubject::where('examlevel_id', 3)->where('examlevel_group_id', $examHSC->id)
+                                                                            ->get();
+                                                                        ?>
+                                                                        @foreach($hscsubjects as $subjects)
+                                                                            {{ Form::checkbox('HSCExamsubject[]', $subjects->id, false, array( 'id'=>'HSCExamsubject')) }}
+                                                                            {!! Form::label('HSCSubject',  $subjects->name) !!}
+                                                                        @endforeach
+
+                                                                    </div>
+                                                                    <div class="col-md-1">
+                                                                        @if(count($hscsubjects) > 0)
+                                                                        <button type="button" class="btn btn-success btn-lg mb-2"><i data-feather="save"></i> Save</button>
+                                                                        @endif
+                                                                    </div>
                                                                 </div>
-                                                                <div class="col-md-9" id="{{\App\Helpers\StaticValue::clean($examGraduation->name)}}">
-
-                                                                    <?php
-                                                                    $hscsubjects = \App\Models\ExamlevelSubject::where('examlevel_id',4)->where('examlevel_group_id',$examGraduation->id)
-                                                                        ->get();
-                                                                    ?>
-                                                                    @foreach($hscsubjects as $subjects)
-                                                                        {{ Form::checkbox('HSCExamsubject[]', $subjects->id, false, array( 'id'=>'GraduationExamsubject')) }}
-                                                                        {!! Form::label('GraduationSubject',  $subjects->name) !!}
-                                                                    @endforeach
-
-                                                                </div>
-                                                            </div>
-                                                        @endforeach
+                                                            @endforeach
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
+                                        @endif
+                                        @if($joninfo->graduation)
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="card mt-4 border rounded">
+                                                        <div class="card-header bg-soft-secondary">
+                                                            Graduation
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <?php
+                                                            $Graduation = \App\Models\ExamlevelGroup::where('examlevel_id', 4)
+                                                                ->get();
 
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group pl-3">
-                                                <button type="submit" class="btn btn-success btn-lg"><i data-feather="save"></i> Save</button>
+                                                            ?>
+                                                            @foreach($Graduation as $examGraduation)
+                                                                <div
+                                                                    class="row border border-primary rounded pt-2 mb-2">
+                                                                    <div class="col-md-3">
+                                                                        {{ Form::checkbox('GraduationExam[]', $examGraduation->id, false, array( 'id'=>'Graduation')) }}
+                                                                        {!! Form::label('Graduation',  $examGraduation->name) !!}
+                                                                    </div>
+                                                                    <div class="col-md-8"
+                                                                         id="{{\App\Helpers\StaticValue::clean($examGraduation->name)}}">
+
+                                                                        <?php
+                                                                        $Graduationsubjects = \App\Models\ExamlevelSubject::where('examlevel_id', 4)->where('examlevel_group_id', $examGraduation->id)
+                                                                            ->get();
+                                                                        ?>
+                                                                        @foreach($Graduationsubjects as $subjects)
+                                                                            {{ Form::checkbox('GraduationExamsubject[]', $subjects->id, false, array( 'id'=>'GraduationExamsubject')) }}
+                                                                            {!! Form::label('GraduationSubject',  $subjects->name) !!}
+                                                                        @endforeach
+
+                                                                    </div>
+                                                                    <div class="col-md-1">
+                                                                        @if(count($Graduationsubjects) > 0)
+                                                                        <button type="button" class="btn btn-success btn-lg mb-2"><i data-feather="save"></i> Save</button>
+                                                                        @endif
+                                                                    </div>
+                                                                </div>
+                                                            @endforeach
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
+                                        @endif
+                                        @if($joninfo->masters)
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="card mt-4 border rounded rounded">
+                                                        <div class="card-header bg-soft-secondary">
+                                                            Masters
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <?php
+                                                            $Masters = \App\Models\ExamlevelGroup::where('examlevel_id', 5)
+                                                                ->get();
 
+                                                            ?>
+                                                            @foreach($Masters as $Master)
+                                                                <div
+                                                                    class="row border border-primary rounded pt-2 mb-2">
+                                                                    <div class="col-md-3">
+                                                                        {{ Form::checkbox('MastersExam[]', $Master->id, false, array( 'id'=>'Graduation')) }}
+                                                                        {!! Form::label('Masters',  $Master->name) !!}
+                                                                    </div>
+                                                                    <div class="col-md-8"
+                                                                         id="{{\App\Helpers\StaticValue::clean($Master->name)}}">
+
+                                                                        <?php
+                                                                        $Mastersubjects = \App\Models\ExamlevelSubject::where('examlevel_id', 5)->where('examlevel_group_id', $Master->id)
+                                                                            ->get();
+                                                                        ?>
+                                                                        @foreach($Mastersubjects as $subjects)
+                                                                            {{ Form::checkbox('MastersExamsubject[]', $subjects->id, false, array( 'id'=>'MastersExamsubject')) }}
+                                                                            {!! Form::label('MastersSubject',  $subjects->name) !!}
+                                                                        @endforeach
+
+                                                                    </div>
+                                                                    <div class="col-md-1">
+                                                                        @if(count($Mastersubjects) > 0)
+                                                                        <button type="button" class="btn btn-success btn-lg mb-2"><i data-feather="save"></i> Save</button>
+                                                                        @endif
+                                                                    </div>
+                                                                </div>
+                                                            @endforeach
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
                                     </div>
+
+{{--                                    <div class="row">--}}
+{{--                                        <div class="col-md-6">--}}
+{{--                                            <div class="form-group pl-3">--}}
+{{--                                                <button type="submit" class="btn btn-success btn-lg"><i data-feather="save"></i> Save</button>--}}
+{{--                                            </div>--}}
+{{--                                        </div>--}}
+
+{{--                                    </div>--}}
                                 </div>
                                 </div>
                             </div>

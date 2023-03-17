@@ -248,4 +248,8 @@ class JobsController extends Controller
       //  dd($joninfo);
         return view('admin.jobs.setting',['joninfo'=>$joninfo]);
     }
+    public function settingSave(Request $request, $uuid){
+        dd($request->all());
+
+    }
 }
