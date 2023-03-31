@@ -50,21 +50,21 @@
                                     <table class="table table-bordered">
                                         <tbody>
                                         <tr>
-                                            <td style="width: 30%">প্রার্থীর নাম ইংরেজীতে (বড় অক্ষরে) </td>
+                                            <td style="width: 30%" class="fw-bold">প্রার্থীর নাম ইংরেজীতে (বড় অক্ষরে) </td>
                                             <td>
                                                 {{ $applicationinfo->name_en }}
                                             </td>
                                         </tr>
 
                                         <tr>
-                                            <td>প্রার্থীর নাম বাংলায় </td>
+                                            <td class="fw-bold">প্রার্থীর নাম বাংলায় </td>
                                             <td>
                                                 {{ $applicationinfo->name_bn }}
                                             </td>
                                         </tr>
 
                                         <tr>
-                                            <td>পিতার নাম </td>
+                                            <td class="fw-bold">পিতার নাম </td>
                                             <td>
                                                 {{ $applicationinfo->father_name }}
 
@@ -72,13 +72,13 @@
                                         </tr>
 
                                         <tr>
-                                            <td>মাতার নাম </td>
+                                            <td class="fw-bold">মাতার নাম </td>
                                             <td> {{ $applicationinfo->mother_name }}
                                             </td>
                                         </tr>
 
                                         <tr>
-                                            <td>জন্ম তারিখ </td>
+                                            <td class="fw-bold">জন্ম তারিখ </td>
                                             <td>
                                                 {{ Carbon\Carbon::parse($applicationinfo->bday)->format('F j, Y') }}
 
@@ -86,21 +86,21 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>মোবাইল/টেলিফোন নম্বর </td>
+                                            <td class="fw-bold">মোবাইল/টেলিফোন নম্বর </td>
                                             <td>
                                                 {{ $applicationinfo->mother_name }}
 
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>জাতীয় পরিচয় নম্বর </td>
+                                            <td class="fw-bold">জাতীয় পরিচয় নম্বর </td>
                                             <td>
                                                 {{ $applicationinfo->nid }}
 
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>জাতীয়তা </td>
+                                            <td class="fw-bold">জাতীয়তা </td>
                                             <td>
                                                 {{ $applicationinfo->nationality }}
 
@@ -108,26 +108,26 @@
                                         </tr>
 
                                         <tr>
-                                            <td>ধর্ম </td>
+                                            <td class="fw-bold">ধর্ম </td>
                                             <td>
                                                 {{ $applicationinfo->religious }}
                                             </td>
                                         </tr>
 
                                         <tr>
-                                            <td>জেন্ডার </td>
+                                            <td class="fw-bold">জেন্ডার </td>
                                             <td>
                                                 {{ $applicationinfo->gender }}
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>জন্ম স্থান (জেলা)</td>
+                                            <td class="fw-bold">জন্ম স্থান (জেলা)</td>
                                             <td>
                                                 {{ $applicationinfo->birthplace? $applicationinfo->birthplace->zilla_name:'' }}
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>পেশা</td>
+                                            <td class="fw-bold">পেশা</td>
                                             <td>
                                                 {{ $applicationinfo->occupation }}
 
@@ -147,44 +147,44 @@
                                     <table class="table table-bordered">
                                         <tbody>
                                         <tr>
-                                            <td>বাসা ও সড়ক (নাম/নম্বর)</td>
+                                            <td class="fw-bold">বাসা ও সড়ক (নাম/নম্বর)</td>
                                             <td>
                                                 {{ $applicationinfo->pa_house }}
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>গ্রাম/পাড়া/মহল্লা</td>
+                                            <td class="fw-bold">গ্রাম/পাড়া/মহল্লা</td>
                                             <td>
                                                 {{ $applicationinfo->pa_village }}
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>ইউনিয়ন/ওয়ার্ড</td>
+                                            <td class="fw-bold">ইউনিয়ন/ওয়ার্ড</td>
                                             <td>
                                                 {{ $applicationinfo->pa_union }}
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>ডাকঘর </td>
+                                            <td class="fw-bold">ডাকঘর </td>
                                             <td>
                                                 {{ $applicationinfo->pa_postoffice }}
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>পোস্টকোড নম্বর </td>
+                                            <td class="fw-bold">পোস্টকোড নম্বর </td>
                                             <td>
                                                 {{ $applicationinfo->pa_postcode }}
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>জেলা </td>
+                                            <td class="fw-bold">জেলা </td>
                                             <td>
                                                 {{ $applicationinfo->zila ? $applicationinfo->zila->zilla_name:'' }}
                                             </td>
                                         </tr>
 
                                         <tr>
-                                            <td>উপজেলা/থানা </td>
+                                            <td class="fw-bold">উপজেলা/থানা </td>
                                             <td>
                                                 {{ $applicationinfo->upozilla ? $applicationinfo->upozilla->upozilla:'' }}
                                             </td>
@@ -201,37 +201,37 @@
                                     <table class="table table-bordered">
                                         <tbody>
                                         <tr>
-                                            <td>বাসা ও সড়ক (নাম/নম্বর)</td>
+                                            <td class="fw-bold">বাসা ও সড়ক (নাম/নম্বর)</td>
                                             <td>
                                                 {{ $applicationinfo->pr_house }}
 
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>গ্রাম/পাড়া/মহল্লা</td>
+                                            <td class="fw-bold">গ্রাম/পাড়া/মহল্লা</td>
                                             <td>
                                                 {{ $applicationinfo->pr_village }}</td>
                                         </tr>
                                         <tr>
-                                            <td>ইউনিয়ন/ওয়ার্ড</td>
+                                            <td class="fw-bold">ইউনিয়ন/ওয়ার্ড</td>
                                             <td>
                                                 {{ $applicationinfo->pr_union }}
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>ডাকঘর </td>
+                                            <td class="fw-bold">ডাকঘর </td>
                                             <td>
                                                 {{ $applicationinfo->pr_postoffice }}
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>পোস্টকোড নম্বর </td>
+                                            <td class="fw-bold">পোস্টকোড নম্বর </td>
                                             <td>
                                                 {{ $applicationinfo->pr_postcode }}
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>জেলা </td>
+                                            <td class="fw-bold">জেলা </td>
                                             <td>
                                                 {{ $applicationinfo->permanentzila ? $applicationinfo->permanentzila->zilla_name:'' }}
                                             </td>
@@ -316,21 +316,21 @@
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-md-3">
-                                            <label for="extrq" class="form-label"> অতিরিক্ত যোগ্যতা (যদি থাকে)</label><br />
+                                            <label for="extrq" class="form-label fw-bold"> অতিরিক্ত যোগ্যতা (যদি থাকে)</label><br />
                                             {{ $applicationinfo->extra_qualification }}
 
                                         </div>
 
                                         <div class="col-md-3">
-                                            <label for="extrq1" class="form-label"> সংশ্লিষ্ট ক্ষেত্রে অভিজ্ঞতা</label> <br />
+                                            <label for="extrq1" class="form-label fw-bold"> সংশ্লিষ্ট ক্ষেত্রে অভিজ্ঞতা</label> <br />
                                             {{ $applicationinfo->experience }}
                                         </div>
                                         <div class="col-md-3">
-                                            <label for="extrq" class="form-label"> অভিজ্ঞতার বিবরণ (যদি থাকে)</label>
+                                            <label for="extrq" class="form-label fw-bold"> অভিজ্ঞতার বিবরণ (যদি থাকে)</label>
                                             {!! Form::textarea('experiencemonth', null, array('placeholder' => '', 'rows'=>'2', 'class' => 'form-control','id'=>'experiencemonth')) !!}
                                         </div>
                                         <div class="col-md-3">
-                                            <label for="extrq" class="form-label">অভিজ্ঞতার মেয়াদ (বৎসর )</label><br />
+                                            <label for="extrq" class="form-label fw-bold">অভিজ্ঞতার মেয়াদ (বৎসর )</label><br />
                                             {{ $applicationinfo->experienceyear }}
 
 
@@ -338,23 +338,23 @@
                                     </div>
                                     <div class="row" style="margin-top: 5px">
                                         <div class="col-md-3">
-                                            <label for="extrq" class="form-label"> কোটা</label><br />
+                                            <label for="extrq" class="form-label fw-bold"> কোটা</label><br />
                                             {{ $applicationinfo->quota }}
                                         </div>
                                         <div class="col-md-3">
-                                            <label for="extrq" class="form-label">বিভাগীয় প্রার্থী কিনা</label><br />
+                                            <label for="extrq" class="form-label fw-bold">বিভাগীয় প্রার্থী কিনা</label><br />
                                             {{ $applicationinfo->division_appli }}
                                         </div>
                                     </div>
 
                                     <div class="row" style="margin-top: 5px">
                                         <div class="col-md-6">
-                                            <label for="formFile" class="form-label">প্রার্থীর ছবি </label><br />
-
+                                            <label for="formFile" class="form-label fw-bold">প্রার্থীর ছবি </label><br />
+                                            <img class="img-responsive" src="{{URL::to('/assets/applicants')}}/{{ $applicationinfo->picture }}" alt="" style="width: 150px"/>
                                         </div>
                                         <div class="col-md-6">
-                                            <label for="formFile1" class="form-label">প্রার্থীর স্বাক্ষর </label><br />
-
+                                            <label for="formFile1" class="form-label fw-bold">প্রার্থীর স্বাক্ষর </label><br />
+                                            <img class="img-responsive" src="{{URL::to('/assets/applicants')}}/{{ $applicationinfo->signature }}" alt="" style="width: 150px"/>
                                         </div>
 
                                     </div>
@@ -364,7 +364,7 @@
                     </div>
                     <div class="row mb-5">
                         <div class="col-md-6 ">
-                            <a href="#" class="btn btn-primary mt-4 btn-lg float-start"><i data-feather="edit"></i> Edit Information</a> &nbsp;&nbsp;
+                            <a href="{{ route('applicantPreviewEdit',$applicationinfo->uuid) }}" class="btn btn-primary mt-4 btn-lg float-start"><i data-feather="edit"></i> Edit Information</a> &nbsp;&nbsp;
                         </div>
                         <div class="col-md-6 ">
                             <button type="submit" class="btn btn-success mt-4 btn-lg float-end"><i data-feather="send"></i> Submit Application</button>

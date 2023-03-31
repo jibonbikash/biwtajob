@@ -11,7 +11,8 @@ class Job extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = ['uuid','title','description','vacancies','job_id','age_calculation','apply_fee','job_experience','freedom_age','handicapped_age',
-        'divisioncaplicant_age','max_age','min_age','freedom_fighter','petition_age','application_deadline','min_education','jsc','ssc','hsc','graduation','masters','status','jobcurbday'];
+        'divisioncaplicant_age','max_age','min_age','freedom_fighter','petition_age','application_deadline','min_education', 'min_education_con','min_education_with',
+        'jsc','ssc','hsc','graduation','masters','status','jobcurbday'];
     protected $notFoundMessage = 'The book could not be found';
     public function applicants()
     {

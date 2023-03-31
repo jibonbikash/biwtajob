@@ -7,6 +7,7 @@ use App\Http\Requests\JobCreateRequest;
 use App\Models\Examlevel;
 use App\Models\Job;
 use App\Models\JobExam;
+use App\Models\JobExamSubject;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -32,7 +33,8 @@ class JobsController extends Controller
      */
     public function create()
     {
-        return view('admin.jobs.create');
+        $examLevels= Examlevel::get()->pluck('name', 'name');
+        return view('admin.jobs.create',['examLevels'=>$examLevels]);
     }
 
     /**
@@ -71,11 +73,14 @@ class JobsController extends Controller
                     'freedom_fighter' => $request->input('freedom_fighter'),
                     'petition_age' => $request->input('petition_age'),
                     'salary_range' => $request->input('salary_range'),
+                    'min_education' => $request->input('min_education'),
+                    'min_education_con' => $request->input('min_education_con'),
+                    'min_education_with' => $request->input('min_education_with'),
                     'jsc' => $request->input('JSCExam') == 'JSC' ? true : false,
                     'ssc' => $request->input('SSCExam') == 'SSC' ? true : false,
                     'hsc' => $request->input('HSCExam') == 'HSC' ? true : false,
-                    'graduation	' => $request->input('GradExam') == 'Grad' ? true : false,
-                    'masters	' => $request->input('MastersExam') == 'Masters' ? true : false,
+                    'graduation' => $request->input('GradExam') == 'graduation' ? true : false,
+                    'masters' => $request->input('MastersExam') == 'Masters' ? true : false,
                 ]);
                 if (count((array)$request->input('JSC')) > 0) {
                     foreach ($request->input('JSC') as $key => $value) {
@@ -164,7 +169,8 @@ class JobsController extends Controller
     public function edit($id)
     {
         $job=Job::find($id);
-        return view('admin.jobs.update',['job'=>$job]);
+        $examLevels= Examlevel::get()->pluck('name', 'name');
+        return view('admin.jobs.update',['job'=>$job,'examLevels'=>$examLevels]);
     }
 
     /**
@@ -176,7 +182,39 @@ class JobsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+       $update= Job::where('id', $id)
+            ->update([
+                'title' => $request->input('title'),
+                'description' => $request->input('description'),
+                'vacancies' => $request->input('vacancies'),
+                'job_id' => $request->input('job_id'),
+                'age_calculation' => $request->input('age_calculation'),
+                'apply_fee' => $request->input('apply_fee'),
+                'application_deadline' => $request->input('application_deadline'),
+                'job_experience' => $request->input('job_experience'),
+                'job_location' => $request->input('job_location'),
+                'freedom_age' => $request->input('freedom_age'),
+                'handicapped_age' => $request->input('handicapped_age'),
+                'divisioncaplicant_age' => $request->input('divisioncaplicant_age'),
+                'max_age' => $request->input('max_age'),
+                'min_age' => $request->input('min_age'),
+                'freedom_fighter' => $request->input('freedom_fighter'),
+                'petition_age' => $request->input('petition_age'),
+                'salary_range' => $request->input('salary_range'),
+                'min_education' => $request->input('min_education'),
+                'min_education_con' => $request->input('min_education_con'),
+                'min_education_with' => $request->input('min_education_with'),
+                'jsc' => $request->input('JSCExam') == 'JSC' ? true : false,
+                'ssc' => $request->input('SSCExam') == 'SSC' ? true : false,
+                'hsc' => $request->input('HSCExam') == 'HSC' ? true : false,
+                'graduation' => $request->input('GradExam') == 'graduation' ? true : false,
+                'masters' => $request->input('MastersExam') == 'Masters' ? true : false,
+            ]);
+        if ($update) {
+            return redirect()->route('jobs.index')
+                ->with('success', 'Data update successfully!!');
+        }
+        dd($request->all());
     }
 
     /**
@@ -252,4 +290,24 @@ class JobsController extends Controller
         dd($request->all());
 
     }
+
+
+    public function examsubject(Request $request)
+    {
+        @JobExamSubject::where([
+            'job_id' => $request->input('job_id'),
+            'type' => $request->input('type'),
+            'examlevel_group_id' => $request->input('examlevel_group_id'),
+        ])->delete();
+        foreach ($request->input('examlevelSubject') as $subject) {
+            JobExamSubject::create([
+                'job_id' => $request->input('job_id'),
+                'type' => $request->input('type'),
+                'examlevel_group_id' => $request->input('examlevel_group_id'),
+                'examlevel_subject_id' => $subject,
+            ]);
+        }
+
+    }
+
 }

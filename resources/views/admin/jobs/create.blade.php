@@ -139,12 +139,39 @@
                                 {!! Form::text('divisioncaplicant_age', null, array('placeholder' => '','class' => 'form-control')) !!}
                             </div>
                         </div>
+
+                            <div class="col-md-12">
+                                <div class="card-header">
+                                    <h5>Minimum Education</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <strong>Education</strong>
+                                        {!! Form::select('min_education',$examLevels,null,['class'=>'form-control min_education','placeholder'=>'Select ','id'=>'min_education']) !!}
+                                        </div>
+                                        <div class="col-md-4">
+                                            <strong>Condition</strong>
+                                            {!! Form::select('min_education_con',['OR'=>'OR', 'AND'=>'AND'],null,['class'=>'form-control min_education','placeholder'=>'Select ','id'=>'min_education']) !!}
+                                        </div>
+                                        <div class="col-md-4">
+                                            <strong>Education</strong>
+                                            {!! Form::select('min_education_with',$examLevels,null,['class'=>'form-control min_education','placeholder'=>'Select ','id'=>'min_education']) !!}
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+
                         <div class="col-md-12">
                             <div class="card">
                                 <div class="card-header">
                                     <h5>Required Education Setting</h5>
                                 </div>
                                 <div class="card-body">
+
                                     <div class="row mt-2">
                                         <div class="col-md-3">
 
@@ -171,16 +198,16 @@
                                             {!! Form::label('HSC',  "HSC") !!}
                                         </div>
                                         <div class="col-md-3" id="HSCshow">
-                                            HSC
+
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-3">
-                                            {{ Form::checkbox('GradExam', 'Grad', false, array( 'id'=>'Grad')) }}
+                                            {{ Form::checkbox('GradExam', 'graduation', false, array( 'id'=>'Grad')) }}
                                             {!! Form::label('Graduation/Equivalent Level',  "Graduation/Equivalent Level") !!}
                                         </div>
                                         <div class="col-md-3" id="Grad">
-                                            Grad
+
                                         </div>
                                     </div>
                                     <div class="row">
@@ -189,7 +216,7 @@
                                             {!! Form::label('Masters/Equivalent Level',  "Masters/Equivalent Level") !!}
                                         </div>
                                         <div class="col-md-3" id="Masters">
-                                            Masters
+
                                         </div>
                                     </div>
                                 </div>
@@ -244,6 +271,7 @@
 // alert('dfdfd ffgf')
 //             });
             // <input id="jsc" name="JSC" type="checkbox" value="JSC">
+            /*
             $('#jsc, #SSC, #HSC, #Grad, #Masters').on('change', function() {
                 if(this.checked) {
                     var val = this.checked ? this.value : '';
@@ -271,7 +299,7 @@
                   // alert('uncheckd ' + $(this).val()+'show');
                 }
             });
-
+*/
         } );
 
     </script>

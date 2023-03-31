@@ -38,7 +38,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                 <div class="card mt-4 border border-info rounded">
-                                    <div class="card-header bg-soft-info">
+                                    <div class="card-header bg-soft-info" id="accordionExample">
                                       Education Setting
                                     </div>
                                     <div class="card-body">
@@ -46,37 +46,52 @@
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <div class="card border mt-4 rounded">
-                                                        <div class="card-header bg-soft-secondary">
-                                                            SSC Equivalent
+                                                        <div class="card-header">
+
+                                                            <a href="" class="text-dark" data-toggle="collapse"
+                                                               data-target="#collapseOne" aria-expanded="true"
+                                                               aria-controls="collapseOne">
+                                                                <div class="card-header" id="headingOne">
+                                                                    <h5 class="m-0 font-size-16">
+                                                                        SSC Equivalent <i
+                                                                            class="uil uil-angle-down float-right accordion-arrow"></i>
+                                                                    </h5>
+                                                                </div>
+                                                            </a>
+
                                                         </div>
-                                                        <div class="card-body">
+                                                        <div class="card-body collapse show" id="collapseOne" ria-labelledby="headingOne"
+                                                             data-parent="#accordionExample">
                                                             <?php
                                                             $SSC = \App\Models\ExamlevelGroup::where('examlevel_id', 2)
                                                                 ->get();
 
                                                             ?>
                                                             @foreach($SSC as $examssc)
+                                                                <?php
+                                                                   $name= \App\Helpers\StaticValue::clean($examssc->name);
+                                                                ?>
                                                                 <div
                                                                     class="row border border-primary rounded pt-2 mb-2">
                                                                     <div class="col-md-3">
-                                                                        {{ Form::checkbox('SSCExam[]', $examssc->id, false, array( 'id'=>'SSC')) }}
+                                                                        {{ Form::checkbox('SSCExam[]', $examssc->id, false, array( 'id'=>$name, 'onclick'=>'ExamLevel("'.$name.'");')) }}
                                                                         {!! Form::label('SSC',  $examssc->name) !!}
                                                                     </div>
-                                                                    <div class="col-md-8"
-                                                                         id="{{\App\Helpers\StaticValue::clean($examssc->name)}}">
+                                                                    <div class="col-md-8 {{$name}}"
+                                                                         id="{{$name}}"  style="display: none">
                                                                         <?php
                                                                         $sscsubjects = \App\Models\ExamlevelSubject::where('examlevel_id', 2)->where('examlevel_group_id', $examssc->id)
                                                                             ->get();
                                                                         ?>
                                                                         @foreach($sscsubjects as $subjects)
-                                                                            {{ Form::checkbox('sscExamsubject[]', $subjects->id, false, array( 'id'=>'HSCExamsubject')) }}
+                                                                            {{ Form::checkbox('sscExamsubject[]', $subjects->id, false, array( 'id'=>$name)) }}
                                                                             {!! Form::label('SSCSubject',  $subjects->name) !!}
                                                                         @endforeach
 
                                                                     </div>
-                                                                    <div class="col-md-1">
+                                                                    <div class="col-md-1 {{\App\Helpers\StaticValue::clean($examssc->name)}}" style="display: none">
 @if(count($sscsubjects) > 0)
-                                                                        <button type="button" class="btn btn-success btn-lg mb-2"><i data-feather="save"></i> Save</button>
+                                                                        <button type="button" class="btn btn-success btn-lg mb-2" onclick="save('sscExamsubject','ssc', {{$examssc->id}})"><i data-feather="save"></i> Save</button>
                                                                         @endif
                                                                 </div>
                                                                 </div>
@@ -90,24 +105,37 @@
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <div class="card border mt-4 rounded">
-                                                        <div class="card-header bg-soft-secondary">
-                                                            H.S.C Equivalent
+                                                        <div class="card-header">
+                                                            <a href="" class="text-dark" data-toggle="collapse"
+                                                               data-target="#collapseTwo" aria-expanded="true"
+                                                               aria-controls="collapseOne">
+                                                                <div class="card-header" id="headingTwo">
+                                                                    <h5 class="m-0 font-size-16">
+                                                                        H.S.C Equivalent <i
+                                                                            class="uil uil-angle-down float-right accordion-arrow"></i>
+                                                                    </h5>
+                                                                </div>
+                                                            </a>
                                                         </div>
-                                                        <div class="card-body">
+                                                        <div class="card-body collapse" id="collapseTwo" ria-labelledby="headingTwo"
+                                                             data-parent="#accordionExample">
                                                             <?php
                                                             $hsc = \App\Models\ExamlevelGroup::where('examlevel_id', 3)
                                                                 ->get();
 
                                                             ?>
                                                             @foreach($hsc as $examHSC)
+                                                                    <?php
+                                                                $name= \App\Helpers\StaticValue::clean($examHSC->name);
+                                                                ?>
                                                                 <div
                                                                     class="row border border-primary rounded pt-2 mb-2">
                                                                     <div class="col-md-3">
-                                                                        {{ Form::checkbox('HSCExam[]', $examHSC->id, false, array( 'id'=>'HSC')) }}
+                                                                        {{ Form::checkbox('HSCExam[]', $examHSC->id, false, array( 'id'=>$name, 'onclick'=>'ExamLevel("'.$name.'");')) }}
                                                                         {!! Form::label('HSC',  $examHSC->name) !!}
                                                                     </div>
-                                                                    <div class="col-md-8"
-                                                                         id="{{\App\Helpers\StaticValue::clean($examHSC->name)}}">
+                                                                    <div class="col-md-8 {{$name}}"
+                                                                         id="{{$name}}" style="display: none">
                                                                         <?php
                                                                         $hscsubjects = \App\Models\ExamlevelSubject::where('examlevel_id', 3)->where('examlevel_group_id', $examHSC->id)
                                                                             ->get();
@@ -118,9 +146,9 @@
                                                                         @endforeach
 
                                                                     </div>
-                                                                    <div class="col-md-1">
+                                                                    <div class="col-md-1 {{$name}}" style="display: none">
                                                                         @if(count($hscsubjects) > 0)
-                                                                        <button type="button" class="btn btn-success btn-lg mb-2"><i data-feather="save"></i> Save</button>
+                                                                                <button type="button" class="btn btn-success btn-lg mb-2" onclick="save('HSCExamsubject','hsc', {{$examHSC->id}})"><i data-feather="save"></i> Save</button>
                                                                         @endif
                                                                     </div>
                                                                 </div>
@@ -134,24 +162,39 @@
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <div class="card mt-4 border rounded">
-                                                        <div class="card-header bg-soft-secondary">
-                                                            Graduation
+                                                        <div class="card-header">
+                                                            <a href="" class="text-dark" data-toggle="collapse"
+                                                               data-target="#collapseThree" aria-expanded="true"
+                                                               aria-controls="collapseThree">
+                                                                <div class="card-header" id="headingThree">
+                                                                    <h5 class="m-0 font-size-16">
+                                                                        Graduation <i class="uil uil-angle-down float-right accordion-arrow"></i>
+                                                                    </h5>
+                                                                </div>
+                                                            </a>
+
+
                                                         </div>
-                                                        <div class="card-body">
+                                                        <div class="card-body collapse" id="collapseThree" ria-labelledby="headingThree"
+                                                             data-parent="#accordionExample">
                                                             <?php
                                                             $Graduation = \App\Models\ExamlevelGroup::where('examlevel_id', 4)
                                                                 ->get();
 
                                                             ?>
                                                             @foreach($Graduation as $examGraduation)
+                                                                    <?php
+                                                                    $name= \App\Helpers\StaticValue::clean($examGraduation->name);
+                                                                    ?>
+
                                                                 <div
                                                                     class="row border border-primary rounded pt-2 mb-2">
                                                                     <div class="col-md-3">
-                                                                        {{ Form::checkbox('GraduationExam[]', $examGraduation->id, false, array( 'id'=>'Graduation')) }}
+                                                                        {{ Form::checkbox('GraduationExam[]', $examGraduation->id, false, array( 'id'=>$name, 'onclick'=>'ExamLevel("'.$name.'");')) }}
                                                                         {!! Form::label('Graduation',  $examGraduation->name) !!}
                                                                     </div>
-                                                                    <div class="col-md-8"
-                                                                         id="{{\App\Helpers\StaticValue::clean($examGraduation->name)}}">
+                                                                    <div class="col-md-8 {{$name}}"
+                                                                         id="{{$name}}" style="display: none">
 
                                                                         <?php
                                                                         $Graduationsubjects = \App\Models\ExamlevelSubject::where('examlevel_id', 4)->where('examlevel_group_id', $examGraduation->id)
@@ -163,9 +206,9 @@
                                                                         @endforeach
 
                                                                     </div>
-                                                                    <div class="col-md-1">
+                                                                    <div class="col-md-1 {{$name}}" style="display: none">
                                                                         @if(count($Graduationsubjects) > 0)
-                                                                        <button type="button" class="btn btn-success btn-lg mb-2"><i data-feather="save"></i> Save</button>
+                                                                            <button type="button" class="btn btn-success btn-lg mb-2" onclick="save('GraduationExamsubject','graduation', {{$examGraduation->id}})"><i data-feather="save"></i> Save</button>
                                                                         @endif
                                                                     </div>
                                                                 </div>
@@ -179,38 +222,52 @@
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <div class="card mt-4 border rounded rounded">
-                                                        <div class="card-header bg-soft-secondary">
-                                                            Masters
+                                                        <div class="card-header">
+
+                                                            <a href="" class="text-dark" data-toggle="collapse"
+                                                               data-target="#collapseFour" aria-expanded="true"
+                                                               aria-controls="headingFour">
+                                                                <div class="card-header" id="collapseFour">
+                                                                    <h5 class="m-0 font-size-16">
+                                                                        Masters <i class="uil uil-angle-down float-right accordion-arrow"></i>
+                                                                    </h5>
+                                                                </div>
+                                                            </a>
+
                                                         </div>
-                                                        <div class="card-body">
+                                                        <div class="card-body collapse" id="collapseFour" ria-labelledby="headingFour"
+                                                             data-parent="#accordionExample">
                                                             <?php
                                                             $Masters = \App\Models\ExamlevelGroup::where('examlevel_id', 5)
                                                                 ->get();
 
                                                             ?>
                                                             @foreach($Masters as $Master)
+                                                                    <?php
+                                                                    $name= \App\Helpers\StaticValue::clean($Master->name);
+                                                                    ?>
                                                                 <div
                                                                     class="row border border-primary rounded pt-2 mb-2">
                                                                     <div class="col-md-3">
-                                                                        {{ Form::checkbox('MastersExam[]', $Master->id, false, array( 'id'=>'Graduation')) }}
+                                                                        {{ Form::checkbox('MastersExam[]', $Master->id, false, array( 'id'=>$name, 'onclick'=>'ExamLevel("'.$name.'");')) }}
                                                                         {!! Form::label('Masters',  $Master->name) !!}
                                                                     </div>
-                                                                    <div class="col-md-8"
-                                                                         id="{{\App\Helpers\StaticValue::clean($Master->name)}}">
+                                                                    <div class="col-md-8 {{$name}}"
+                                                                         id="{{$name}}" style="display: none">
 
                                                                         <?php
                                                                         $Mastersubjects = \App\Models\ExamlevelSubject::where('examlevel_id', 5)->where('examlevel_group_id', $Master->id)
                                                                             ->get();
                                                                         ?>
                                                                         @foreach($Mastersubjects as $subjects)
-                                                                            {{ Form::checkbox('MastersExamsubject[]', $subjects->id, false, array( 'id'=>'MastersExamsubject')) }}
+                                                                            {{ Form::checkbox('MastersExamsubject[]', $subjects->id, false, array( 'id'=>$name)) }}
                                                                             {!! Form::label('MastersSubject',  $subjects->name) !!}
                                                                         @endforeach
 
                                                                     </div>
-                                                                    <div class="col-md-1">
+                                                                    <div class="col-md-1 {{$name}}" style="display: none">
                                                                         @if(count($Mastersubjects) > 0)
-                                                                        <button type="button" class="btn btn-success btn-lg mb-2"><i data-feather="save"></i> Save</button>
+                                                                            <button type="button" class="btn btn-success btn-lg mb-2" onclick="save('MastersExamsubject','masters', {{$Master->id}})"><i data-feather="save"></i> Save</button>
                                                                         @endif
                                                                     </div>
                                                                 </div>
@@ -235,7 +292,7 @@
                             </div>
 
                             </div>
-
+                        {{ Form::hidden('jobID', $joninfo->id) }}
                             {!! Form::close() !!}
 
                         </div>
@@ -260,6 +317,44 @@
         $( function() {
 
         } );
+        function ExamLevel(name){
+
+
+            if ($('#'+name).is(":checked"))
+            {
+                $('.'+name).show();
+            }
+           else{
+
+                $('.'+name).hide();
+            }
+
+        }
+
+        function save(name, type, group_id){
+            console.log(name, type);
+            var checked = [];
+            $("input[name='"+name+"[]']:checked").each(function ()
+            {
+                checked.push(parseInt($(this).val()));
+            });
+            $.ajax({
+                url:"{{ route('examlevels.examsubject') }}",
+                type:"POST",
+                data: {
+                    job_id: $('input[name=jobID]').val(),
+                    type: type,
+                    examlevel_group_id: group_id,
+                    examlevelSubject: checked,
+                    _token: "{{ csrf_token() }}",
+                },
+                success:function (data) {
+
+                }
+            })
+        }
+
+
     </script>
 
 @endsection

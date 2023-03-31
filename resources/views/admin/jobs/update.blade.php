@@ -31,7 +31,7 @@
             <div class="card">
                 <div class="card-body">
                     @include('layouts.shared.message')
-                    {!! Form::open(array('route' => 'jobs.store' ,'method'=>'post', 'files' => true)) !!}
+                    {!! Form::open(array('route' => array('jobs.update', $job->id) ,'method'=>'PATCH', 'files' => true)) !!}
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
@@ -137,6 +137,85 @@
                             <div class="form-group">
                                 <strong>Division Age</strong>
                                 {!! Form::text('divisioncaplicant_age', $job->divisioncaplicant_age, array('placeholder' => '','class' => 'form-control')) !!}
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="card-header">
+                                <h5>Minimum Education</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <strong>Education</strong>
+                                        {!! Form::select('min_education',$examLevels,$job->min_education,['class'=>'form-control min_education','placeholder'=>'Select ','id'=>'min_education']) !!}
+                                    </div>
+                                    <div class="col-md-4">
+                                        <strong>Condition</strong>
+                                        {!! Form::select('min_education_con',['OR'=>'OR', 'AND'=>'AND'],$job->min_education_con,['class'=>'form-control min_education','placeholder'=>'Select ','id'=>'min_education']) !!}
+                                    </div>
+                                    <div class="col-md-4">
+                                        <strong>Education</strong>
+                                        {!! Form::select('min_education_with',$examLevels,$job->min_education_with,['class'=>'form-control min_education','placeholder'=>'Select ','id'=>'min_education']) !!}
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Required Education Setting</h5>
+                                </div>
+                                <div class="card-body">
+
+                                    <div class="row mt-2">
+                                        <div class="col-md-3">
+
+                                            {{ Form::checkbox('JSCExam', 'JSC', $job->jsc, array('id'=>'jsc')) }}
+                                            {!! Form::label('JSC',  "JSC") !!}
+                                        </div>
+                                        <div class="col-md-6" id="JSCshow">
+
+                                        </div>
+                                    </div>
+
+
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            {{ Form::checkbox('SSCExam', 'SSC', $job->ssc, array('id'=>'SSC')) }}
+                                            {!! Form::label('SSC',  "SSC") !!}
+                                        </div>
+                                        <div class="col-md-6" id="SSCshow">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            {{ Form::checkbox('HSCExam', 'HSC', $job->hsc, array( 'id'=>'HSC')) }}
+                                            {!! Form::label('HSC',  "HSC") !!}
+                                        </div>
+                                        <div class="col-md-3" id="HSCshow">
+
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            {{ Form::checkbox('GradExam', 'graduation', $job->graduation, array( 'id'=>'Grad')) }}
+                                            {!! Form::label('Graduation/Equivalent Level',  "Graduation/Equivalent Level") !!}
+                                        </div>
+                                        <div class="col-md-3" id="Grad">
+
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            {{ Form::checkbox('MastersExam', 'Masters', $job->masters, array( 'id'=>'Masters')) }}
+                                            {!! Form::label('Masters/Equivalent Level',  "Masters/Equivalent Level") !!}
+                                        </div>
+                                        <div class="col-md-3" id="Masters">
+
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 

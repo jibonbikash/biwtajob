@@ -224,10 +224,10 @@ class HomeController extends Controller
             $nameimage = time() . '-' . mt_rand() . "." . $extension;
             $namesignature = time() . '-' . mt_rand() . "_signature." . $extensionsignature;
             StaticValue::createDirecrotory($jobinfo->job_id);
-            $image->move(public_path('assets/applicants/'.date("Y-d-m").'/'.$jobinfo->job_id), $nameimage);
-            $signature->move(public_path('assets/applicants/'.date("Y-d-m").'/'.$jobinfo->job_id), $namesignature);
-            $nameimage=date("Y-d-m").'/'.$jobinfo->job_id.'/'.$nameimage;
-            $namesignature=date("Y-d-m").'/'.$jobinfo->job_id.'/'.$namesignature;
+            $image->move(public_path('assets/applicants/'.date("Y").'/'.$jobinfo->job_id), $nameimage);
+            $signature->move(public_path('assets/applicants/'.date("Y").'/'.$jobinfo->job_id), $namesignature);
+            $nameimage=date("Y").'/'.$jobinfo->job_id.'/'.$nameimage;
+            $namesignature=date("Y").'/'.$jobinfo->job_id.'/'.$namesignature;
 
 
             DB::beginTransaction();
@@ -402,5 +402,27 @@ dd($e->getMessage());
         return view('jobs.applyformPreview',['applicationinfo'=>$applicationinfo]);
 
 
+    }
+
+    public function applicantPreviewEdit(Request $request, $uuid){
+        $applicationinfo= Applicant::with(['educations','job', 'birthplace','zila','upozilla','permanentzila','permanentupozilla'])->where('uuid', $uuid)->first();
+
+        $job= Job::find($applicationinfo->job_id);
+        $district_Upozilla = DB::table('district_upozilla')->orderBy('zilla_name','ASC')->get()->toArray();
+        $district = DB::table('district_upozilla')->where('zilla_id',0)->orderBy('zilla_name','ASC')->pluck('zilla_name','id');
+
+        $boards = DB::table('boards')->orderBy('name','ASC')->pluck('name','id');
+        $examlist= Examlevel::select('id','name','status')->with(['examGroups'=>function($quert){
+            $quert->with(['examSubject'=>function($query){
+                $query->select('id','examlevel_id','examlevel_group_id','name');
+            }])->select('id','examlevel_id','name','status');
+        }])->get();
+        return view('jobs.applyformPreviewEdit',[
+            'applicationinfo'=>$applicationinfo,
+            'job'=>$job,
+            'district_Upozilla'=>$district_Upozilla,
+            'boards'=>$boards,
+            'district'=>$district,
+            'examlist'=>$examlist,]);
     }
 }

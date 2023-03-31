@@ -24,6 +24,7 @@ Route::get('jobs/apply/{uuid}', [HomeController::class, 'applyform'])->name('app
 Route::get('exam/subject', [HomeController::class, 'examSubject'])->name('examSubject');
 Route::post('jobApply', [HomeController::class, 'jobApply'])->name('jobApply');
 Route::get('applicant/preview/{uuid}', [HomeController::class, 'applicantPreview'])->name('applicantPreview');
+Route::get('applicant/edit/{uuid}', [HomeController::class, 'applicantPreviewEdit'])->name('applicantPreviewEdit');
 
 
 Auth::routes([
@@ -55,5 +56,5 @@ Route::group(['middleware' => ['auth'], "prefix" => "admin"], function() {
     Route::resource('examlevelgroups', ExamLevelGroupController::class);
     Route::resource('examlevelgroupsubjects', ExamLevelGroupSubjectController::class);
     Route::get('examgroup', [ExamLevelGroupController::class,'examgroup'])->name('examgroup');
-
+    Route::post('examsubject', [JobsController::class, 'examsubject'])->name('examlevels.examsubject');
 });
