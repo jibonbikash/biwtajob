@@ -64,4 +64,6 @@ Route::group(['middleware' => ['auth'], "prefix" => "admin"], function() {
     Route::resource('examlevelgroupsubjects', ExamLevelGroupSubjectController::class);
     Route::get('examgroup', [ExamLevelGroupController::class,'examgroup'])->name('examgroup');
     Route::post('examsubject', [JobsController::class, 'examsubject'])->name('examlevels.examsubject');
+    Route::get('print/{id}', [ExamLevelGroupController::class,'print'])->name('print');
+    Route::get('adminCard/{id}', [ExamLevelGroupController::class,'adminCard'])->name('adminCard');
 });

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\JobCreateRequest;
+use App\Models\Applicant;
 use App\Models\Examlevel;
 use App\Models\Job;
 use App\Models\JobExam;
@@ -249,7 +250,8 @@ class JobsController extends Controller
     }
 
     public function applicants(Request $request){
-        return view('admin.jobs.applicants');
+        $applicants=Applicant::with(['educations','job', 'birthplace','zila','upozilla','permanentzila','permanentupozilla','apliyedJob'])->latest()->paginate(50);
+        return view('admin.jobs.applicants',['applicants'=>$applicants]);
     }
     public function rollSetting(Request $request){
         return view('admin.jobs.rollSetting');

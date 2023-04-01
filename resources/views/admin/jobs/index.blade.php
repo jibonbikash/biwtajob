@@ -70,7 +70,7 @@
                                 </table>
 
                             </div>
-                            {{ $jobs->onEachSide(5)->appends(Request::all())->links() }}
+                            {{ $jobs->onEachSide(5)->appends(Request::all())->links('pagination::bootstrap-5') }}
                         </div>
                     </div>
 
