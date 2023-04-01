@@ -13,7 +13,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">
+                <div class="card-header fw-bold">
                     মৌখিক পরীক্ষার প্রবেশ পত্র
                 </div>
                 <div class="card-body">

@@ -21,7 +21,7 @@
 
         <img src="https://jobsbiwta.gov.bd/website/wp-content/uploads/2013/06/biwta_banner_new-03-copy.jpg" alt="" style="width: 100%; max-height: 200px" />
 
-    <nav class="navbar navbar-expand-lg  mt-1 navbar-dark bg-primary mb-5">
+    <nav class="navbar navbar-expand-lg  mt-1 navbar-dark bg-primary mb-3">
         <div class="container-fluid">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -44,7 +44,7 @@
                         <a class="nav-link {{ (request()->is('practicalCopy')) ? 'active' : '' }}" href="{{route('practicalCopy')}}">ব্যবহারিক পরীক্ষার প্রবেশ পত্র</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {{ (request()->is('medicalCopy')) ? 'active' : '' }}" href="{{route('medicalCopy')}}">ব্বাস্থ্য পরীক্ষার প্রবেশপত্র</a>
+                        <a class="nav-link {{ (request()->is('medicalCopy')) ? 'active' : '' }}" href="{{route('medicalCopy')}}">স্বাস্থ্য পরীক্ষার প্রবেশপত্র</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Search Applied ID</a>
@@ -64,6 +64,9 @@
 <style>
     .nav-link{
         color: white;
+    }
+    .navbar-nav .nav-link.active, .navbar-nav .show>.nav-link{
+        font-weight: 600;
     }
 </style>
 </body>
