@@ -27,7 +27,10 @@ class Applicant extends Model
     {
         return $this->belongsTo(DistrictUpozilla::class,'bplace','id');
     }
-
+    public function apliyedJob()
+    {
+        return $this->hasOne(JobApply::class,'applicants_id','id');
+    }
 
     public function upozilla()
     {

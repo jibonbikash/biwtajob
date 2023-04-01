@@ -18,32 +18,36 @@
 <body>
 
 <div class="container">
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+
+        <img src="https://jobsbiwta.gov.bd/website/wp-content/uploads/2013/06/biwta_banner_new-03-copy.jpg" alt="" style="width: 100%; max-height: 200px" />
+
+    <nav class="navbar navbar-expand-lg  mt-1 navbar-dark bg-primary mb-5">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">Navbar</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                        <a class="nav-link {{ (request()->is('/')) ? 'active' : '' }}" aria-current="page" href="{{URL::to('/')}}">Current Job  Circular</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Features</a>
+                        <a class="nav-link {{ (request()->is('printCopy')) ? 'active' : '' }}" href="{{route('PrintCopy')}}">Applicant  Copy Print</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Pricing</a>
+                        <a class="nav-link {{ (request()->is('writtenCopy')) ? 'active' : '' }}" href="{{route('writtenCopy')}}">লিখিত পরীক্ষার প্রবেশ পত্র</a>
                     </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Dropdown link
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Action</a></li>
-                            <li><a class="dropdown-item" href="#">Another action</a></li>
-                            <li><a class="dropdown-item" href="#">Something else here</a></li>
-                        </ul>
+                    <li class="nav-item ">
+                        <a class="nav-link {{ (request()->is('vivaCopy')) ? 'active' : '' }}" href="{{route('vivaCopy')}}">মৌখিক পরীক্ষার প্রবেশ পত্র</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ (request()->is('practicalCopy')) ? 'active' : '' }}" href="{{route('practicalCopy')}}">ব্যবহারিক পরীক্ষার প্রবেশ পত্র</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ (request()->is('medicalCopy')) ? 'active' : '' }}" href="{{route('medicalCopy')}}">ব্বাস্থ্য পরীক্ষার প্রবেশপত্র</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Search Applied ID</a>
                     </li>
                 </ul>
             </div>
@@ -57,5 +61,10 @@
         feather.replace()
     </script>
 @yield('script-bottom')
+<style>
+    .nav-link{
+        color: white;
+    }
+</style>
 </body>
 </html>

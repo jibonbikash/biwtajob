@@ -64,6 +64,7 @@
                     </div>
                     {!! Form::open(['route' => array('jobApply'), 'files' => true]) !!}
                     {!! Form::hidden('uuid', $uuid) !!}
+                    {!! Form::hidden('jobcurday', $job->jobcurbday ? $job->jobcurbday:'') !!}
                     <div class="row mt-4">
                         <div class="col-md-12">
                             @include('layouts.shared.message')

@@ -7,6 +7,7 @@
                 <div class="card-header">{{ __('Vacancies') }}</div>
                 <div class="card-body">
                     @include('layouts.shared.message')
+                    <div class="table-responsive">
                     <table class="table table-striped table-hover table-bordered">
                         <thead>
                         <tr class="table-secondary">
@@ -37,6 +38,7 @@
                     <nav aria-label="Page navigation example">
                     {{ $jobs->appends(Request::all())->links('pagination::bootstrap-5') }}
                     </nav>
+                    </div>
                 </div>
             </div>
         </div>

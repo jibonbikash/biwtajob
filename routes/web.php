@@ -25,7 +25,14 @@ Route::get('exam/subject', [HomeController::class, 'examSubject'])->name('examSu
 Route::post('jobApply', [HomeController::class, 'jobApply'])->name('jobApply');
 Route::get('applicant/preview/{uuid}', [HomeController::class, 'applicantPreview'])->name('applicantPreview');
 Route::get('applicant/edit/{uuid}', [HomeController::class, 'applicantPreviewEdit'])->name('applicantPreviewEdit');
-
+Route::post('applicant/edit/{uuid}', [HomeController::class, 'applicantPreviewConfirm'])->name('applicantPreviewConfirm');
+Route::get('applicantion/view/{uuid}', [HomeController::class, 'applicationPrint'])->name('applicationPrint');
+Route::get('/university', [HomeController::class, 'university'])->name('university');
+Route::get('/printCopy', [HomeController::class, 'PrintCopy'])->name('PrintCopy');
+Route::get('/writtenCopy', [HomeController::class, 'writtenCopy'])->name('writtenCopy');
+Route::get('/vivaCopy', [HomeController::class, 'vivaCopy'])->name('vivaCopy');
+Route::get('/practicalCopy', [HomeController::class, 'practicalCopy'])->name('practicalCopy');
+Route::get('/medicalCopy', [HomeController::class, 'medicalCopy'])->name('medicalCopy');
 
 Auth::routes([
     'register' => false, // Registration Routes...
