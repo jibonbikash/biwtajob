@@ -66,4 +66,5 @@ Route::group(['middleware' => ['auth'], "prefix" => "admin"], function() {
     Route::post('examsubject', [JobsController::class, 'examsubject'])->name('examlevels.examsubject');
     Route::get('print/{id}', [ExamLevelGroupController::class,'print'])->name('print');
     Route::get('adminCard/{id}', [ExamLevelGroupController::class,'adminCard'])->name('adminCard');
+    Route::get('certificateslist', [JobsController::class,'certificateslist'])->name('admin.certificateslist');
 });

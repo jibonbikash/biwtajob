@@ -219,6 +219,19 @@
 
                                         </div>
                                     </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            {{ Form::checkbox('certificates', 'YES', false, array( 'id'=>'certificates')) }}
+                                            {!! Form::label('Certificates',  "Certificates") !!}
+                                        </div>
+                                        <div class="col-md-6" id="Certificateslist">
+
+                                        </div>
+                                        <div class="col-md-3" id="certificate_isrequired">
+                                            {{ Form::checkbox('certificate_isrequired', '1', false, array( 'id'=>'certificates')) }}
+                                            {!! Form::label('Is required?',  "Is required?") !!}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -300,6 +313,29 @@
                 }
             });
 */
+            $('#certificates').on('change', function() {
+                if(this.checked) {
+                    var val = this.checked ? this.value : '';
+                    $.ajax({
+                        url:"{{ route('admin.certificateslist') }}",
+                        type:"GET",
+                        data: {
+                            type: val
+                        },
+                        success:function (data) {
+                            //  console.log(data.data);
+                              $("#Certificateslist").empty();
+                            // console.log(val+'show');
+                            $("#Certificateslist").html(data.data);
+
+                            // $.each(data.data, function (i, ex) {
+                            //     $('<div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" id="'+val+'--'+ex.id+'" value="'+ex.id+'" name="'+val+'[]"><label class="form-check-label" for="'+val+'--'+ex.id+'" >' + ex.name + '</label></div>').appendTo($("div#"+val+'show'));
+                            // });
+                        }
+                    })
+                }
+
+            });
         } );
 
     </script>

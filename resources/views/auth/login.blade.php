@@ -38,7 +38,7 @@
                                             </div>
                                             <input type="email"
                                                 class="form-control @if($errors->has('email')) is-invalid @endif" id="
-                                                email" placeholder="hello@coderthemes.com" name="email" value="{{ old('email')}}" />
+                                                email" placeholder="Email" name="email" value="{{ old('email')}}" />
 
                                             @if($errors->has('email'))
                                             <span class="invalid-feedback" role="alert">

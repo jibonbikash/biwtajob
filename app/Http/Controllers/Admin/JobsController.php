@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\JobCreateRequest;
 use App\Models\Applicant;
+use App\Models\Crtificate;
 use App\Models\Examlevel;
 use App\Models\Job;
+use App\Models\JobCertificate;
 use App\Models\JobExam;
 use App\Models\JobExamSubject;
 use Illuminate\Http\Request;
@@ -82,6 +84,8 @@ class JobsController extends Controller
                     'hsc' => $request->input('HSCExam') == 'HSC' ? true : false,
                     'graduation' => $request->input('GradExam') == 'graduation' ? true : false,
                     'masters' => $request->input('MastersExam') == 'Masters' ? true : false,
+                    'certificate_isrequired' => $request->input('certificate_isrequired') == '1' ? true : false,
+                    'certificate' => $request->input('certificates') == 'YES' ? "YES" : "NO",
                 ]);
                 if (count((array)$request->input('JSC')) > 0) {
                     foreach ($request->input('JSC') as $key => $value) {
@@ -129,7 +133,14 @@ class JobsController extends Controller
                         ]);
                     }
                 }
-
+                if (count((array)$request->input('certificateslist')) > 0) {
+                    foreach ($request->input('certificateslist') as $key => $value) {
+                        JobCertificate::create([
+                            'job_id' => $newJob->id,
+                            'certificate_id' => $value,
+                        ]);
+                    }
+                }
 
                 DB::commit();
                 if ($newJob) {
@@ -284,7 +295,7 @@ class JobsController extends Controller
     public function setting(Request $request, $uuid)
     {
 
-        $joninfo = Job::active()->where('uuid', $uuid)->first();
+        $joninfo = Job::active()->with(['examSubject'])->where('uuid', $uuid)->first();
       //  dd($joninfo);
         return view('admin.jobs.setting',['joninfo'=>$joninfo]);
     }
@@ -296,20 +307,39 @@ class JobsController extends Controller
 
     public function examsubject(Request $request)
     {
-        @JobExamSubject::where([
-            'job_id' => $request->input('job_id'),
-            'type' => $request->input('type'),
-            'examlevel_group_id' => $request->input('examlevel_group_id'),
-        ])->delete();
-        foreach ($request->input('examlevelSubject') as $subject) {
-            JobExamSubject::create([
+
+        DB::beginTransaction();
+
+        try {
+            @JobExamSubject::where([
                 'job_id' => $request->input('job_id'),
                 'type' => $request->input('type'),
                 'examlevel_group_id' => $request->input('examlevel_group_id'),
-                'examlevel_subject_id' => $subject,
-            ]);
+            ])->delete();
+            foreach ($request->input('examlevelSubject') as $subject) {
+                JobExamSubject::create([
+                    'job_id' => $request->input('job_id'),
+                    'type' => $request->input('type'),
+                    'examlevel_group_id' => $request->input('examlevel_group_id'),
+                    'examlevel_subject_id' => $subject,
+                ]);
+            }
+            DB::commit();
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['success' => false]);
         }
 
+
+
+    }
+
+    public function certificateslist(){
+       $certificates= Crtificate::orderBy('name','ASC')->get();
+       //$certificates= Crtificate::orderBy('name','ASC')->pluck('name','id');
+        $view = view('admin.jobs._certificateslist', ['certificates'=>$certificates])->render();
+        return response()->json(['success' => true, 'data' => $view]);
     }
 
 }

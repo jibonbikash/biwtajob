@@ -6,6 +6,7 @@
  * Time: ৩:৩৬ PM
  * Copyright jibon <jibon.bikash@gmail.com>
  */
+$sscList= collect($joninfo->examSubject);
 ?>
 
 @extends('layouts.vertical')
@@ -13,6 +14,7 @@
 
 @section('css')
     <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <link href="{{ URL::asset('assets/css/jquery.toast.min.css') }}" rel="stylesheet" type="text/css" />
 @endsection
 
 @section('breadcrumb')
@@ -47,7 +49,6 @@
                                                 <div class="col-md-12">
                                                     <div class="card border mt-4 rounded">
                                                         <div class="card-header">
-
                                                             <a href="" class="text-dark" data-toggle="collapse"
                                                                data-target="#collapseOne" aria-expanded="true"
                                                                aria-controls="collapseOne">
@@ -70,6 +71,8 @@
                                                             @foreach($SSC as $examssc)
                                                                 <?php
                                                                    $name= \App\Helpers\StaticValue::clean($examssc->name);
+                                                                 $sscSubjectList= collect($sscList)->where('examlevel_group_id', $examssc->id)->pluck('examlevel_subject_id','examlevel_subject_id')->all();
+
                                                                 ?>
                                                                 <div
                                                                     class="row border border-primary rounded pt-2 mb-2">
@@ -82,9 +85,11 @@
                                                                         <?php
                                                                         $sscsubjects = \App\Models\ExamlevelSubject::where('examlevel_id', 2)->where('examlevel_group_id', $examssc->id)
                                                                             ->get();
+                                                                     //   in_array($value->id, $rolePermissions) ? true : false
                                                                         ?>
+
                                                                         @foreach($sscsubjects as $subjects)
-                                                                            {{ Form::checkbox('sscExamsubject[]', $subjects->id, false, array( 'id'=>$name)) }}
+                                                                            {{ Form::checkbox('sscExamsubject[]', $subjects->id, in_array($subjects->id, $sscSubjectList) ? true : false, array( 'id'=>$name)) }}
                                                                             {!! Form::label('SSCSubject',  $subjects->name) !!}
                                                                         @endforeach
 
@@ -127,7 +132,10 @@
                                                             @foreach($hsc as $examHSC)
                                                                     <?php
                                                                 $name= \App\Helpers\StaticValue::clean($examHSC->name);
-                                                                ?>
+
+                                                                    $HSCSubjectList= collect($sscList)->where('examlevel_group_id', $examHSC->id)->pluck('examlevel_subject_id','examlevel_subject_id')->all();
+
+                                                                    ?>
                                                                 <div
                                                                     class="row border border-primary rounded pt-2 mb-2">
                                                                     <div class="col-md-3">
@@ -141,7 +149,7 @@
                                                                             ->get();
                                                                         ?>
                                                                         @foreach($hscsubjects as $subjects)
-                                                                            {{ Form::checkbox('HSCExamsubject[]', $subjects->id, false, array( 'id'=>'HSCExamsubject')) }}
+                                                                            {{ Form::checkbox('HSCExamsubject[]', $subjects->id, in_array($subjects->id, $HSCSubjectList) ? true : false, array( 'id'=>'HSCExamsubject')) }}
                                                                             {!! Form::label('HSCSubject',  $subjects->name) !!}
                                                                         @endforeach
 
@@ -185,6 +193,8 @@
                                                             @foreach($Graduation as $examGraduation)
                                                                     <?php
                                                                     $name= \App\Helpers\StaticValue::clean($examGraduation->name);
+                                                                    $GraduationSubjectList= collect($sscList)->where('examlevel_group_id', $examGraduation->id)->pluck('examlevel_subject_id','examlevel_subject_id')->all();
+
                                                                     ?>
 
                                                                 <div
@@ -201,7 +211,7 @@
                                                                             ->get();
                                                                         ?>
                                                                         @foreach($Graduationsubjects as $subjects)
-                                                                            {{ Form::checkbox('GraduationExamsubject[]', $subjects->id, false, array( 'id'=>'GraduationExamsubject')) }}
+                                                                            {{ Form::checkbox('GraduationExamsubject[]', $subjects->id, in_array($subjects->id, $GraduationSubjectList) ? true : false, array( 'id'=>'GraduationExamsubject')) }}
                                                                             {!! Form::label('GraduationSubject',  $subjects->name) !!}
                                                                         @endforeach
 
@@ -226,8 +236,8 @@
 
                                                             <a href="" class="text-dark" data-toggle="collapse"
                                                                data-target="#collapseFour" aria-expanded="true"
-                                                               aria-controls="headingFour">
-                                                                <div class="card-header" id="collapseFour">
+                                                               aria-controls="collapseFour">
+                                                                <div class="card-header" id="headingFour">
                                                                     <h5 class="m-0 font-size-16">
                                                                         Masters <i class="uil uil-angle-down float-right accordion-arrow"></i>
                                                                     </h5>
@@ -245,6 +255,8 @@
                                                             @foreach($Masters as $Master)
                                                                     <?php
                                                                     $name= \App\Helpers\StaticValue::clean($Master->name);
+                                                                    $MastersSubjectList= collect($sscList)->where('examlevel_group_id', $Master->id)->pluck('examlevel_subject_id','examlevel_subject_id')->all();
+
                                                                     ?>
                                                                 <div
                                                                     class="row border border-primary rounded pt-2 mb-2">
@@ -260,7 +272,7 @@
                                                                             ->get();
                                                                         ?>
                                                                         @foreach($Mastersubjects as $subjects)
-                                                                            {{ Form::checkbox('MastersExamsubject[]', $subjects->id, false, array( 'id'=>$name)) }}
+                                                                            {{ Form::checkbox('MastersExamsubject[]', $subjects->id, in_array($subjects->id, $MastersSubjectList) ? true : false, array( 'id'=>$name)) }}
                                                                             {!! Form::label('MastersSubject',  $subjects->name) !!}
                                                                         @endforeach
 
@@ -307,7 +319,7 @@
 
 @section('script')
     <!-- optional plugins -->
-
+    <script src="{{ URL::asset('assets/js/jquery.toast.min.js') }}"></script>
 @endsection
 
 @section('script-bottom')
@@ -332,7 +344,7 @@
         }
 
         function save(name, type, group_id){
-            console.log(name, type);
+           // console.log(name, type);
             var checked = [];
             $("input[name='"+name+"[]']:checked").each(function ()
             {
@@ -349,6 +361,27 @@
                     _token: "{{ csrf_token() }}",
                 },
                 success:function (data) {
+                    //alert(data);
+                    if(data.success==true){
+                        $.toast({
+                            position: 'top-right',
+                            heading: 'Success',
+                            text: 'Data updated.',
+                            showHideTransition: 'slide',
+                            icon: 'success'
+                        })
+                    }
+                    else {
+                        $.toast({
+                            position: 'top-right',
+                            heading: 'error',
+                            text: 'Data not updated.',
+                            showHideTransition: 'slide',
+                            icon: 'error'
+                        })
+                    }
+
+
 
                 }
             })

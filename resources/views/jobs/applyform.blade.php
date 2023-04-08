@@ -820,7 +820,71 @@
                                                     </div>
                                                 @endif
 
+                                                @if($job->certificate=="YES")
+                                                    <div class="card mt-4">
+                                                        <div class="card-header bg-secondary text-white">
+                                                            সার্টিফিকেশন
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <div class="mb-3 row">
+                                                                        <label for="inputPassword"
+                                                                               class="col-sm-4 col-form-label">সার্টিফিকেশন
+                                                                            নাম @if($job->certificate_isrequired==1) <span class="text-danger">*</span>@endif</label>
+                                                                        <div class="col-sm-8">
 
+                                                                            @php
+                                                                               // dd(collect($job->certificates));
+
+                                                                                    $certificates= \App\Models\JobCertificate::join('certificates', 'job_certificates.certificate_id', '=', 'certificates.id')
+                                                                                  ->where('job_certificates.job_id',$job->id)
+                                                                                  ->pluck('certificates.name','certificates.id')
+                                                                                  ->all();
+                                                                            @endphp
+                                                                            {!! Form::select('certificate',$certificates,null,['class'=>'form-control select2','placeholder'=>'']) !!}
+                                                                            @if ($errors->has('certificate'))
+                                                                                <span class="text-danger">{{ $errors->first('certificate') }}</span>
+                                                                            @endif
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <div class="mb-3 row">
+                                                                        <label for="inputPassword"
+                                                                               class="col-sm-4 col-form-label">প্রতিষ্ঠান নাম @if($job->certificate_isrequired==1) <span class="text-danger">*</span>@endif</label>
+                                                                        <div class="col-sm-8">
+                                                                            {!! Form::text('certificateinstitute_name', null, array('placeholder' => '','class' => 'form-control')) !!}
+                                                                            @if ($errors->has('certificateinstitute_name'))
+                                                                                <span class="text-danger">{{ $errors->first('certificateinstitute_name') }}</span>
+                                                                            @endif
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <div class="mb-3 row">
+                                                                        <label for="inputPassword"
+                                                                               class="col-sm-4 col-form-label">গ্রেড/শ্রেণি/বিভাগ  @if($job->certificate_isrequired==1) <span class="text-danger">*</span>@endif </label>
+                                                                        <div class="col-sm-8">
+                                                                            {!! Form::number('certificateduration', null, array('placeholder' => '','class' => 'form-control')) !!}
+                                                                            @if ($errors->has('certificateduration'))
+                                                                                <span class="text-danger">{{ $errors->first('certificateduration') }}</span>
+                                                                            @endif
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+
+
+                                                        </div>
+                                                    </div>
+                                                @endif
 
                                         </div>
 

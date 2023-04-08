@@ -51,7 +51,12 @@ class HomeController extends Controller
 
     public function applyform(Request $request, $uuid){
         try {
-            $job= Job::active()->activeJobs()->where('uuid',$uuid)->firstOrFail();
+            $job= Job::with(['certificates'=>function($query){
+                $query->with(['certificate'=>function($qq){
+                    $qq->select('id','name')->pluck('name','id');
+                }]);
+            }])->active()->activeJobs()->where('uuid',$uuid)->firstOrFail();
+        //    dd($job);
             $district_Upozilla = DB::table('district_upozilla')->orderBy('zilla_name','ASC')->get()->toArray();
             $boards = DB::table('boards')->orderBy('name','ASC')->pluck('name','id');
            $examlist= Examlevel::select('id','name','status')->with(['examGroups'=>function($quert){
@@ -115,6 +120,7 @@ class HomeController extends Controller
                 'permanent_upozilla' => 'required|max:255',
                 'image' => 'required|mimes:jpeg,png,jpg,gif|max:1024',
                 'signature' => 'required|mimes:jpeg,png,jpg,gif|max:1024|dimensions:max_width=300,max_height=300',
+               // ['certificate.in' => 'The certificate field is required.............']
 
             ]);
             $validator->sometimes('jscexamlevel', 'required', function () use ($job){
@@ -209,6 +215,17 @@ class HomeController extends Controller
             });
             $validator->sometimes('masterspassyear', 'required', function () use ($job){
                 return $job->masters==1;
+            });
+
+            $validator->sometimes('certificate', 'required', function () use ($job){
+                return $job->certificate_isrequired==1;
+            });
+
+            $validator->sometimes('certificateinstitute_name', 'required', function () use ($job){
+                return $job->certificate_isrequired==1;
+            });
+           $validator->sometimes('certificateduration', 'required', function () use ($job){
+                return $job->certificate_isrequired==1;
             });
 
             if ($validator->fails()) {
