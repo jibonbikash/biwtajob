@@ -484,8 +484,10 @@
                                                                         <label for="inputPassword"
                                                                                class="col-sm-4 col-form-label">বোর্ড <span class="text-danger">*</span></label>
                                                                         <div class="col-sm-8">
+<?php
 
-                                                                            {!! Form::select('sscboard',$boards,null,['class'=>'form-control select2','placeholder'=>'']) !!}
+?>
+                                                                            {!! Form::select('sscboard',collect($boards)->where('type',1)->pluck('name','id'),null,['class'=>'form-control select2','placeholder'=>'']) !!}
                                                                             @if ($errors->has('sscboard'))
                                                                                 <span class="text-danger">{{ $errors->first('sscboard') }}</span>
                                                                             @endif
@@ -591,7 +593,7 @@
                                                                                class="col-sm-4 col-form-label">বোর্ড <span class="text-danger">*</span></label>
                                                                         <div class="col-sm-8">
 
-                                                                            {!! Form::select('hscboard',$boards,null,['class'=>'form-control select2','placeholder'=>'']) !!}
+                                                                            {!! Form::select('hscboard',collect($boards)->where('type',1)->pluck('name','id'),null,['class'=>'form-control select2','placeholder'=>'']) !!}
                                                                             @if ($errors->has('hscboard'))
                                                                                 <span class="text-danger">{{ $errors->first('hscboard') }}</span>
                                                                             @endif
@@ -692,7 +694,7 @@
                                                                                class="col-sm-4 col-form-label">বিশ্ববিদ্যালয়/ইনস্টিটিউট  <span class="text-danger">*</span></label>
                                                                         <div class="col-sm-8">
 
-                                                                            {!! Form::select('graduationuniversity',\App\Helpers\StaticValue::UNIVERSITIES,null,['class'=>'select2 form-control','placeholder'=>'']) !!}
+                                                                            {!! Form::select('graduationuniversity',collect($boards)->where('type',2)->pluck('name','id'),null,['class'=>'select2 form-control','placeholder'=>'']) !!}
                                                                             @if ($errors->has('graduationuniversity'))
                                                                                 <span class="text-danger">{{ $errors->first('graduationuniversity') }}</span>
                                                                             @endif
@@ -794,7 +796,7 @@
                                                                                class="col-sm-4 col-form-label">বিশ্ববিদ্যালয়/ইনস্টিটিউট <span class="text-danger">*</span></label>
                                                                         <div class="col-sm-8">
 
-                                                                            {!! Form::select('mastersuniversity',\App\Helpers\StaticValue::UNIVERSITIES,null,['class'=>' select2 form-control','placeholder'=>'']) !!}
+                                                                            {!! Form::select('mastersuniversity',collect($boards)->where('type',2)->pluck('name','id'),null,['class'=>' select2 form-control','placeholder'=>'']) !!}
                                                                             @if ($errors->has('mastersuniversity'))
                                                                                 <span class="text-danger">{{ $errors->first('mastersuniversity') }}</span>
                                                                             @endif

@@ -58,7 +58,8 @@ class HomeController extends Controller
             }])->active()->activeJobs()->where('uuid',$uuid)->firstOrFail();
         //    dd($job);
             $district_Upozilla = DB::table('district_upozilla')->orderBy('zilla_name','ASC')->get()->toArray();
-            $boards = DB::table('boards')->orderBy('name','ASC')->pluck('name','id');
+            $boards = DB::table('boards')->orderBy('name','ASC')->get();
+
            $examlist= Examlevel::select('id','name','status')->with(['examGroups'=>function($quert){
                $quert->with(['examSubject'=>function($query){
                    $query->select('id','examlevel_id','examlevel_group_id','name');
@@ -233,7 +234,7 @@ class HomeController extends Controller
                     ->withErrors($validator)
                     ->withInput();
             }
-          //  dd($request->all());
+            dd($request->all());
            $jobinfo= Job::where('uuid', $request->input('uuid'))->first();
 
             $image = $request->file('image');
