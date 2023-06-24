@@ -19,13 +19,14 @@
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
 </head>
-<body onload="window.print()">
+<body>
 <div class="container">
     <table width="100%">
         <tr>
             <td width="33%">
                 <div class="col-md-4">
-                    <b style="font-size:40px;"> Roll:  {{ $applicationinfo->apliyedJob ? $applicationinfo->apliyedJob->roll:'' }} </b><br />
+                    {{-- <b style="font-size:40px;"> Roll:  {{ $applicationinfo->apliyedJob ? $applicationinfo->apliyedJob->roll:'' }} </b><br /> --}}
+
                     বরাবর <br />
                     পরিচালক  <br />
                     প্রশাসন ও মানবসম্পদ  <br />
@@ -126,9 +127,9 @@
     <table class="table table-bordered">
         <thead>
         <tr>
-            <th>১০. ঠিকানা</th>
-            <th>বর্তমান </th>
-            <th>স্থায়ী </th>
+            <th style="width: 33%">১০. ঠিকানা</th>
+            <th style="width: 33%">বর্তমান </th>
+            <th style="width: 33%">স্থায়ী </th>
 
         </tr>
         </thead>
@@ -191,7 +192,7 @@
 
             </td>
             <td>
-                {{ $applicationinfo->permanentzila ? $applicationinfo->permanentzila->upozilla:'' }}
+                {{ $applicationinfo->permanentupozilla ? $applicationinfo->permanentupozilla->upozilla:'' }}
             </td>
 
         </tr>

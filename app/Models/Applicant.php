@@ -14,6 +14,7 @@ class Applicant extends Model
     {
         return $this->hasMany(ApplicantEducation::class,'applicants_id','id');
     }
+    
     public function job()
     {
         return $this->belongsTo(Job::class);
@@ -32,6 +33,12 @@ class Applicant extends Model
         return $this->hasOne(JobApply::class,'applicants_id','id');
     }
 
+    public function applicantCertificate()
+    {
+        return $this->hasOne(ApplicantCertificate::class,'applicants_id','id');
+    }
+
+
     public function upozilla()
     {
         return $this->belongsTo(DistrictUpozilla::class,'pa_upozilla','id');
@@ -40,6 +47,7 @@ class Applicant extends Model
     {
         return $this->belongsTo(DistrictUpozilla::class,'pr_zilla','id');
     }
+
     public function permanentupozilla()
     {
         return $this->belongsTo(DistrictUpozilla::class,'pr_upozilla','id');

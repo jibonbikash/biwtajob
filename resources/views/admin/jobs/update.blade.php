@@ -215,6 +215,19 @@
 
                                         </div>
                                     </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            {{ Form::checkbox('certificates', 'YES', $job->certificate, array( 'id'=>'certificates')) }}
+                                            {!! Form::label('Certificates',  "Certificates") !!}
+                                        </div>
+                                        <div class="col-md-6" id="Certificateslist">
+
+                                        </div>
+                                        <div class="col-md-3" id="certificate_isrequired">
+                                            {{ Form::checkbox('certificate_isrequired', '1', $job->certificate_isrequired, array( 'id'=>'certificatesre')) }}
+                                            {!! Form::label('Is required?',  "Is required?") !!}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

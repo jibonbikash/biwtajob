@@ -62,7 +62,7 @@
 
                                             {!! Form::close() !!}
                                             @endif
-                                            <a class="btn btn-info  btn-sm" title="Applicant Lits({{ $job->applicants_count }})" href="{{ route('jobs.edit',$job->id) }}"><i data-feather="users" class="text-white"></i></a>
+                                            <a class="btn btn-info  btn-sm" title="Applicant Lits({{ $job->applicants_count }})" href="{{ route('applicants',['job_id'=>$job->id]) }}"><i data-feather="users" class="text-white"></i></a>
                                         </td>
                                     </tr>
                                     @endforeach

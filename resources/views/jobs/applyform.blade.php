@@ -65,6 +65,11 @@
                     {!! Form::open(['route' => array('jobApply'), 'files' => true]) !!}
                     {!! Form::hidden('uuid', $uuid) !!}
                     {!! Form::hidden('jobcurday', $job->jobcurbday ? $job->jobcurbday:'') !!}
+                    <?php
+        if($job->min_education_con){
+            echo Form::hidden('min_education_con', $job->min_education_con);
+        }
+                    ?>
                     <div class="row mt-4">
                         <div class="col-md-12">
                             @include('layouts.shared.message')
@@ -378,7 +383,7 @@
                                                                            class="col-sm-4 col-form-label">বোর্ড <span class="text-danger">*</span></label>
                                                                     <div class="col-sm-8">
 
-                                                                        {!! Form::select('jscboard',$boards,null,['class'=>'select2 form-control','placeholder'=>'']) !!}
+                                                                        {!! Form::select('jscboard',collect($boards)->where('type',1)->pluck('name','id'),null,['class'=>'select2 form-control','placeholder'=>'']) !!}
                                                                         @if ($errors->has('jscboard'))
                                                                             <span class="text-danger">{{ $errors->first('jscboard') }}</span>
                                                                         @endif
@@ -1078,7 +1083,7 @@
                     var ppostcode = $('#present_postcode').val();
                     var pupozilla = $('#present_zilla').val();
                     var pzilla = $('#present_upozilla').val();
-                    //   alert('phouseno');
+                    //   alert(pzilla);
                     $('#permanent_house_no').val(phouseno);
                     $('#permanent_village').val(pvillage);
                     $('#permanent_union').val(punion);

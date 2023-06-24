@@ -26,6 +26,7 @@ Route::post('jobApply', [HomeController::class, 'jobApply'])->name('jobApply');
 Route::get('applicant/preview/{uuid}', [HomeController::class, 'applicantPreview'])->name('applicantPreview');
 Route::get('applicant/edit/{uuid}', [HomeController::class, 'applicantPreviewEdit'])->name('applicantPreviewEdit');
 Route::post('applicant/edit/{uuid}', [HomeController::class, 'applicantPreviewConfirm'])->name('applicantPreviewConfirm');
+Route::post('applicantion/confirm/{uuid}', [HomeController::class, 'applicantConfirm'])->name('applicantConfirm');
 Route::get('applicantion/view/{uuid}', [HomeController::class, 'applicationPrint'])->name('applicationPrint');
 Route::get('/university', [HomeController::class, 'university'])->name('university');
 Route::get('/printCopy', [HomeController::class, 'PrintCopy'])->name('PrintCopy');
@@ -64,7 +65,7 @@ Route::group(['middleware' => ['auth'], "prefix" => "admin"], function() {
     Route::resource('examlevelgroupsubjects', ExamLevelGroupSubjectController::class);
     Route::get('examgroup', [ExamLevelGroupController::class,'examgroup'])->name('examgroup');
     Route::post('examsubject', [JobsController::class, 'examsubject'])->name('examlevels.examsubject');
-    Route::get('print/{id}', [ExamLevelGroupController::class,'print'])->name('print');
-    Route::get('adminCard/{id}', [ExamLevelGroupController::class,'adminCard'])->name('adminCard');
+    Route::get('print/{id}', [JobsController::class,'printCopy'])->name('print');
+    Route::get('adminCard/{id}', [JobsController::class,'adminCard'])->name('adminCard');
     Route::get('certificateslist', [JobsController::class,'certificateslist'])->name('admin.certificateslist');
 });

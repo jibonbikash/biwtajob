@@ -238,9 +238,9 @@
                                         </tr>
 
                                         <tr>
-                                            <td>উপজেলা/থানা </td>
+                                            <td class="fw-bold">উপজেলা/থানা </td>
                                             <td>
-                                                {{ $applicationinfo->permanentzila ? $applicationinfo->permanentzila->upozilla:'' }}
+                                                {{ $applicationinfo->permanentupozilla ? $applicationinfo->permanentupozilla->upozilla:'' }}
                                             </td>
                                         </tr>
                                         </tbody>
@@ -284,14 +284,26 @@
 
     }
     else{
-        echo 'university';
+       // echo 'university';
+        echo \App\Models\Board::find($education->board_university)->name;
 
     }
 
                                                             @endphp
-{{--                                                            {{ $education->board_university }}--}}
+                                                           {{-- {{ $education->board_university }} --}}
                                                         </td>
-                                                        <td>{{ $education->result }}</td>
+                                                        <td>
+                                                            @php 
+if(in_array($education->result, range(1, 3))) {
+    echo \App\Helpers\StaticValue::RESULTSSC[$education->result];
+}
+else{
+    echo $education->cgpa.' - '; echo \App\Helpers\StaticValue::RESULTSSC[$education->result];
+}
+                                                            @endphp
+                                                            {{-- {{ $education->result }} --}}
+                                                        
+                                                        </td>
                                                     </tr>
                                                 @endforeach
                                                 </tbody>
@@ -326,8 +338,8 @@
                                             {{ $applicationinfo->experience }}
                                         </div>
                                         <div class="col-md-3">
-                                            <label for="extrq" class="form-label fw-bold"> অভিজ্ঞতার বিবরণ (যদি থাকে)</label>
-                                            {!! Form::textarea('experiencemonth', null, array('placeholder' => '', 'rows'=>'2', 'class' => 'form-control','id'=>'experiencemonth')) !!}
+                                            <label for="extrq" class="form-label fw-bold"> অভিজ্ঞতার বিবরণ (যদি থাকে)</label> <br />
+                                            {{ $applicationinfo->experiencemonth }}
                                         </div>
                                         <div class="col-md-3">
                                             <label for="extrq" class="form-label fw-bold">অভিজ্ঞতার মেয়াদ (বৎসর )</label><br />
@@ -366,9 +378,14 @@
                         <div class="col-md-6 ">
                             <a href="{{ route('applicantPreviewEdit',$applicationinfo->uuid) }}" class="btn btn-primary mt-4 btn-lg float-start"><i data-feather="edit"></i> Edit Information</a> &nbsp;&nbsp;
                         </div>
+
                         <div class="col-md-6 ">
+                            {!! Form::open(['route' => array('applicantConfirm', $applicationinfo->uuid), 'files' => false]) !!}
+                            {!! Form::hidden('jobUID', $applicationinfo->uuid) !!}
                             <button type="submit" class="btn btn-success mt-4 btn-lg float-end"><i data-feather="send"></i> Submit Application</button>
+                            {!! Form::close() !!}
                         </div>
+
 
                     </div>
 

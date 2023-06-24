@@ -260,9 +260,27 @@ class JobsController extends Controller
         }
     }
 
-    public function applicants(Request $request){
-        $applicants=Applicant::with(['educations','job', 'birthplace','zila','upozilla','permanentzila','permanentupozilla','apliyedJob'])->latest()->paginate(50);
-        return view('admin.jobs.applicants',['applicants'=>$applicants]);
+    public function applicants(Request $request)
+    {
+        $job= Job::get()->pluck('title', 'id');
+        $q=$request->input('q') ?? null;
+        $code=$request->input('code') ?? null;
+        $applicants = Applicant::with(['educations', 'job', 'birthplace', 'zila', 'upozilla', 'permanentzila', 'permanentupozilla', 'apliyedJob'])
+            ->when($request->input('q'), function ($q) use ($request){
+                $q->where(function ($query) use ($request){
+                    $query->where('name_en','like', '%'.$request->input('q').'%')
+                        ->orWhere('name_bn', 'like', '%'.$request->input('q').'%')
+                        ->orWhere('nid', 'like', '%'.$request->input('q').'%')
+                        ->orWhere('mobile', 'like', '%'.$request->input('q').'%');
+            });
+            })
+            ->when($request->input('job_id'), function ($query) use ($request){
+               
+               return $query->where('job_id',$request->input('job_id'));
+             })
+             ->whereIn('eligible',[1,2])
+            ->latest()->paginate(50);
+        return view('admin.jobs.applicants', ['applicants' => $applicants, 'jobs'=>$job]);
     }
     public function rollSetting(Request $request){
         return view('admin.jobs.rollSetting');
@@ -341,5 +359,10 @@ class JobsController extends Controller
         $view = view('admin.jobs._certificateslist', ['certificates'=>$certificates])->render();
         return response()->json(['success' => true, 'data' => $view]);
     }
+public function adminCard(Request $request, $id){
 
+}
+public function printCopy(Request $request, $id){
+
+}
 }

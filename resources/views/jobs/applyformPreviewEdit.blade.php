@@ -328,9 +328,28 @@
                                                                               ->where('examlevels.id',1)
                                                                               ->pluck('examlevel_groups.name','examlevel_groups.id')
                                                                               ->all();
+                                   if(count((array)$jscresult)){
+                                    if(isset($jscresult[0])){
+                                    $jscresult=$jscresult[0];
+
+                                  }
+                                  elseif ($jscresult[1]) {
+                                    $jscresult=$jscresult[1];
+                                  }
+
+                                  elseif ($SSresult[2]) {
+                                    $jscresult=$jscresult[2];
+                                  }
+
+                                  }
+                            
+                                  else{
+                                    $jscresult=[];
+                                  }
+
 //dd($jscresult);
                                                                         @endphp
-                                                                        {!! Form::select('jscexamlevel',$jsc,$jscresult[0]->edu_level,['class'=>'form-control select2','placeholder'=>'']) !!}
+                                                                        {!! Form::select('jscexamlevel',$jsc,$jscresult ? $jscresult->edu_level:null,['class'=>'form-control select2','placeholder'=>'']) !!}
                                                                         @if ($errors->has('jscexamlevel'))
                                                                             <span class="text-danger">{{ $errors->first('jscexamlevel') }}</span>
                                                                         @endif
@@ -342,7 +361,7 @@
                                                                     <label for="inputPassword"
                                                                            class="col-sm-4 col-form-label">শিক্ষা প্রতিষ্ঠান <span class="text-danger">*</span></label>
                                                                     <div class="col-sm-8">
-                                                                        {!! Form::text('jscinstitute_name', $jscresult[0]->institute_name, array('placeholder' => '','class' => 'form-control')) !!}
+                                                                        {!! Form::text('jscinstitute_name', $jscresult ? $jscresult->institute_name:null, array('placeholder' => '','class' => 'form-control')) !!}
                                                                         @if ($errors->has('jscinstitute_name'))
                                                                             <span class="text-danger">{{ $errors->first('jscinstitute_name') }}</span>
                                                                         @endif
@@ -358,11 +377,11 @@
                                                                     <label for="inputPassword"
                                                                            class="col-sm-4 col-form-label">গ্রেড/শ্রেণি/বিভাগ <span class="text-danger">*</span></label>
                                                                     <div class="col-sm-8">
-                                                                        {!! Form::select('jscresult',\App\Helpers\StaticValue::RESULTJSC,$jscresult[0]->result,['class'=>'select2 form-control','placeholder'=>'','id'=>'jscresult']) !!}
+                                                                        {!! Form::select('jscresult',\App\Helpers\StaticValue::RESULTJSC,$jscresult ? $jscresult->result:null,['class'=>'select2 form-control','placeholder'=>'','id'=>'jscresult']) !!}
                                                                         @if ($errors->has('jscresult'))
                                                                             <span class="text-danger">{{ $errors->first('jscresult') }}</span>
                                                                         @endif
-                                                                        {!! Form::text('jscresult_score', $jscresult[0]->cgpa, array('placeholder' => '','class' => 'form-control jscresult_score','style'=>$jscresult[0]->result==4 || $jscresult[0]->result==5 ? '':'display:none')) !!}
+                                                                        {!! Form::text('jscresult_score', $jscresult->cgpa, array('placeholder' => '','class' => 'form-control jscresult_score','style'=>$jscresult->result==4 || $jscresult->result==5 ? '':'display:none')) !!}
                                                                         @if ($errors->has('jscresult_score'))
                                                                             <span class="text-danger">{{ $errors->first('jscresult_score') }}</span>
                                                                         @endif
@@ -379,7 +398,7 @@
                                                                            class="col-sm-4 col-form-label">বোর্ড <span class="text-danger">*</span></label>
                                                                     <div class="col-sm-8">
 
-                                                                        {!! Form::select('jscboard',collect($boards)->where('type',1)->pluck('name','id'),$jscresult[0]->board_university,['class'=>'select2 form-control','placeholder'=>'']) !!}
+                                                                        {!! Form::select('jscboard',collect($boards)->where('type',1)->pluck('name','id'),$jscresult ? $jscresult->board_university:null,['class'=>'select2 form-control','placeholder'=>'']) !!}
                                                                         @if ($errors->has('jscboard'))
                                                                             <span class="text-danger">{{ $errors->first('jscboard') }}</span>
                                                                         @endif
@@ -391,7 +410,7 @@
                                                                     <label for="inputPassword"
                                                                            class="col-sm-4 col-form-label">পাসের সন <span class="text-danger">*</span></label>
                                                                     <div class="col-sm-8">
-                                                                        {!! Form::number('jscpassyear', $jscresult[0]->passing_year, array('placeholder' => '','class' => 'form-control', 'maxlength'=>4, 'maxlength'=>4)) !!}
+                                                                        {!! Form::number('jscpassyear', $jscresult ? $jscresult->passing_year:null, array('placeholder' => '','class' => 'form-control', 'maxlength'=>4, 'maxlength'=>4)) !!}
                                                                         @if ($errors->has('jscpassyear'))
                                                                             <span class="text-danger">{{ $errors->first('jscpassyear') }}</span>
                                                                         @endif
@@ -424,10 +443,31 @@
                                                                               ->whereNull('examlevel_groups.deleted_at')
                                                                               ->pluck('examlevel_groups.name','examlevel_groups.id')
                                                                               ->all();
+
+
                                     $SSresult= collect($applicationinfo->educations)->whereIn('edu_level', \App\Models\ExamlevelGroup::where('examlevel_id', 2)->pluck('id'));
-                                  // dd($SSresult);
+                                  //dd($SSresult);
+                                  if(count((array)$SSresult)){
+                                    if(isset($SSresult[0])){
+                                    $SSresult=$SSresult[0];
+
+                                  }
+                                  elseif ($SSresult[1]) {
+                                    $SSresult=$SSresult[1];
+                                  }
+
+                                  elseif ($SSresult[2]) {
+                                    $SSresult=$SSresult[2];
+                                  }
+
+                                  }
+                            
+                                  else{
+                                    $SSresult=[];
+                                  }
+                                  //dd($SSresult);
                                                                             @endphp
-                                                                            {!! Form::select('sscexamlevel',$ssc,$SSresult[1]->edu_level,['class'=>'select2 form-control','placeholder'=>'','id'=>'sscexamlevel']) !!}
+                                                                            {!! Form::select('sscexamlevel',$ssc,$SSresult->edu_level,['class'=>'select2 form-control','placeholder'=>'','id'=>'sscexamlevel']) !!}
                                                                             @if ($errors->has('sscexamlevel'))
                                                                                 <span class="text-danger">{{ $errors->first('sscexamlevel') }}</span>
                                                                             @endif
@@ -439,7 +479,7 @@
                                                                         <label for="inputPassword"
                                                                                class="col-sm-4 col-form-label">শিক্ষা প্রতিষ্ঠান <span class="text-danger">*</span></label>
                                                                         <div class="col-sm-8">
-                                                                            {!! Form::text('sscinstitute_name', $SSresult[1]->institute_name, array('placeholder' => '','class' => 'form-control')) !!}
+                                                                            {!! Form::text('sscinstitute_name', $SSresult->institute_name, array('placeholder' => '','class' => 'form-control')) !!}
                                                                             @if ($errors->has('sscinstitute_name'))
                                                                                 <span class="text-danger">{{ $errors->first('sscinstitute_name') }}</span>
                                                                             @endif
@@ -455,11 +495,11 @@
                                                                         <label for="inputPassword"
                                                                                class="col-sm-4 col-form-label">গ্রেড/শ্রেণি/বিভাগ <span class="text-danger">*</span></label>
                                                                         <div class="col-sm-8">
-                                                                            {!! Form::select('sscresult',\App\Helpers\StaticValue::RESULTSSC,$SSresult[1]->result,['class'=>'select2 form-control','placeholder'=>'','id'=>'sscresult']) !!}
+                                                                            {!! Form::select('sscresult',\App\Helpers\StaticValue::RESULTSSC,$SSresult->result,['class'=>'select2 form-control','placeholder'=>'','id'=>'sscresult']) !!}
                                                                             @if ($errors->has('sscresult'))
                                                                                 <span class="text-danger">{{ $errors->first('sscresult') }}</span>
                                                                             @endif
-                                                                            {!! Form::text('sscresult_score', $SSresult[1]->cgpa, array('placeholder' => '','class' => 'form-control sscresult_score is-invalid','style'=>$SSresult[1]->result==4 || $SSresult[1]->result==5 ? '':'display:none')) !!}
+                                                                            {!! Form::text('sscresult_score', $SSresult->cgpa, array('placeholder' => '','class' => 'form-control sscresult_score','style'=>$SSresult->result==4 || $SSresult->result==5 ? '':'display:none')) !!}
                                                                             @if ($errors->has('sscresult_score'))
                                                                                 <span class="text-danger">{{ $errors->first('sscresult_score') }}</span>
                                                                             @endif
@@ -471,7 +511,7 @@
                                                                         <label for="inputPassword"
                                                                                class="col-sm-4 col-form-label">বিষয় <span class="text-danger">*</span></label>
                                                                         <div class="col-sm-8">
-                                                                            {!! Form::select('sscSubject',[],$SSresult[1]->group_subject,['class'=>'form-control sscsubject select2','placeholder'=>'','id'=>'sscsubject']) !!}
+                                                                            {!! Form::select('sscSubject',[],$SSresult->group_subject,['class'=>'form-control sscsubject select2','placeholder'=>'','id'=>'sscsubject']) !!}
                                                                             @if ($errors->has('sscSubject'))
                                                                                 <span class="text-danger">{{ $errors->first('sscSubject') }}</span>
                                                                             @endif
@@ -488,7 +528,7 @@
                                                                                class="col-sm-4 col-form-label">বোর্ড <span class="text-danger">*</span></label>
                                                                         <div class="col-sm-8">
 
-                                                                            {!! Form::select('sscboard',collect($boards)->where('type',1)->pluck('name','id'),$SSresult[1]->board_university,['class'=>'form-control select2','placeholder'=>'']) !!}
+                                                                            {!! Form::select('sscboard',collect($boards)->where('type',1)->pluck('name','id'),$SSresult->board_university,['class'=>'form-control select2','placeholder'=>'']) !!}
                                                                             @if ($errors->has('sscboard'))
                                                                                 <span class="text-danger">{{ $errors->first('sscboard') }}</span>
                                                                             @endif
@@ -500,7 +540,7 @@
                                                                         <label for="inputPassword"
                                                                                class="col-sm-4 col-form-label">পাসের সন <span class="text-danger">*</span></label>
                                                                         <div class="col-sm-8">
-                                                                            {!! Form::number('sscpassyear', $SSresult[1]->passing_year, array('placeholder' => '','class' => 'form-control sscpassyear', 'maxlength'=>4, 'maxlength'=>4)) !!}
+                                                                            {!! Form::number('sscpassyear', $SSresult->passing_year, array('placeholder' => '','class' => 'form-control sscpassyear', 'maxlength'=>4, 'maxlength'=>4)) !!}
                                                                             @if ($errors->has('sscpassyear'))
                                                                                 <span class="text-danger">{{ $errors->first('sscpassyear') }}</span>
                                                                             @endif
@@ -535,8 +575,23 @@
                                                                                   ->where('examlevels.id',3)
                                                                                   ->pluck('examlevel_groups.name','examlevel_groups.id')
                                                                                   ->all();
-                                                                            @endphp
-                                                                            {!! Form::select('hscexamlevel',$hsc,$HSCresult[2]->edu_level,['class'=>'form-control select2','placeholder'=>'', 'id'=>'hscexamlevel']) !!}
+                                                                                  //  dd($HSCresult);
+                                                                                    if(isset($HSCresult[0])){
+                                                                                        $HSCresult=$HSCresult[0];
+
+                                                                                    }
+                                                                                    elseif (isset($HSCresult[1])) {
+                                                                                        $HSCresult=$HSCresult[1];
+                                                                                    }
+                                                                                    elseif (isset($HSCresult[2])) {
+                                                                                        $HSCresult=$HSCresult[2];
+                                                                                    }
+                                                                                    else{
+                                                                                        $HSCresult=$HSCresult[3];
+                                                                                    }
+                                                                                    
+                                                                                                                                @endphp
+                                                                            {!! Form::select('hscexamlevel',$hsc,$HSCresult->edu_level,['class'=>'form-control select2','placeholder'=>'', 'id'=>'hscexamlevel']) !!}
                                                                             @if ($errors->has('hscexamlevel'))
                                                                                 <span class="text-danger">{{ $errors->first('hscexamlevel') }}</span>
                                                                             @endif
@@ -548,7 +603,7 @@
                                                                         <label for="inputPassword"
                                                                                class="col-sm-4 col-form-label">শিক্ষা প্রতিষ্ঠান <span class="text-danger">*</span></label>
                                                                         <div class="col-sm-8">
-                                                                            {!! Form::text('hscinstitute_name', $HSCresult[2]->institute_name, array('placeholder' => '','class' => 'form-control')) !!}
+                                                                            {!! Form::text('hscinstitute_name', $HSCresult->institute_name, array('placeholder' => '','class' => 'form-control')) !!}
                                                                             @if ($errors->has('hscinstitute_name'))
                                                                                 <span class="text-danger">{{ $errors->first('hscinstitute_name') }}</span>
                                                                             @endif
@@ -564,11 +619,11 @@
                                                                         <label for="inputPassword"
                                                                                class="col-sm-4 col-form-label">গ্রেড/শ্রেণি/বিভাগ <span class="text-danger">*</span></label>
                                                                         <div class="col-sm-8">
-                                                                            {!! Form::select('hscresult',\App\Helpers\StaticValue::RESULTSSC,$HSCresult[2]->result,['class'=>'select2 form-control','placeholder'=>'','id'=>'hscresult']) !!}
+                                                                            {!! Form::select('hscresult',\App\Helpers\StaticValue::RESULTSSC,$HSCresult->result,['class'=>'select2 form-control','placeholder'=>'','id'=>'hscresult']) !!}
                                                                             @if ($errors->has('hscresult'))
                                                                                 <span class="text-danger">{{ $errors->first('hscresult') }}</span>
                                                                             @endif
-                                                                            {!! Form::text('hscresult_score', $HSCresult[2]->cgpa, array('placeholder' => '','class' => 'form-control hscresult_score','style'=>$HSCresult[2]->result==4 || $HSCresult[2]->result==5 ? '':'display:none',)) !!}
+                                                                            {!! Form::text('hscresult_score', $HSCresult->cgpa, array('placeholder' => '','class' => 'form-control hscresult_score','style'=>$HSCresult->result==4 || $HSCresult->result==5 ? '':'display:none',)) !!}
                                                                             @if ($errors->has('hscresult_score'))
                                                                                 <span class="text-danger">{{ $errors->first('hscresult_score') }}</span>
                                                                             @endif
@@ -580,7 +635,7 @@
                                                                         <label for="inputPassword"
                                                                                class="col-sm-4 col-form-label">বিষয় <span class="text-danger">*</span></label>
                                                                         <div class="col-sm-8">
-                                                                            {!! Form::select('hscubject',[],$HSCresult[2]->group_subject,['class'=>'form-control select2 hscubject','placeholder'=>'','id'=>'hscubject']) !!}
+                                                                            {!! Form::select('hscubject',[],$HSCresult->group_subject,['class'=>'form-control select2 hscubject','placeholder'=>'','id'=>'hscubject']) !!}
                                                                             @if ($errors->has('hscubject'))
                                                                                 <span class="text-danger">{{ $errors->first('hscubject') }}</span>
                                                                             @endif
@@ -597,7 +652,7 @@
                                                                                class="col-sm-4 col-form-label">বোর্ড <span class="text-danger">*</span></label>
                                                                         <div class="col-sm-8">
 
-                                                                            {!! Form::select('hscboard',collect($boards)->where('type',1)->pluck('name','id'),$HSCresult[2]->board_university,['class'=>'form-control select2','placeholder'=>'']) !!}
+                                                                            {!! Form::select('hscboard',collect($boards)->where('type',1)->pluck('name','id'),$HSCresult->board_university,['class'=>'form-control select2','placeholder'=>'']) !!}
                                                                             @if ($errors->has('hscboard'))
                                                                                 <span class="text-danger">{{ $errors->first('hscboard') }}</span>
                                                                             @endif
@@ -609,7 +664,7 @@
                                                                         <label for="inputPassword"
                                                                                class="col-sm-4 col-form-label">পাসের সন <span class="text-danger">*</span></label>
                                                                         <div class="col-sm-8">
-                                                                            {!! Form::number('hscpassyear', $HSCresult[2]->passing_year, array('placeholder' => '','class' => 'form-control','maxlength'=>4, 'maxlength'=>4)) !!}
+                                                                            {!! Form::number('hscpassyear', $HSCresult->passing_year, array('placeholder' => '','class' => 'form-control','maxlength'=>4, 'maxlength'=>4)) !!}
                                                                             @if ($errors->has('hscpassyear'))
                                                                                 <span class="text-danger">{{ $errors->first('hscpassyear') }}</span>
                                                                             @endif
@@ -641,9 +696,43 @@
                                                                               ->pluck('examlevel_groups.name','examlevel_groups.id')
                                                                               ->all();
                             $GRADresult= collect($applicationinfo->educations)->whereIn('edu_level', \App\Models\ExamlevelGroup::where('examlevel_id', 4)->pluck('id'));
-                       //     dd($GRADresult);
+                     //  dd($GRADresult);
+                       if(count((array)$GRADresult)> 0){
+                        
+                        if(isset($GRADresult[0])){
+                          
+                                                                                        $GRADresult=$GRADresult[0];
+                                                                                        
+
+                                                                                    }
+                                                                                    elseif (isset($GRADresult[1])) {
+                                                                                        $GRADresult=$GRADresult[1];
+                                                                                       
+                                                                                    }
+                                                                                    elseif (isset($GRADresult[2])) {
+                                                                                        $GRADresult=$GRADresult[2];
+                                                                                       
+                                                                                    }
+                                                                                    elseif (isset($GRADresult[3])) {
+                                                                                        $GRADresult=$GRADresult[3];
+                                                                                       
+                                                                                    }
+
+                                                                                    else{
+                                                                                        $GRADresult=$GRADresult[4];
+                                                                                        
+                                                                                    }
+                                                                                    
+                       }
+                       else{
+                           
+                        $GRADresult=[];
+                     //  dd('dddddddddddddddddddddd');
+                       }
+                    //   dd($GRADresult);
+                       
                                                                             @endphp
-                                                                            {!! Form::select('graduationexamlevel',$graduation,$GRADresult[3]->edu_level,['class'=>'select2 form-control','placeholder'=>'','id'=>'graduationexamlevel']) !!}
+                                                                            {!! Form::select('graduationexamlevel',$graduation,$GRADresult->edu_level??'',['class'=>'select2 form-control','placeholder'=>'','id'=>'graduationexamlevel']) !!}
                                                                             @if ($errors->has('graduationexamlevel'))
                                                                                 <span class="text-danger">{{ $errors->first('graduationexamlevel') }}</span>
                                                                             @endif
@@ -655,7 +744,7 @@
                                                                         <label for="inputPassword"
                                                                                class="col-sm-4 col-form-label">শিক্ষা প্রতিষ্ঠান <span class="text-danger">*</span></label>
                                                                         <div class="col-sm-8">
-                                                                            {!! Form::text('graduationinstitute_name', $GRADresult[3]->institute_name, array('placeholder' => '','class' => 'form-control')) !!}
+                                                                            {!! Form::text('graduationinstitute_name', $GRADresult->institute_name??'', array('placeholder' => '','class' => 'form-control')) !!}
                                                                             @if ($errors->has('graduationinstitute_name'))
                                                                                 <span class="text-danger">{{ $errors->first('graduationinstitute_name') }}</span>
                                                                             @endif
@@ -668,23 +757,24 @@
                                                             <div class="row">
                                                                 <div class="col-md-6">
                                                                     <div class="mb-3 row">
-                                                                        <label for="inputPassword"
+                                                                        <label for="graduationresult"
                                                                                class="col-sm-4 col-form-label">গ্রেড/শ্রেণি/বিভাগ <span class="text-danger">*</span></label>
                                                                         <div class="col-sm-8">
-                                                                            {!! Form::select('graduationresult',\App\Helpers\StaticValue::RESULTSSC,$GRADresult[3]->result,['class'=>' select2 form-control','placeholder'=>'','id'=>'graduationresult']) !!}
+                                                                            {!! Form::select('graduationresult',\App\Helpers\StaticValue::RESULTSSC,$GRADresult ? $GRADresult->result:'',['class'=>' select2 form-control','placeholder'=>'','id'=>'graduationresult']) !!}
                                                                             @if ($errors->has('graduationresult'))
                                                                                 <span class="text-danger">{{ $errors->first('graduationresult') }}</span>
                                                                             @endif
-                                                                            {!! Form::text('graduationresult_score', $GRADresult[3]->cgpa, array('placeholder' => '','class' => 'form-control graduationresult_score ','style'=>$GRADresult[3]->result==4 || $GRADresult[3]->result==5 ? '':'display:none',)) !!}
+                                                                            {!! Form::text('graduationresult_score',  $GRADresult ? $GRADresult->cgpa:"", array('placeholder' => '','class' => 'form-control graduationresult_score ','style'=>$GRADresult ? ($GRADresult->result==4 || $GRADresult->result==5 ? '':'display:none'):"",)) !!}
+                                                                        
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-6">
                                                                     <div class="mb-3 row">
-                                                                        <label for="inputPassword"
+                                                                        <label for="graduationsubject"
                                                                                class="col-sm-4 col-form-label">বিষয় <span class="text-danger">*</span></label>
                                                                         <div class="col-sm-8">
-                                                                            {!! Form::select('graduationsubject',[],$GRADresult[3]->group_subject,['class'=>'form-control graduationsubject select2','placeholder'=>'','id'=>'graduationsubject']) !!}
+                                                                            {!! Form::select('graduationsubject',[],$GRADresult ? $GRADresult->group_subject:'',['class'=>'form-control graduationsubjecttt','placeholder'=>'','id'=>'graduationsubject']) !!}
                                                                             @if ($errors->has('graduationsubject'))
                                                                                 <span class="text-danger">{{ $errors->first('graduationsubject') }}</span>
                                                                             @endif
@@ -696,10 +786,10 @@
                                                             <div class="row">
                                                                 <div class="col-md-6">
                                                                     <div class="mb-3 row">
-                                                                        <label for="inputPassword"
+                                                                        <label for="graduationuniversity"
                                                                                class="col-sm-4 col-form-label">বিশ্ববিদ্যালয়/ইনস্টিটিউট  <span class="text-danger">*</span></label>
                                                                         <div class="col-sm-8">
-                                                                            {!! Form::select('graduationuniversity',collect($boards)->where('type',2)->pluck('name','id'),$GRADresult[3]->board_university,['class'=>'select2 form-control','placeholder'=>'']) !!}
+                                                                            {!! Form::select('graduationuniversity',collect($boards)->where('type',2)->pluck('name','id'),$GRADresult ? $GRADresult->board_university:'',['class'=>'select2 form-control','placeholder'=>'']) !!}
                                                                             @if ($errors->has('graduationuniversity'))
                                                                                 <span class="text-danger">{{ $errors->first('graduationuniversity') }}</span>
                                                                             @endif
@@ -711,7 +801,7 @@
                                                                         <label for="inputPassword"
                                                                                class="col-sm-4 col-form-label">পাসের সন <span class="text-danger">*</span></label>
                                                                         <div class="col-sm-8">
-                                                                            {!! Form::number('graduationpassyear', $GRADresult[3]->passing_year, array('placeholder' => '','class' => 'form-control', 'maxlength'=>4, 'maxlength'=>4)) !!}
+                                                                            {!! Form::number('graduationpassyear', $GRADresult ? $GRADresult->passing_year:"", array('placeholder' => '','class' => 'form-control', 'maxlength'=>4, 'maxlength'=>4)) !!}
                                                                             @if ($errors->has('graduationpassyear'))
                                                                                 <span class="text-danger">{{ $errors->first('graduationpassyear') }}</span>
                                                                             @endif
@@ -744,9 +834,53 @@
                                                                               ->pluck('examlevel_groups.name','examlevel_groups.id')
                                                                               ->all();
  $Mastresult= collect($applicationinfo->educations)->whereIn('edu_level', \App\Models\ExamlevelGroup::where('examlevel_id', 5)->pluck('id'));
+// dd($Mastresult);
+ if(count($Mastresult)> 0){
+                        
+                        if(isset($Mastresult[0])){
+                          
+                                                                                        $Mastresult=$Mastresult[0];
+                                                                                        
+
+                                                                                    }
+                                                                                    elseif (isset($Mastresult[1])) {
+                                                                                        $Mastresult=$Mastresult[1];
+                                                                                       
+                                                                                    }
+                                                                                    elseif (isset($Mastresult[2])) {
+                                                                                        $Mastresult=$Mastresult[2];
+                                                                                       
+                                                                                    }
+                                                                                    elseif (isset($Mastresult[3])) {
+                                                                                        $Mastresult=$Mastresult[3];
+                                                                                       
+                                                                                    }
+
+                                                                                    elseif (isset($Mastresult[4])) {
+                                                                                        $Mastresult=$Mastresult[4];
+                                                                                       
+                                                                                    }
+                                                                                    elseif (isset($Mastresult[5])) {
+                                                                                        $Mastresult=$Mastresult[5];
+                                                                                       
+                                                                                    }
+
+                                                                                    else{
+                                                                                        $Mastresult=$Mastresult[6];
+                                                                                        
+                                                                                    }
+                                                                                    
+                       }
+                       else{
+                           
+                        $Mastresult=[];
+                     //  dd('dddddddddddddddddddddd');
+                       }
+                    //   dd($Mastresult);
+
 
                                                                             @endphp
-                                                                            {!! Form::select('mastersexamlevel',$masters,$Mastresult[4]->edu_level,['class'=>'form-control select2','placeholder'=>'','id'=>'mastersexamlevel']) !!}
+                                                                            {!! Form::select('mastersexamlevel',$masters,$Mastresult->edu_level,['class'=>'form-control select2','placeholder'=>'','id'=>'mastersexamlevel']) !!}
                                                                             @if ($errors->has('mastersexamlevel'))
                                                                                 <span class="text-danger">{{ $errors->first('mastersexamlevel') }}</span>
                                                                             @endif
@@ -758,7 +892,7 @@
                                                                         <label for="inputPassword"
                                                                                class="col-sm-4 col-form-label">শিক্ষা প্রতিষ্ঠান <span class="text-danger">*</span></label>
                                                                         <div class="col-sm-8">
-                                                                            {!! Form::text('mastersinstitute_name',$Mastresult[4]->institute_name, array('placeholder' => '','class' => 'form-control')) !!}
+                                                                            {!! Form::text('mastersinstitute_name',$Mastresult->institute_name, array('placeholder' => '','class' => 'form-control')) !!}
                                                                             @if ($errors->has('mastersinstitute_name'))
                                                                                 <span class="text-danger">{{ $errors->first('mastersinstitute_name') }}</span>
                                                                             @endif
@@ -774,11 +908,11 @@
                                                                         <label for="inputPassword"
                                                                                class="col-sm-4 col-form-label">গ্রেড/শ্রেণি/বিভাগ <span class="text-danger">*</span></label>
                                                                         <div class="col-sm-8">
-                                                                            {!! Form::select('mastersresult',\App\Helpers\StaticValue::RESULTSSC,$Mastresult[4]->result,['class'=>'select2 form-control','placeholder'=>'','id'=>'mastersresult']) !!}
+                                                                            {!! Form::select('mastersresult',\App\Helpers\StaticValue::RESULTSSC,$Mastresult->result,['class'=>'select2 form-control','placeholder'=>'','id'=>'mastersresult']) !!}
                                                                             @if ($errors->has('mastersexamlevel'))
                                                                                 <span class="text-danger">{{ $errors->first('mastersexamlevel') }}</span>
                                                                             @endif
-                                                                            {!! Form::text('mastersresult_score', $Mastresult[4]->cgpa, array('placeholder' => '','class' => 'form-control mastersresult_score','style'=>$Mastresult[4]->result==4 || $Mastresult[4]->result==5 ? '':'display:none',)) !!}
+                                                                            {!! Form::text('mastersresult_score', $Mastresult->cgpa, array('placeholder' => '','class' => 'form-control mastersresult_score','style'=>$Mastresult->result==4 || $Mastresult->result==5 ? '':'display:none',)) !!}
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -787,7 +921,7 @@
                                                                         <label for="inputPassword"
                                                                                class="col-sm-4 col-form-label">বিষয় <span class="text-danger">*</span></label>
                                                                         <div class="col-sm-8">
-                                                                            {!! Form::select('mastersSubject',[],$Mastresult[4]->group_subject,['class'=>'form-control mastersSubject select2','placeholder'=>'','id'=>'mastersSubject']) !!}
+                                                                            {!! Form::select('mastersSubject',[],$Mastresult->group_subject,['class'=>'form-control mastersSubject select2','placeholder'=>'','id'=>'mastersSubject']) !!}
                                                                             @if ($errors->has('mastersSubject'))
                                                                                 <span class="text-danger">{{ $errors->first('mastersSubject') }}</span>
                                                                             @endif
@@ -802,8 +936,10 @@
                                                                         <label for="inputPassword"
                                                                                class="col-sm-4 col-form-label">বিশ্ববিদ্যালয়/ইনস্টিটিউট <span class="text-danger">*</span></label>
                                                                         <div class="col-sm-8">
-
-                                                                            {!! Form::select('mastersuniversity',collect($boards)->where('type',2)->pluck('name','id'),$Mastresult[4]->board_university,['class'=>' select2 form-control','placeholder'=>'']) !!}
+<?php
+//dd(collect($boards)->where('type',2)->pluck('name','id'), $Mastresult->board_university);
+?>
+                                                                            {!! Form::select('mastersuniversity',collect($boards)->where('type',2)->pluck('name','id'),$Mastresult ? $Mastresult->board_university:null,['class'=>' select2 form-control','placeholder'=>'']) !!}
                                                                             @if ($errors->has('mastersuniversity'))
                                                                                 <span class="text-danger">{{ $errors->first('mastersuniversity') }}</span>
                                                                             @endif
@@ -815,7 +951,7 @@
                                                                         <label for="inputPassword"
                                                                                class="col-sm-4 col-form-label">পাসের সন <span class="text-danger">*</span></label>
                                                                         <div class="col-sm-8">
-                                                                            {!! Form::number('masterspassyear', $Mastresult[4]->passing_year, array('placeholder' => '','class' => 'form-control', 'maxlength'=>4, 'maxlength'=>4)) !!}
+                                                                            {!! Form::number('masterspassyear', $Mastresult ? $Mastresult->passing_year:null, array('placeholder' => '','class' => 'form-control', 'maxlength'=>4, 'maxlength'=>4)) !!}
                                                                             @if ($errors->has('masterspassyear'))
                                                                                 <span class="text-danger">{{ $errors->first('masterspassyear') }}</span>
                                                                             @endif
@@ -829,6 +965,75 @@
                                                     </div>
                                                 @endif
 
+                                                @if($job->certificate=="YES")
+                                                @php
+                                              //  dd($applicationinfo->applicantCertificate);    
+
+                                                @endphp
+                                                <div class="card mt-4">
+                                                    <div class="card-header bg-secondary text-white">
+                                                        সার্টিফিকেশন
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <div class="mb-3 row">
+                                                                    <label for="inputPassword"
+                                                                           class="col-sm-4 col-form-label">সার্টিফিকেশন
+                                                                        নাম @if($job->certificate_isrequired==1) <span class="text-danger">*</span>@endif</label>
+                                                                    <div class="col-sm-8">
+
+                                                                        @php
+                                                                           // dd(collect($job->certificates));
+
+                                                                                $certificates= \App\Models\JobCertificate::join('certificates', 'job_certificates.certificate_id', '=', 'certificates.id')
+                                                                              ->where('job_certificates.job_id',$job->id)
+                                                                              ->pluck('certificates.name','certificates.id')
+                                                                              ->all();
+                                                                        @endphp
+                                                                        {!! Form::select('certificate',$certificates, $applicationinfo->applicantCertificate()->exists() ?? $applicationinfo->applicantCertificate->edu_level,['class'=>'form-control select2','placeholder'=>'']) !!}
+                                                                        @if ($errors->has('certificate'))
+                                                                            <span class="text-danger">{{ $errors->first('certificate') }}</span>
+                                                                        @endif
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <div class="mb-3 row">
+                                                                    <label for="inputPassword"
+                                                                           class="col-sm-4 col-form-label">প্রতিষ্ঠান নাম @if($job->certificate_isrequired==1) <span class="text-danger">*</span>@endif</label>
+                                                                    <div class="col-sm-8">
+                                                                        {!! Form::text('certificateinstitute_name', $applicationinfo->applicantCertificate()->exists() ?  $applicationinfo->applicantCertificate->institute_name:'', array('placeholder' => '','class' => 'form-control')) !!}
+                                                                        @if ($errors->has('certificateinstitute_name'))
+                                                                            <span class="text-danger">{{ $errors->first('certificateinstitute_name') }}</span>
+                                                                        @endif
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <div class="mb-3 row">
+                                                                    <label for="inputPassword"
+                                                                           class="col-sm-4 col-form-label">গ্রেড/শ্রেণি/বিভাগ  @if($job->certificate_isrequired==1) <span class="text-danger">*</span>@endif </label>
+                                                                    <div class="col-sm-8">
+                                                                        {!! Form::number('certificateduration', $applicationinfo->applicantCertificate()->exists() ? $applicationinfo->applicantCertificate->duration: null, array('placeholder' => '','class' => 'form-control')) !!}
+                                                                        @if ($errors->has('certificateduration'))
+                                                                            <span class="text-danger">{{ $errors->first('certificateduration') }}</span>
+                                                                        @endif
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+
+
+                                                    </div>
+                                                </div>
+                                            @endif
 
 
                                         </div>
@@ -905,7 +1110,7 @@
                     </div>
                     <div class="row mb-5">
                         <div class="col-md-7 ">
-                            <button type="submit" class="btn btn-primary mt-4 btn-lg float-end">Submit Application</button>
+                            <button type="submit" class="btn btn-primary mt-4 btn-lg float-end">Submit Application & Preview </button>
                         </div>
 
                     </div>
@@ -917,6 +1122,11 @@
 
         </div>
     </div>
+    <?php
+           // dd($HSCresult, count($HSCresult));
+           
+            ?>
+
 @endsection
 @section('script-bottom')
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
@@ -1126,14 +1336,14 @@
                 }
             });
 <?php
-if(count($SSresult)> 0){
+if(count((array)$SSresult)> 0){
 ?>
             var selectElemssc = $("#sscsubject");
 $.ajax({
     url:"{{ route('examSubject') }}",
     type:"GET",
     data: {
-        examgroup: {{$SSresult[1]->edu_level}},
+        examgroup: {{$SSresult->edu_level}},
         exam: 2,
     },
     success:function (data) {
@@ -1148,7 +1358,7 @@ $.ajax({
 
     }
 })
-  $(".sscsubject").val("{{ $SSresult ? $SSresult[1]->group_subject:''}}").change();
+  $(".sscsubject").val("{{ $SSresult ? $SSresult->group_subject:''}}").change();
 
 <?php
 }
@@ -1184,18 +1394,20 @@ $.ajax({
 
             });
             <?php
-            if(count($HSCresult)> 0){
+           
+            if(count((array)$HSCresult)> 0){
             ?>
             var selectElemHSC = $("#hscubject");
+          //  console.log({{$HSCresult ? $HSCresult->edu_level:''}});
             $.ajax({
                 url:"{{ route('examSubject') }}",
                 type:"GET",
                 data: {
-                    examgroup: {{$HSCresult[2]->edu_level}},
+                    examgroup: {{$HSCresult ? $HSCresult->edu_level:''}},
                     exam: 3,
                 },
                 success:function (data) {
-                 //   console.log(data);
+                    console.log(data);
                     $( ".hscubject" ).empty();
                     $.each(data.data, function(index, value){
                         $("<option/>", {
@@ -1203,10 +1415,13 @@ $.ajax({
                             text: value.name
                         }).appendTo(selectElemHSC);
                     });
-
+                  //  $("#hscubject option[value='{{ $HSCresult ? $HSCresult->group_subject:''}}']").prop('selected',true);
+                    $(".hscubject").val("{{ $HSCresult ? $HSCresult->group_subject:''}}").change();
                 }
             })
-            $(".hscubject").val("{{ $HSCresult ? $HSCresult[2]->group_subject:''}}").change();
+           
+
+        
 
             <?php
             }
@@ -1238,30 +1453,34 @@ $.ajax({
             });
 
             <?php
-            if(count($GRADresult)> 0){
+            if(count((array)$GRADresult)> 0){
             ?>
             var selectElemGra = $("#graduationsubject");
             $.ajax({
                 url:"{{ route('examSubject') }}",
                 type:"GET",
                 data: {
-                    examgroup: {{$GRADresult ? $GRADresult[3]->edu_level:''}},
+                    examgroup: {{$GRADresult ? $GRADresult->edu_level:''}},
                     exam: 4,
                 },
                 success:function (data) {
+                    
                       console.log(data);
-                    $( ".graduationsubject" ).empty();
+                    $(".graduationsubjecttt").empty();
                     $.each(data.data, function(index, value){
                         $("<option/>", {
                             value: value.id,
                             text: value.name
                         }).appendTo(selectElemGra);
                     });
+                    $(".graduationsubjecttt").val("{{ $GRADresult ? $GRADresult->group_subject:''}}").change();
+             
+            }
+                })
 
-                }
-            })
-            $(".graduationsubject").val("{{ $GRADresult ? $GRADresult[3]->group_subject:''}}").change();
-
+               // $("#graduationsubject option[value='14']").prop('selected',true);
+           
+           // $("#graduationsubject").val("14").change();
             <?php
             }
             ?>
@@ -1279,7 +1498,7 @@ $.ajax({
                     },
                     success:function (data) {
                         console.log(data);
-                        $( ".graduationsubject" ).empty();
+                        $( ".graduationsubjecttt" ).empty();
                         $.each(data.data, function(index, value){
                             $("<option/>", {
                                 value: value.id,
@@ -1292,14 +1511,14 @@ $.ajax({
 
             });
             <?php
-            if(count($Mastresult)> 0){
+            if(count((array)$Mastresult)> 0){
             ?>
             var selectElemMAS = $("#mastersSubject");
             $.ajax({
                 url:"{{ route('examSubject') }}",
                 type:"GET",
                 data: {
-                    examgroup: {{$Mastresult ? $Mastresult[4]->edu_level:''}},
+                    examgroup: {{$Mastresult ? $Mastresult->edu_level:''}},
                     exam: 5,
                 },
                 success:function (data) {
@@ -1311,10 +1530,10 @@ $.ajax({
                             text: value.name
                         }).appendTo(selectElemMAS);
                     });
-
+                    $(".mastersSubject").val("{{ $Mastresult ? $Mastresult->group_subject:''}}").change();
                 }
             })
-            $(".graduationsubject").val("{{ $Mastresult ? $Mastresult[4]->group_subject:''}}").change();
+            
 
             <?php
             }

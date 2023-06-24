@@ -16,7 +16,7 @@ class Job extends Model
     protected $notFoundMessage = 'The book could not be found';
     public function applicants()
     {
-        return $this->hasMany(Applicant::class,'job_id');
+        return $this->hasMany(Applicant::class,'job_id')->whereIn('eligible',[1,2]);
     }
     public function certificates()
     {
