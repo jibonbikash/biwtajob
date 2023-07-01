@@ -39,7 +39,7 @@
         {!! Form::text('q', request()->get('q'), array('placeholder' => 'Applicant Name, Mobile, email','class' => 'form-control')) !!}
     </div>
     <div class="col-md-3">
-        {!! Form::text('code', request()->get('code'), array('placeholder' => 'code','class' => 'form-control')) !!}
+        {!! Form::text('code', request()->get('code'), array('placeholder' => 'code, roll, transaction id','class' => 'form-control')) !!}
     </div>
     <div class="col-md-3">
         <button type="submit" name="search" value="q" class="btn btn-success btn-lg float-end" title="Search"><i data-feather="search"></i></button>
@@ -65,7 +65,7 @@
                             <th scope="col">Father's Name</th>
                             <th scope="col">Mobile</th>
                             <th scope="col">DOB</th>
-                            <th scope="col">District</th>
+                            {{-- <th scope="col">District</th> --}}
                             <th scope="col">Age</th>
                             {{-- <th scope="col">Quota</th> --}}
                             <th scope="col">Action</th>
@@ -76,17 +76,19 @@
                         @foreach($applicants as $applicant)
                         <tr>
                             <th scope="row">{{ $loop->iteration + $applicants->firstItem() - 1 }}</th>
-                            <td>{{ $applicant->job ? $applicant->job->title:'' }}</td>
-                            <td>{{ $applicant->apliyedJob ? $applicant->apliyedJob->token:'' }}</td>
-                            <td>{{ $applicant->apliyedJob ? $applicant->apliyedJob->roll:'' }}</td>
+                            <td>{{ $applicant->job_title }}</td>
+                            <td>{{ $applicant->token }}</td>
+                            <td>{{ $applicant->roll }}</td>
                             <td>{{ $applicant->name_bn }}</td>
                             <td>{{ $applicant->father_name }}</td>
                             <td>{{ $applicant->mobile }}</td>
                             <td>{{ Carbon\Carbon::parse($applicant->bday)->format('F j, Y') }}</td>
-                            <td> {{ $applicant->birthplace? $applicant->birthplace->zilla_name:'' }}</td>
+                            {{-- <td> 
+                                {{ $applicant->birthplace? $applicant->birthplace->zilla_name:'' }}
+                            </td> --}}
                             <td>
                                 <?php
-                                $fixedday = Carbon\Carbon::parse($applicant->job ? $applicant->job->age_calculation : '')->format('F j, Y');
+                                $fixedday = Carbon\Carbon::parse($applicant->age_calculation)->format('F j, Y');
                                 $fixeddaycal = date('d-m-Y', strtotime($fixedday));
                                 $datetime1 = new DateTime($fixeddaycal);
                                 $datetime2 = new DateTime($applicant->bday);
@@ -97,8 +99,8 @@
                             </td>
                             {{-- <td>{{ $applicant->quota }}</td> --}}
                             <td>
-                                <a href="{{ route('print',$applicant->id) }}" title="Print Details" class="btn btn-sm btn-primary"><i data-feather="printer"></i></a>
-                                <a href="{{ route('adminCard',$applicant->id) }}" title="Admin Card" class="btn btn-sm btn-primary"><i data-feather="credit-card"></i></a>
+                                <a href="{{ route('print',$applicant->id) }}" target="_blank" title="Print Details" class="btn btn-sm btn-primary"><i data-feather="printer"></i></a>
+                                <a href="{{ route('adminCard',$applicant->id) }}" target="_blank"  title="Admin Card" class="btn btn-sm btn-primary"><i data-feather="credit-card"></i></a>
                             </td>
 
                         </tr>

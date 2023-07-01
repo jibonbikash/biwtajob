@@ -27,13 +27,18 @@ Route::get('applicant/preview/{uuid}', [HomeController::class, 'applicantPreview
 Route::get('applicant/edit/{uuid}', [HomeController::class, 'applicantPreviewEdit'])->name('applicantPreviewEdit');
 Route::post('applicant/edit/{uuid}', [HomeController::class, 'applicantPreviewConfirm'])->name('applicantPreviewConfirm');
 Route::post('applicantion/confirm/{uuid}', [HomeController::class, 'applicantConfirm'])->name('applicantConfirm');
-Route::get('applicantion/view/{uuid}', [HomeController::class, 'applicationPrint'])->name('applicationPrint');
+Route::get('applicantion/{uuid}', [HomeController::class, 'applicationPrint'])->name('applicationPrint');
 Route::get('/university', [HomeController::class, 'university'])->name('university');
 Route::get('/printCopy', [HomeController::class, 'PrintCopy'])->name('PrintCopy');
 Route::get('/writtenCopy', [HomeController::class, 'writtenCopy'])->name('writtenCopy');
 Route::get('/vivaCopy', [HomeController::class, 'vivaCopy'])->name('vivaCopy');
 Route::get('/practicalCopy', [HomeController::class, 'practicalCopy'])->name('practicalCopy');
 Route::get('/medicalCopy', [HomeController::class, 'medicalCopy'])->name('medicalCopy');
+Route::post('/ageCalculation', [HomeController::class, 'ageCalculation'])->name('ageCalculation');
+Route::post('/applyAgeCalculation', [HomeController::class, 'applyAgeCalculation'])->name('applyAgeCalculation');
+//Route::get('applicantion/printcopy', [HomeController::class, 'printcopy'])->name('printcopy');
+
+
 
 Auth::routes([
     'register' => false, // Registration Routes...
@@ -56,7 +61,11 @@ Route::group(['middleware' => ['auth'], "prefix" => "admin"], function() {
     Route::post('ckeditor/upload', [JobsController::class, 'imageupload'])->name('ckeditor.upload');
     Route::get('/applicants', [JobsController::class, 'applicants'])->name('applicants');
     Route::get('/roll-setting', [JobsController::class, 'rollSetting'])->name('rollSetting');
+    Route::post('/roll-setting', [JobsController::class, 'rollSettingconfigure'])->name('rollSettingconfigure');
     Route::get('/seat-plan', [JobsController::class, 'seatPlan'])->name('seatPlan');
+    Route::post('/seat-plan', [JobsController::class, 'seatPlansetting'])->name('seatPlansetting');
+    Route::post('/seat-planroll', [JobsController::class, 'seatPlansettingRoll'])->name('seatPlansettingRoll');
+
     Route::get('/education', [JobsController::class, 'educationtype'])->name('educationtype');
     Route::resource('examlevels', ExamLevelController::class);
     Route::get('examlevels/group/add/{id}', [ExamLevelController::class, 'groupadd'])->name('examlevels.groupadd');

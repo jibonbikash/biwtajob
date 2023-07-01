@@ -8,12 +8,14 @@ use App\Models\Applicant;
 use App\Models\Crtificate;
 use App\Models\Examlevel;
 use App\Models\Job;
+use App\Models\JobApply;
 use App\Models\JobCertificate;
 use App\Models\JobExam;
 use App\Models\JobExamSubject;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Database\Query\JoinClause;
 
 class JobsController extends Controller
 {
@@ -24,7 +26,16 @@ class JobsController extends Controller
      */
     public function index(Request $request)
     {
-       $jobs= Job::withCount(['applicants'])->with(['applicants'])->latest()->paginate(20);
+       $status= $request->input('status');
+       $q= $request->input('q');
+       $jobs= Job::withCount(['applicants'])->with(['applicants'])
+       ->when($status, function ($query) use ($status){
+        $query->where('status', $status);
+    }) 
+    ->when($q, function ($query) use ($q){
+        $query->where('title', 'like', '%'.$q.'%');
+    }) 
+       ->latest()->paginate(20);
      //  dd($jobs);
         return view('admin.jobs.index',['jobs'=>$jobs]);
     }
@@ -64,6 +75,7 @@ class JobsController extends Controller
                     'vacancies' => $request->input('vacancies'),
                     'job_id' => $request->input('job_id'),
                     'age_calculation' => $request->input('age_calculation'),
+                    'jobcurbday' => $request->input('jobcurbday'),
                     'apply_fee' => $request->input('apply_fee'),
                     'application_deadline' => $request->input('application_deadline'),
                     'job_experience' => $request->input('job_experience'),
@@ -201,6 +213,7 @@ class JobsController extends Controller
                 'vacancies' => $request->input('vacancies'),
                 'job_id' => $request->input('job_id'),
                 'age_calculation' => $request->input('age_calculation'),
+                'jobcurbday' => $request->input('jobcurbday'),
                 'apply_fee' => $request->input('apply_fee'),
                 'application_deadline' => $request->input('application_deadline'),
                 'job_experience' => $request->input('job_experience'),
@@ -260,33 +273,62 @@ class JobsController extends Controller
         }
     }
 
+    // 'apliyedJob'=>function($q) use($code ){
+     //   return $q->where('token','like', '%'.$code.'%');
+   // } 
     public function applicants(Request $request)
     {
         $job= Job::get()->pluck('title', 'id');
         $q=$request->input('q') ?? null;
+        $job_id=$request->input('job_id') ?? null;
         $code=$request->input('code') ?? null;
-        $applicants = Applicant::with(['educations', 'job', 'birthplace', 'zila', 'upozilla', 'permanentzila', 'permanentupozilla', 'apliyedJob'])
+
+        $applicants = DB::table('applicants')
+            ->join('job_applies', 'applicants.id', '=', 'job_applies.applicants_id')
+            ->join('jobs', function (JoinClause $join) {
+            $join->on('applicants.job_id', '=', 'jobs.id')->On('job_applies.job_id', '=', 'jobs.id');
+        })
+            ->select('applicants.*', 'job_applies.token', 'jobs.title as job_title', 'job_applies.received as received', 'job_applies.txnid as txnid', 'job_applies.txndate as txndate', 'job_applies.roll as roll',
+            'job_applies.exam_hall as exam_hall','job_applies.exam_date as exam_date','job_applies.exam_time as exam_time', 'job_applies.exam_time as apply_date',
+            'jobs.age_calculation as age_calculation',
+            )
+            ->whereNull('applicants.deleted_at')
+            ->whereNull('job_applies.deleted_at')
             ->when($request->input('q'), function ($q) use ($request){
                 $q->where(function ($query) use ($request){
-                    $query->where('name_en','like', '%'.$request->input('q').'%')
-                        ->orWhere('name_bn', 'like', '%'.$request->input('q').'%')
-                        ->orWhere('nid', 'like', '%'.$request->input('q').'%')
-                        ->orWhere('mobile', 'like', '%'.$request->input('q').'%');
+                    $query->where('applicants.name_en','like', '%'.$request->input('q').'%')
+                        ->orWhere('applicants.name_bn', 'like', '%'.$request->input('q').'%')
+                        ->orWhere('applicants.nid', 'like', '%'.$request->input('q').'%')
+                        ->orWhere('applicants.mobile', 'like', '%'.$request->input('q').'%');
             });
             })
-            ->when($request->input('job_id'), function ($query) use ($request){
-               
-               return $query->where('job_id',$request->input('job_id'));
-             })
-             ->whereIn('eligible',[1,2])
+            ->when($job_id, function ($query) use ($job_id){
+                $query->where('applicants.job_id', $job_id);
+            }) 
+            ->when($code, function ($query) use ($code){
+                $query->where(function ($query) use ($request){
+                    $query->where('job_applies.token','like', '%'.$code.'%')
+                        ->orWhere('job_applies.txnid', 'like', '%'.$code.'%')
+                        ->orWhere('job_applies.roll', 'like', '%'.$code.'%');
+                        
+            });
+
+                $query->where('token','like', '%'.$code.'%');
+            }) 
+
+            ->whereIn('applicants.eligible',[1,2])
             ->latest()->paginate(50);
+
         return view('admin.jobs.applicants', ['applicants' => $applicants, 'jobs'=>$job]);
     }
     public function rollSetting(Request $request){
-        return view('admin.jobs.rollSetting');
+        $job= Job::get()->pluck('title', 'id');
+
+        return view('admin.jobs.rollSetting', ['jobs'=>$job]);
     }
     public function seatPlan(Request $request){
-        return view('admin.jobs.seatPlan');
+        $job= Job::get()->pluck('title', 'id');
+        return view('admin.jobs.seatPlan', ['jobs'=>$job]);
     }
 
     public function educationtype(Request $request)
@@ -360,9 +402,151 @@ class JobsController extends Controller
         return response()->json(['success' => true, 'data' => $view]);
     }
 public function adminCard(Request $request, $id){
-
+    $applicationinfo= Applicant::with(['educations','job', 'birthplace','zila','upozilla','permanentzila','permanentupozilla','apliyedJob'])->find($id);
+    // dd($applicationinfo);
+     if($applicationinfo->eligible==1){
+      return view('layouts.print',[
+          'appliedddata'=>$applicationinfo,
+        ]);
+     }
+     else{
+      return redirect()->route('home')
+      ->with('error', 'No data found!!!');;
+     }
 }
 public function printCopy(Request $request, $id){
+   
+
+        $applicationinfo= Applicant::with(['educations','job', 'birthplace','zila','upozilla','permanentzila','permanentupozilla','apliyedJob'])->find($id);
+      // dd($applicationinfo);
+       if($applicationinfo->eligible==1){
+        return view('jobs.applicantionPrint',[
+            'applicationinfo'=>$applicationinfo,
+          ]);
+       }
+       else{
+        return redirect()->route('home')
+        ->with('error', 'No data found!!!');;
+       }
+
 
 }
+
+public function rollSettingconfigure(Request $request){
+
+    $request->validate([
+        'job_id' => 'required|numeric|min:1',
+        'rollstart' => 'required|numeric|min:1',
+        'examdate' => 'required',
+        'examtime' => 'required',
+    ]);
+
+    try {
+
+
+        DB::beginTransaction();
+
+try {
+    $rollStart=$request->input('rollstart');
+    $applyApplicants=JobApply::where('job_id',$request->input('job_id'))->where('received',1)->get();
+    foreach ( $applyApplicants as $applyApplicant) {
+        $applyApplicant->roll=$rollStart;
+        $applyApplicant->exam_date=$request->input('examdate');
+        $applyApplicant->exam_time=$request->input('examtime');
+        $applyApplicant->save();
+        $rollStart++;
+    }
+
+    DB::commit();
+   
+} catch (\Exception $e) {
+    DB::rollback();
+
+}
+
+        
+    
+        return redirect()->route('rollSetting')
+        ->with('success', 'Total '.$rollStart.' data updated');;
+      
+      } catch (\Exception $e) {
+      
+        return redirect()->route('rollSetting')
+        ->with('error', $e->getMessage());
+      }
+
+   
+
+
+
+/*    JobApply::where('job_id',$request->input('job_id'))
+->increment('roll', 1, ['exam_date' => $request->input('examdate'), 'exam_time' => $request->input('examtime')]);
+*/
+}
+
+public function seatPlansetting(Request $request){
+
+    $request->validate([
+        'job_id' => 'required|numeric|min:1',
+        'rollstart' => 'required|numeric|min:1',
+        'rollend' => 'required|numeric|min:1',
+        'institute' => 'required'
+    ]);
+
+    try {
+        DB::beginTransaction();
+
+        try {
+        
+            $applyApplicants=JobApply::where('job_id',$request->input('job_id'))->where('received',1)->whereBetween('roll', [$request->input('rollstart'), $request->input('rollend')])->get();
+         //   dd($applyApplicants);
+            foreach ( $applyApplicants as $applyApplicant) {
+                $applyApplicant->exam_hall=$request->input('institute');
+                $applyApplicant->save();
+            
+            }
+        
+            DB::commit();
+
+            return redirect()->route('seatPlan')
+            ->with('success', 'Total '.$request->input('rollstart'). ' to '.$request->input('rollend'). ' data updated');;
+           
+        } catch (\Exception $e) {
+            DB::rollback();
+        
+        }  
+
+    } catch (\Exception $e) {
+      
+        return redirect()->route('seatPlan')
+        ->with('error', $e->getMessage());
+      }
+
+    //return redirect()->route('seatPlan');
+
+}
+
+public function seatPlansettingRoll(Request $request){
+
+    $data = DB::table('job_applies')
+   ->select(\DB::raw('MIN(roll) AS rollStart, MAX(roll) AS rollEnd'))
+   ->where('job_id',$request->input('job_id'))
+   ->whereNotNull('exam_date')
+   ->whereNotNull('exam_time')
+   ->whereNull('exam_hall')
+   ->first();
+   //dd($data);
+   if($data){
+
+    return response()->json(['success' => true, 'data' => $data]);
+   }
+   else
+   return response()->json(['success' => false, 'message' => 'SeatPlan already complete or no roll setting yet.']);
+  // dd($data);
+
+}
+
+
+
+
 }

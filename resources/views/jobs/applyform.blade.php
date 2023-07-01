@@ -57,14 +57,25 @@
 
                         <div class="col-md-2 fw-bold">বিজ্ঞপ্তি তারিখ</div>
                         <div class="col-md-10">
-                            {{$job->jobcurbday ? $job->jobcurbday:''}}
+                            {{ $job->jobcurbday ? date("F j, Y", strtotime($job->jobcurbday)) :'' }}
                         </div>
 
 
                     </div>
+                    
+                  
+
                     {!! Form::open(['route' => array('jobApply'), 'files' => true]) !!}
                     {!! Form::hidden('uuid', $uuid) !!}
                     {!! Form::hidden('jobcurday', $job->jobcurbday ? $job->jobcurbday:'') !!}
+                    {!! Form::hidden('age_calculation', $job->age_calculation) !!}
+                    {!! Form::hidden('min_age', $job->min_age) !!}
+                    {!! Form::hidden('max_age', $job->max_age) !!}
+                    {!! Form::hidden('handicapped_age', $job->handicapped_age) !!}
+                    {!! Form::hidden('divisioncaplicant_age', $job->divisioncaplicant_age) !!}
+                    {!! Form::hidden('petition_age', $job->petition_age) !!}
+                    {!! Form::hidden('freedom_fighter', $job->freedom_fighter) !!}
+                     {!! Form::hidden('date_of_birth_cal', '') !!}
                     <?php
         if($job->min_education_con){
             echo Form::hidden('min_education_con', $job->min_education_con);
@@ -72,7 +83,7 @@
                     ?>
                     <div class="row mt-4">
                         <div class="col-md-12">
-                            @include('layouts.shared.message')
+                            {{-- @include('layouts.shared.message') --}}
                             <div class="card">
                                 <div class="card-header bg-secondary fw-bold text-white">
                                     ব্যক্তিগত তথ্য
@@ -81,8 +92,8 @@
                                     <table class="table table-bordered">
                                         <tbody>
                                         <tr>
-                                            <td>প্রার্থীর নাম ইংরেজীতে (বড় অক্ষরে) <span class="text-danger">*</span> </td>
-                                            <td> {!! Form::text('name_en', null, array('placeholder' => '','class' => 'form-control')) !!}
+                                            <td style="width: 40%">প্রার্থীর নাম ইংরেজীতে (বড় অক্ষরে) <span class="text-danger">*</span> </td>
+                                            <td style="width: 60%"> {!! Form::text('name_en', null, array('placeholder' => '','class' => 'form-control')) !!}
                                                 @if ($errors->has('name_en'))
                                                     <span class="text-danger">{{ $errors->first('name_en') }}</span>
                                                 @endif
@@ -118,10 +129,12 @@
 
                                         <tr>
                                             <td>জন্ম তারিখ <span class="text-danger">*</span></td>
-                                            <td>{!! Form::text('date_of_birth', null, array('placeholder' => '','class' => 'form-control', 'id'=>'date_of_birth')) !!}
+                                            <td>{!! Form::text('date_of_birth', null, array('placeholder' => '','class' => 'form-control', 'id'=>'date_of_birth', 'autocomplete'=>'off')) !!}
                                                 @if ($errors->has('date_of_birth'))
                                                     <span class="text-danger">{{ $errors->first('date_of_birth') }}</span>
                                                 @endif
+                                               
+                                                <span class="text-danger date_of_birth"></span>
                                             </td>
                                         </tr>
                                         <tr>
@@ -932,7 +945,7 @@
                                     <div class="row" style="margin-top: 5px">
                                         <div class="col-md-3">
                                             <label for="extrq" class="form-label"> কোটা</label>
-                                            {!! Form::select('quota',\App\Helpers\StaticValue::QTOTA,null,['class'=>'form-control','placeholder'=>'','id'=>'experienceyear']) !!}
+                                            {!! Form::select('quota',\App\Helpers\StaticValue::QTOTA,null,['class'=>'form-control','placeholder'=>'','id'=>'quota']) !!}
                                         </div>
                                         <div class="col-md-3">
                                             <label for="extrq" class="form-label">বিভাগীয় প্রার্থী কিনা</label>
@@ -965,7 +978,7 @@
                     </div>
                     <div class="row mb-5">
                         <div class="col-md-7 ">
-                            <button type="submit" class="btn btn-primary mt-4 btn-lg float-end">Submit Registration</button>
+                            <button type="submit" class="btn btn-primary mt-4 btn-lg float-end" id="submitb">Submit Registration</button>
                         </div>
 
                     </div>
@@ -982,6 +995,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://momentjs.com/downloads/moment-with-locales.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script type="text/javascript">
         $.ajaxSetup({
             headers: {
@@ -993,7 +1008,7 @@
 
         $(document).ready(function () {
             $( "#date_of_birth" ).datepicker({
-                dateFormat:"mm-dd-yy",
+                dateFormat: "yy-mm-dd",
                 changeMonth: true,
                 changeYear: true,
                // maxDate: "+1m +1w"
@@ -1335,6 +1350,102 @@
 
 
             });
+
+            $('#date_of_birth').on('change', function (e) {
+
+                var date_of_birth = $('#date_of_birth').val();
+                var ageCalculationDate = {{$job->age_calculation}};
+                var min_age = {{$job->min_age}};
+                var max_age = {{$job->max_age}};
+                var handicapped_age = {{$job->handicapped_age}};
+                var divisioncaplicant_age = {{$job->divisioncaplicant_age}};
+                var petition_age = {{$job->petition_age}};
+               var quota= $('#quota').val();
+               var divisioncaplicant= $('#divisioncaplicant').val();
+               console.log(quota);
+
+            
+
+               $.ajax({
+                    url:"{{ route('ageCalculation') }}",
+                    type:"POST",
+                    cache: false,
+                    data: {
+                        "bday": date_of_birth,
+                        "fixedday": "{{$job->age_calculation}}",
+                        "_token": "{{ csrf_token() }}",
+                    },
+                    success:function (data) {
+                      console.log(data);
+                      $('span.date_of_birth').html(data.data);
+                    }
+                });
+
+                 applicationAgeCalculation(date_of_birth, quota, divisioncaplicant);
+
+            });
+
+
+            $('#quota').on('change', function (e) {
+                var quota= $('#quota').val();
+                var date_of_birth = $('#date_of_birth').val();
+                var divisioncaplicant = $('#divisioncaplicant').val();
+                console.log(quota);
+                applicationAgeCalculation(date_of_birth, quota, divisioncaplicant);
+
+            });
+
+            $('#divisioncaplicant').on('change', function (e) {
+                var quota= $('#quota').val();
+                var date_of_birth = $('#date_of_birth').val();
+                var divisioncaplicant = $('#divisioncaplicant').val();
+                console.log(quota);
+                applicationAgeCalculation(date_of_birth, quota, divisioncaplicant);
+
+            });
+
+
+            function applicationAgeCalculation(date_of_birth, quota='', divisioncaplicant=''){
+                $.ajax({
+                    url:"{{ route('applyAgeCalculation') }}",
+                    type:"POST",
+                    cache: false,
+                    data: {
+                        "bday": date_of_birth,
+                        "fixedday": "{{$job->age_calculation}}",
+                        "quota": quota,
+                        "divisioncaplicant": divisioncaplicant,
+                         "minimumage": "{{$job->min_age}}",
+                         "mamximumage": "{{$job->max_age}}",
+                         "divisional": "{{$job->divisioncaplicant_age}}",
+                         "freedom_fighter": "{{$job->freedom_fighter}}",
+                         "handicapped_age": "{{$job->handicapped_age}}",
+                        "_token": "{{ csrf_token() }}",
+                    },
+                    success:function (data) {
+                      console.log(data);
+                      if(data=='Yes'){
+			$("#submitb").attr("disabled", false);
+			}
+		if(data=='No'){
+			$("#submitb").attr("disabled", true);
+            Swal.fire({
+                icon: 'error',
+                text: 'বয়স এর কারণে আপনি এই পদে আবেদন করতে পারবেন না । কোটা  বা বিভাগীয় প্রাথী হলে OK ক্লিক করুন এবং ফর্মের নিচের দিকে  কোটা বা বিভাগীয় অপশন সিলেক্ট করলে আবেদন করতে পারবেন।',
+            
+                });
+
+			
+			}
+
+                      
+                    }
+                });
+            }
+
+
+
+
         });
     </script>
 

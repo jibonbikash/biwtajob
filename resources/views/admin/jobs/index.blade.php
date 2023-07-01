@@ -32,6 +32,32 @@
                 @include('layouts.shared.message')
                     <div class="row">
                         <div class="col-md-12">
+                        <div class="card mb-2">
+                            <div class="card-header bg-primary text-white font-size-17 font-bold font-weight-bold">
+                            Search
+                            </div>
+                 {!! Form::open(['route' => array('jobs.index'), 'files' => false, 'method'=>'get']) !!}
+            <div class="row mt-1 mb-3">
+               
+                <div class="col-md-3">
+                    {!! Form::text('q', request()->get('q'), array('placeholder' => 'Job title','class' => 'form-control')) !!}
+                </div>
+                <div class="col-md-3">
+                    {!! Form::select('status',\App\Helpers\StaticValue::STATUS,null,['class'=>'form-control','placeholder'=>'Select status']) !!}
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" name="search" value="q" class="btn btn-success btn-lg float-end" title="Search"><i data-feather="search"></i></button>
+                    @if (request()->input('search')=='q')
+                     <a href="{{ route('jobs.index') }}" class="btn btn-warning btn-lg" title="Reset"><i data-feather="refresh-cw" class="text-white"></i></a>
+                    @endif
+                </div>
+            </div>
+                           {!! Form::close() !!}
+                        </div>
+            
+                    </div>
+
+                        <div class="col-md-12">
                             <div  class="table-responsive">
 
                                 <table class="table">

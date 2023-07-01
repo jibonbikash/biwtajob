@@ -24,7 +24,11 @@
                 <div class="media p-3">
                     <div class="media-body">
                         <span class="text-muted text-uppercase font-size-12 font-weight-bold">Total Jobs</span>
-                        <h2 class="mb-0">2189</h2>
+                        <h2 class="mb-0">
+                            <a href="{{ route('jobs.index') }}">
+                            {{ $jobsAll}}
+                            </a>
+                        </h2>
                     </div>
                     
                 </div>
@@ -38,7 +42,11 @@
                 <div class="media p-3">
                     <div class="media-body">
                         <span class="text-muted text-uppercase font-size-12 font-weight-bold">Applicants</span>
-                        <h2 class="mb-0">1065</h2>
+                        <h2 class="mb-0">
+                            <a href="{{ route('applicants') }}">
+                            {{ $applicants}}
+                            </a>
+                        </h2>
                     </div>
                     
                 </div>
@@ -51,9 +59,12 @@
             <div class="card-body p-0">
                 <div class="media p-3">
                     <div class="media-body">
-                        <span class="text-muted text-uppercase font-size-12 font-weight-bold">New
-                            Customers</span>
-                        <h2 class="mb-0">11</h2>
+                        <span class="text-muted text-uppercase font-size-12 font-weight-bold">Active Jobs</span>
+                        <h2 class="mb-0">
+                            <a href="{{ route('jobs.index',['status'=>1]) }}">
+                            {{ $activeJobs}}
+                            </a>
+                        </h2>
                     </div>
                     
                 </div>
@@ -66,9 +77,8 @@
             <div class="card-body p-0">
                 <div class="media p-3">
                     <div class="media-body">
-                        <span class="text-muted text-uppercase font-size-12 font-weight-bold">New
-                            Visitors</span>
-                        <h2 class="mb-0">750</h2>
+                        <span class="text-muted text-uppercase font-size-12 font-weight-bold">Take Received </span>
+                        <h2 class="mb-0">{{ $TakaReceived}}</h2>
                     </div>
                    
                 </div>

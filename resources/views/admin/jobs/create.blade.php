@@ -81,6 +81,13 @@
 
                         <div class="col-md-6">
                             <div class="form-group">
+                                <strong>Job circular Date</strong>
+                                {!! Form::text('jobcurbday', null, array('placeholder' => '','class' => 'form-control','id'=>'jobcurbday','autocomplete'=>'off')) !!}
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
                                 <strong>No. of Vacancies</strong>
                                 {!! Form::text('vacancies', null, array('placeholder' => '','class' => 'form-control')) !!}
                             </div>
@@ -129,7 +136,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <strong>Petition Age Age</strong>
+                                <strong>Petition Age</strong>
                                 {!! Form::text('petition_age', null, array('placeholder' => '','class' => 'form-control')) !!}
                             </div>
                         </div>

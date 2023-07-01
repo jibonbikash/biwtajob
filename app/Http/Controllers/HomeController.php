@@ -97,7 +97,6 @@ class HomeController extends Controller
     public function jobApply(Request $request){
 
 
-
        $job= Job::where('uuid',$request->uuid )->first();
        //dd($job);
         if($job){
@@ -108,7 +107,7 @@ class HomeController extends Controller
                 'name_bn' => 'required|max:255',
                 'father_name' => 'required|max:255',
                 'mother_name' => 'required|max:255',
-                'date_of_birth' => 'required|max:255',
+                'date_of_birth' => 'required|date_format:Y-m-d',
                 'mobile_no' => 'required|max:255',
                 'nationality' => 'required|max:255',
                 'religion' => 'required|max:255',
@@ -124,465 +123,215 @@ class HomeController extends Controller
                 'permanent_upozilla' => 'required|max:255',
                 'image' => 'required|mimes:jpeg,png,jpg,gif|max:1024',
                 'signature' => 'required|mimes:jpeg,png,jpg,gif|max:1024|dimensions:max_width=300,max_height=300',
-               // ['certificate.in' => 'The certificate field is required.............']
+                'jscexamlevel' => 'sometimes|required|max:255',
+                'jscinstitute_name' => 'sometimes|required|max:255',
+                'jscresult' => 'sometimes|required|max:255',
+                'jscboard' => 'sometimes|required|max:255',
+                'jscpassyear' => 'sometimes|required|max:255',
+                'sscexamlevel' => 'sometimes|required|max:255',
+                'sscinstitute_name' => 'sometimes|required|max:255',
+                'sscresult' => 'sometimes|required|max:255',
+                'sscSubject' => 'sometimes|required|max:255',
+                'sscboard' => 'sometimes|required|max:255',
+                'sscpassyear' => 'sometimes|required|max:255',
+            
+                'hscexamlevel' => 'sometimes|required|max:255',
+                'hscinstitute_name' => 'sometimes|required|max:255',
+                'hscresult' => 'sometimes|required|max:255',
+                'hscubject' => 'sometimes|required|max:255',
+                'hscboard' => 'sometimes|required|max:255',
+                'hscpassyear' => 'sometimes|required|max:255',
 
-            ]);
+                'graduationexamlevel' => 'sometimes|required|max:255',
+                'graduationinstitute_name' => 'sometimes|required|max:255',
+                'graduationresult' => 'sometimes|required|max:255',
+                'graduationsubject' => 'sometimes|required|max:255',
+                'graduationuniversity' => 'sometimes|required|max:255',
+                'graduationpassyear' => 'sometimes|required|max:255',
+
+                'mastersexamlevel' => 'sometimes|required|max:255',
+                'mastersinstitute_name' => 'sometimes|required|max:255',
+                'mastersresult' => 'sometimes|required|max:255',
+                'mastersSubject' => 'sometimes|required|max:255',
+                'mastersuniversity' => 'sometimes|required|max:255',
+                'certificate' => 'sometimes|required|max:255',
+                'certificateinstitute_name' => 'sometimes|required|max:255',
+                'certificateduration' => 'sometimes|required|max:255',
+            ],
+            [
+                'name_en.required' => 'প্রার্থীর নাম ইংরেজীতে (বড় অক্ষরে) লিখুন',
+                'name_bn.required'  => 'প্রার্থীর নাম বাংলায় লিখুন',
+                'father_name.required' => 'পিতার নাম লিখুন ',
+                'mother_name.required' => 'মাতার নাম লিখুন',
+                'date_of_birth.required' => 'জন্ম তারিখ লিখুন',
+                'date_of_birth.date_format' => 'জন্ম তারিখের ফরমেট ঠিক নেই',
+                'mobile_no.required' => 'মোবাইল/টেলিফোন নম্বর লিখুন',
+                'nationality.required' => 'জাতীয়তা নির্বাচন করুন',
+                'religion.required' => 'ধর্ম নির্বাচন করুন',
+                'gender.required' => 'জেন্ডার নির্বাচন করুন',
+                'date_of_place.required' => 'জন্ম স্থান (জেলা) নির্বাচন করুন',
+                'present_postoffice.required' => 'বর্তমান ঠিকানার ডাকঘর লিখুন',
+                'present_postcode.required' => 'বর্তমান ঠিকানার পোস্টকোড নম্বর লিখুন',
+                'present_zilla.required' => 'বর্তমান ঠিকানার জেলা নির্বাচন করুন ',
+                'present_upozilla.required' => 'বর্তমান ঠিকানার উপজেলা/থানা নির্বাচন করুন ',
+                'permanent_postoffice.required' => 'স্থায়ী ঠিকানার ডাকঘর লিখুন',
+                'permanent_postcode.required' => 'স্থায়ী ঠিকানার পোস্টকোড নম্বর লিখুন',
+                'permanent_zilla.required' => 'স্থায়ী ঠিকানার জেলা নির্বাচন করুন',
+                'permanent_upozilla.required' => 'স্থায়ী ঠিকানার উপজেলা/থানা নির্বাচন করুন',
+                'image.required' => 'প্রার্থীর ছবি নির্বাচন করুন',
+                'signature.required' => 'প্রার্থীর স্বাক্ষর নির্বাচন করুন',
+                'jscexamlevel.required' => 'জে.এস.সি/ সমমান পরীক্ষার নাম নির্বাচন করুন',
+                'jscinstitute_name.required' => 'শিক্ষা প্রতিষ্ঠানের নাম লিখুন',
+                'jscresult.required' => 'গ্রেড/শ্রেণি/বিভাগ নির্বাচন করুন',
+                'jscboard.required' => 'বোর্ড নির্বাচন করুন',
+                'jscpassyear.required' => 'পাসের সন লিখুন',
+            
+                'sscexamlevel.required' => 'এস.এস.সি/ সমমান পরীক্ষার নাম নির্বাচন করুন',
+                'sscinstitute_name.required' => 'এস.এস.সি/ সমমান শিক্ষা প্রতিষ্ঠানের নাম লিখুন',
+                'sscresult.required' => 'এস.এস.সি/ সমমান গ্রেড/শ্রেণি/বিভাগ নির্বাচন করুন',
+                'sscSubject.required' => 'এস.এস.সি/ সমমান বিষয় নির্বাচন করুন',
+                'sscboard.required' => 'এস.এস.সি/ সমমান বোর্ড নির্বাচন করুন ',
+                'sscpassyear.required' => 'এস.এস.সি/ সমমান পাসের সন লিখুন',
+
+                'hscexamlevel.required' => 'এইচএসসি /সমমূল্য পরীক্ষার নাম নির্বাচন করুন',
+                'hscinstitute_name.required' => 'এইচএসসি /সমমূল্য শিক্ষা প্রতিষ্ঠানের নাম লিখুন',
+                'hscresult.required' => 'এইচএসসি /সমমূল্য গ্রেড/শ্রেণি/বিভাগ নির্বাচন করুন',
+                'hscubject.required' => 'এইচএসসি /সমমূল্য বিষয় নির্বাচন করুন',
+                'hscboard.required' => 'এইচএসসি /সমমূল্য বোর্ড নির্বাচন করুন ',
+                'hscpassyear.required' => 'এইচএসসি /সমমূল্য পাসের সন লিখুন',
+
+                'graduationexamlevel.required' => 'স্নাতক ডিগ্রী পরীক্ষার নাম নির্বাচন করুন',
+                'graduationinstitute_name.required' => 'স্নাতক ডিগ্রী শিক্ষা প্রতিষ্ঠানের নাম লিখুন',
+                'graduationresult.required' => 'স্নাতক ডিগ্রী গ্রেড/শ্রেণি/বিভাগ নির্বাচন করুন',
+                'graduationsubject.required' => 'স্নাতক ডিগ্রী বিষয় নির্বাচন করুন',
+                'graduationuniversity.required' => 'স্নাতক ডিগ্রী বিশ্ববিদ্যালয়/ইনস্টিটিউট নির্বাচন করুন ',
+                'graduationpassyear.required' => 'স্নাতক ডিগ্রী পাসের সন লিখুন',
+
+                'mastersexamlevel.required' => 'স্নাতকোত্তর পরীক্ষার নাম নির্বাচন করুন',
+                'mastersinstitute_name.required' => 'স্নাতকোত্তর শিক্ষা প্রতিষ্ঠানের নাম লিখুন',
+                'mastersresult.required' => 'স্নাতকোত্তর গ্রেড/শ্রেণি/বিভাগ নির্বাচন করুন',
+                'mastersSubject.required' => 'স্নাতকোত্তর বিষয় নির্বাচন করুন',
+                'mastersuniversity.required' => 'স্নাতকোত্তর বিশ্ববিদ্যালয়/ইনস্টিটিউট নির্বাচন করুন ',
+                'masterspassyear.required' => 'স্নাতকোত্তর পাসের সন লিখুন',
+
+                 'certificate.required' => 'সার্টিফিকেশন নাম নির্বাচন করুন',
+                 'certificateinstitute_name.required' => 'সার্টিফিকেশন প্রতিষ্ঠান নাম লিখুন',
+                 'certificateduration.required' => 'সার্টিফিকেশন গ্রেড/শ্রেণি/বিভাগ লিখুন',
+
+           
+
+              ]
+            );
             $flag=false;
-            $validator->sometimes('jscexamlevel', 'required', function () use ($job){
+            $validator->sometimes(['jscexamlevel', 'jscinstitute_name','jscresult','jscboard','jscpassyear'], 'required', function () use ($job){
                 return (($job->min_education=='JSC' OR $job->min_education=='SSC' OR  $job->min_education=='HSC' OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->jsc==1);
-            });
-            $validator->sometimes('jscinstitute_name', 'required', function () use ($job){
-              //  return $job->jsc==1;
-                return (($job->min_education=='JSC' OR $job->min_education=='SSC' OR  $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->jsc==1);
-            });
-            $validator->sometimes('jscresult', 'required', function () use ($job){
-             //   return $job->jsc==1;
-                return (($job->min_education=='JSC' OR $job->min_education=='SSC' OR  $job->min_education=='HSC' OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->jsc==1);
-            });
-            $validator->sometimes('jscboard', 'required', function () use ($job){
-               /// return $job->jsc==1;
-                return (($job->min_education=='JSC' OR $job->min_education=='SSC' OR  $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->jsc==1);
-            });
-            $validator->sometimes('jscpassyear', 'required', function () use ($job){
-               // return $job->jsc==1;
-                return (($job->min_education=='JSC' OR $job->min_education=='SSC' OR  $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->jsc==1);
             });
 
-            $validator->sometimes('sscexamlevel', 'required', function () use ($job){
+            $validator->sometimes(['sscexamlevel','sscinstitute_name','sscresult','sscSubject','sscboard','sscpassyear'], 'required', function () use ($job){
             //    return $job->ssc==1;
                 return (( $job->min_education=='SSC' OR  $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->ssc==1);
             });
-            $validator->sometimes('sscinstitute_name', 'required', function () use ($job){
-              //  return $job->ssc==1;
-                return (( $job->min_education=='SSC' OR  $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->ssc==1);
-            });
-            $validator->sometimes('sscresult', 'required', function () use ($job){
-              //  return $job->ssc==1;
-                return (( $job->min_education=='SSC' OR  $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->ssc==1);
-            });
-            $validator->sometimes('sscSubject', 'required', function () use ($job){
-               // return $job->ssc==1;
-                return (( $job->min_education=='SSC' OR  $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->ssc==1);
-            });
-            $validator->sometimes('sscboard', 'required', function () use ($job){
-             //   return $job->ssc==1;
-                return (( $job->min_education=='SSC' OR  $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->ssc==1);
-            });
-            $validator->sometimes('sscpassyear', 'required', function () use ($job){
-               // return $job->ssc==1;
-                return (( $job->min_education=='SSC' OR  $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->ssc==1);
-            });
 
-            $validator->sometimes('hscexamlevel', 'required', function () use ($job){
+            $validator->sometimes(['hscexamlevel','hscinstitute_name','hscresult','hscubject','hscboard','hscpassyear'], 'required', function () use ($job){
                 return (( $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->hsc==1);
              //   return $job->hsc==1;
             });
-            $validator->sometimes('hscinstitute_name', 'required', function () use ($job){
-              //  return $job->hsc==1;
-                return (( $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->hsc==1);
+            $validator->sometimes(['graduationexamlevel','graduationinstitute_name','graduationresult','graduationsubject','graduationuniversity','graduationpassyear'], 'required', function () use ($job){
+              //  return $job->graduation==1;
+                return (( $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->graduation==1);
             });
-            $validator->sometimes('hscresult', 'required', function () use ($job){
-             //   return $job->hsc==1;
-                return (( $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->hsc==1);
-            });
-            $validator->sometimes('hscubject', 'required', function () use ($job){
-              //  return $job->hsc==1;
-                return (( $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->hsc==1);
-            });
-            $validator->sometimes('hscboard', 'required', function () use ($job){
-               // return $job->hsc==1;
-                return (( $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->hsc==1);
-            });
-            $validator->sometimes('hscpassyear', 'required', function () use ($job){
-             //   return $job->hsc==1;
-                return (( $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->hsc==1);
-            });
+          
 
-            $validator->sometimes('graduationexamlevel', 'required', function () use ($job){
-              //  return $job->graduation==1;
-                return (( $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->graduation==1);
-            });
-            $validator->sometimes('graduationinstitute_name', 'required', function () use ($job){
-              //  return $job->graduation==1;
-                return (( $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->graduation==1);
-            });
-            $validator->sometimes('graduationresult', 'required', function () use ($job){
-               // return $job->graduation==1;
-                return (( $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->graduation==1);
-            });
-            $validator->sometimes('graduationsubject', 'required', function () use ($job){
-              //  return $job->graduation==1;
-                return (( $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->graduation==1);
-            });
-            $validator->sometimes('graduationuniversity', 'required', function () use ($job){
-              //  return $job->graduation==1;
-                return (( $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->graduation==1);
-            });
-            $validator->sometimes('graduationpassyear', 'required', function () use ($job){
-               // return $job->graduation==1;
-                return (( $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->graduation==1);
-            });
-
-
-            $validator->sometimes('mastersexamlevel', 'required', function () use ($job){
+            $validator->sometimes(['mastersexamlevel','mastersinstitute_name','mastersresult','mastersSubject','mastersuniversity','masterspassyear'], 'required', function () use ($job){
               //  return $job->masters==1;
                 return (( $job->min_education=='Masters') AND  $job->masters==1);
             });
-            $validator->sometimes('mastersinstitute_name', 'required', function () use ($job){
-               // return $job->masters==1;
-                return (( $job->min_education=='Masters') AND  $job->masters==1);
-            });
-            $validator->sometimes('mastersresult', 'required', function () use ($job){
-             //   return $job->masters==1;
-                return (( $job->min_education=='Masters') AND  $job->masters==1);
-            });
-            $validator->sometimes('mastersSubject', 'required', function () use ($job){
-              //  return $job->masters==1;
-                return (( $job->min_education=='Masters') AND  $job->masters==1);
-            });
-            $validator->sometimes('mastersuniversity', 'required', function () use ($job){
-               // return $job->masters==1;
-                return (( $job->min_education=='Masters') AND  $job->masters==1);
-            });
-            $validator->sometimes('masterspassyear', 'required', function () use ($job){
-               // return $job->masters==1;
-                return (( $job->min_education=='Masters') AND  $job->masters==1);
-            });
+            
 
+            $validator->sometimes('date_of_birth_cal', 'required', function () use ($request){
+
+                $result= $this->applyAgeCalculationComon($request);
+               // dd($result);
+                return ($result==='No');   
+                
+          });
+
+             
             if($job->min_education_con=="AND"){
-                $validator->sometimes('jscexamlevel', 'required', function () use ($job){
+                $validator->sometimes(['jscexamlevel', 'jscinstitute_name','jscresult','jscboard','jscpassyear'], 'required', function () use ($job){
                     return (($job->min_education=='JSC' OR $job->min_education=='SSC' OR  $job->min_education=='HSC' OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->jsc==1);
                 });
-                $validator->sometimes('jscinstitute_name', 'required', function () use ($job){
-                    return (($job->min_education=='JSC' OR $job->min_education=='SSC' OR  $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->jsc==1);
-                });
-                $validator->sometimes('jscresult', 'required', function () use ($job){
-                    return (($job->min_education=='JSC' OR $job->min_education=='SSC' OR  $job->min_education=='HSC' OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->jsc==1);
-                });
-                $validator->sometimes('jscboard', 'required', function () use ($job){
-                    return (($job->min_education=='JSC' OR $job->min_education=='SSC' OR  $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->jsc==1);
-                });
-                $validator->sometimes('jscpassyear', 'required', function () use ($job){
-                    return (($job->min_education=='JSC' OR $job->min_education=='SSC' OR  $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->jsc==1);
-                });
+              
 
-                $validator->sometimes('sscexamlevel', 'required', function () use ($job){
-                    return (( $job->min_education=='SSC' OR  $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->ssc==1);
-                });
-                $validator->sometimes('sscinstitute_name', 'required', function () use ($job){
-                    return (( $job->min_education=='SSC' OR  $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->ssc==1);
-                });
-                $validator->sometimes('sscresult', 'required', function () use ($job){
-                    return (( $job->min_education=='SSC' OR  $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->ssc==1);
-                });
-                $validator->sometimes('sscSubject', 'required', function () use ($job){
-                    return (( $job->min_education=='SSC' OR  $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->ssc==1);
-                });
-                $validator->sometimes('sscboard', 'required', function () use ($job){
-                    return (( $job->min_education=='SSC' OR  $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->ssc==1);
-                });
-                $validator->sometimes('sscpassyear', 'required', function () use ($job){
+                $validator->sometimes(['sscexamlevel','sscinstitute_name','sscresult','sscSubject','sscboard','sscpassyear'], 'required', function () use ($job){
                     return (( $job->min_education=='SSC' OR  $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->ssc==1);
                 });
 
-                $validator->sometimes('hscexamlevel', 'required', function () use ($job){
-                    return (( $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->hsc==1);
-                });
-                $validator->sometimes('hscinstitute_name', 'required', function () use ($job){
-                    return (( $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->hsc==1);
-                });
-                $validator->sometimes('hscresult', 'required', function () use ($job){
-                    return (( $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->hsc==1);
-                });
-                $validator->sometimes('hscubject', 'required', function () use ($job){
-                    return (( $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->hsc==1);
-                });
-                $validator->sometimes('hscboard', 'required', function () use ($job){
-                    return (( $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->hsc==1);
-                });
-                $validator->sometimes('hscpassyear', 'required', function () use ($job){
-                    return (( $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->hsc==1);
-                });
 
-                $validator->sometimes('graduationexamlevel', 'required', function () use ($job){
-                    return (( $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->graduation==1);
+                $validator->sometimes(['hscexamlevel','hscinstitute_name','hscresult','hscubject','hscboard','hscpassyear'], 'required', function () use ($job){
+                    return (( $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->hsc==1);
                 });
-                $validator->sometimes('graduationinstitute_name', 'required', function () use ($job){
-                    return (( $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->graduation==1);
-                });
-                $validator->sometimes('graduationresult', 'required', function () use ($job){
-                    return (( $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->graduation==1);
-                });
-                $validator->sometimes('graduationsubject', 'required', function () use ($job){
-                    return (( $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->graduation==1);
-                });
-                $validator->sometimes('graduationuniversity', 'required', function () use ($job){
-                    return (( $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->graduation==1);
-                });
-                $validator->sometimes('graduationpassyear', 'required', function () use ($job){
-                    return (( $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->graduation==1);
-                });
+             
 
+                $validator->sometimes(['graduationexamlevel','graduationinstitute_name','graduationresult','graduationsubject','graduationuniversity','graduationpassyear'], 'required', function () use ($job){
+                    return (( $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->graduation==1);
+                });
+              
+
+                $validator->sometimes(['graduationexamlevel','graduationinstitute_name','graduationresult','graduationsubject','graduationuniversity','graduationpassyear'], 'required', function () use ($job){
+                
+                    return (( $job->min_education_with=='Masters') AND  $job->graduation==1);
+                });
+              
+
+                $validator->sometimes(['mastersexamlevel','mastersinstitute_name','mastersresult','mastersSubject','mastersuniversity','masterspassyear'], 'required', function () use ($job){
+                    return (( $job->min_education=='Masters') AND  $job->masters==1);
+                });
+               
 
                 $validator->sometimes('mastersexamlevel', 'required', function () use ($job){
-                    return (( $job->min_education=='Masters') AND  $job->masters==1);
+                    return (( $job->min_education_with=='Masters') AND  $job->masters==1);
                 });
                 $validator->sometimes('mastersinstitute_name', 'required', function () use ($job){
-                    return (( $job->min_education=='Masters') AND  $job->masters==1);
+                    return (( $job->min_education_with=='Masters') AND  $job->masters==1);
                 });
                 $validator->sometimes('mastersresult', 'required', function () use ($job){
-                    return (( $job->min_education=='Masters') AND  $job->masters==1);
+                    return (( $job->min_education_with=='Masters') AND  $job->masters==1);
                 });
                 $validator->sometimes('mastersSubject', 'required', function () use ($job){
-                    return (( $job->min_education=='Masters') AND  $job->masters==1);
+                    return (( $job->min_education_with=='Masters') AND  $job->masters==1);
                 });
                 $validator->sometimes('mastersuniversity', 'required', function () use ($job){
-                    return (( $job->min_education=='Masters') AND  $job->masters==1);
+                    return (( $job->min_education_with=='Masters') AND  $job->masters==1);
                 });
                 $validator->sometimes('masterspassyear', 'required', function () use ($job){
-                    return (( $job->min_education=='Masters') AND  $job->masters==1);
+                    return (( $job->min_education_with=='Masters') AND  $job->masters==1);
                 });
             }
 
-            $validator->sometimes('certificate', 'required', function () use ($job){
+            $validator->sometimes(['certificate','certificateinstitute_name','certificateduration'], 'required', function () use ($job){
                 return $job->certificate_isrequired==1;
             });
 
-            $validator->sometimes('certificateinstitute_name', 'required', function () use ($job){
-                return $job->certificate_isrequired==1;
-            });
-           $validator->sometimes('certificateduration', 'required', function () use ($job){
-                return $job->certificate_isrequired==1;
-            });
-//            $validator->sometimes('hscexamlevel', 'required', function () use ($job){
-//                return $job->min_education=='HSC';
-//            });
-//            $validator->sometimes('hscexamlevel', 'required', function () use ($job){
-//                return $job->min_education=='JSC';
-//            });\
+        
 
-//            if($request->min_education_con=="OR"){
-//
-//            }
-//            if($request->min_education_con=="AND"){
-//
-//            }
+$validator->after(function ($validator) {
+    if ($validator->errors()->isNotEmpty()) {
+        $validator->errors()->add('date_of_birth', 'বয়স এর কারণে আপনি এই পদে আবেদন করতে পারবেন না!');
+    /*    $validator->errors()->add('name_en', 'প্রার্থীর নাম ইংরেজীতে (বড় অক্ষরে) লিখুন ');
+        $validator->errors()->add('name_bn', 'প্রার্থীর নাম বাংলায় লিখুন ');
+        $validator->errors()->add('father_name', 'পিতার নাম লিখুন ');
+        $validator->errors()->add('mother_name', 'মাতার নাম লিখুন ');
+        $validator->errors()->add('mobile_no', 'মোবাইল/টেলিফোন নম্বর লিখুন ');
+        $validator->errors()->add('nid', 'জাতীয় পরিচয় নম্বর লিখুন ');
+        $validator->errors()->add('nationality', 'জাতীয়তা সিলেক্ট করুন');
+        $validator->errors()->add('religion', 'ধর্ম সিলেক্ট করুন');
+        $validator->errors()->add('gender', 'জেন্ডার সিলেক্ট করুন');
+        $validator->errors()->add('date_of_place', 'জন্ম স্থান (জেলা) সিলেক্ট করুন');
+        */
+    }
+});
 
-            /*
-            if($request->min_education_con){
-                //   dd($job->min_education, $job->min_education_con, $job->min_education_with);
-
-                if($job->min_education=="JSC"){
-                    $validator->sometimes('jscexamlevel', 'required', function () use ($job){
-                        return $job->jsc==1;
-                    });
-                    $validator->sometimes('jscinstitute_name', 'required', function () use ($job){
-                        return $job->jsc==1;
-                    });
-                    $validator->sometimes('jscresult', 'required', function () use ($job){
-                        return $job->jsc==1;
-                    });
-                    $validator->sometimes('jscboard', 'required', function () use ($job){
-                        return $job->jsc==1;
-                    });
-                    $validator->sometimes('jscpassyear', 'required', function () use ($job){
-                        return $job->jsc==1;
-                    });
-                }
-
-                elseif ($job->min_education=="SSC"){
-                    $validator->sometimes('sscexamlevel', 'required', function () use ($job){
-                        return $job->ssc==1;
-                    });
-                    $validator->sometimes('sscinstitute_name', 'required', function () use ($job){
-                        return $job->ssc==1;
-                    });
-                    $validator->sometimes('sscresult', 'required', function () use ($job){
-                        return $job->ssc==1;
-                    });
-                    $validator->sometimes('sscSubject', 'required', function () use ($job){
-                        return $job->ssc==1;
-                    });
-                    $validator->sometimes('sscboard', 'required', function () use ($job){
-                        return $job->ssc==1;
-                    });
-                    $validator->sometimes('sscpassyear', 'required', function () use ($job){
-                        return $job->ssc==1;
-                    });
-                }
-                elseif($job->min_education=="HSC"){
-                    $validator->sometimes('hscexamlevel', 'required', function () use ($job){
-                        return $job->hsc==1;
-                    });
-                    $validator->sometimes('hscinstitute_name', 'required', function () use ($job){
-                        return $job->hsc==1;
-                    });
-                    $validator->sometimes('hscresult', 'required', function () use ($job){
-                        return $job->hsc==1;
-                    });
-                    $validator->sometimes('hscubject', 'required', function () use ($job){
-                        return $job->hsc==1;
-                    });
-                    $validator->sometimes('hscboard', 'required', function () use ($job){
-                        return $job->hsc==1;
-                    });
-                    $validator->sometimes('hscpassyear', 'required', function () use ($job){
-                        return $job->hsc==1;
-                    });
-
-                }
-                elseif($job->min_education=="Graduation"){
-                    $validator->sometimes('graduationexamlevel', 'required', function () use ($job){
-                        return $job->graduation==1;
-                    });
-                    $validator->sometimes('graduationinstitute_name', 'required', function () use ($job){
-                        return $job->graduation==1;
-                    });
-                    $validator->sometimes('graduationresult', 'required', function () use ($job){
-                        return $job->graduation==1;
-                    });
-                    $validator->sometimes('graduationsubject', 'required', function () use ($job){
-                        return $job->graduation==1;
-                    });
-                    $validator->sometimes('graduationuniversity', 'required', function () use ($job){
-                        return $job->graduation==1;
-                    });
-                    $validator->sometimes('graduationpassyear', 'required', function () use ($job){
-                        return $job->graduation==1;
-                    });
-
-                }
-                elseif($job->min_education=="Masters"){
-                    $validator->sometimes('mastersexamlevel', 'required', function () use ($job){
-                        return $job->masters==1;
-                    });
-                    $validator->sometimes('mastersinstitute_name', 'required', function () use ($job){
-                        return $job->masters==1;
-                    });
-                    $validator->sometimes('mastersresult', 'required', function () use ($job){
-                        return $job->masters==1;
-                    });
-                    $validator->sometimes('mastersSubject', 'required', function () use ($job){
-                        return $job->masters==1;
-                    });
-                    $validator->sometimes('mastersuniversity', 'required', function () use ($job){
-                        return $job->masters==1;
-                    });
-                    $validator->sometimes('masterspassyear', 'required', function () use ($job){
-                        return $job->masters==1;
-                    });
-
-                }
-
-            }
-
-            if($request->min_education_with){
-                //   dd($job->min_education, $job->min_education_con, $job->min_education_with);
-
-                if($job->min_education=="JSC"){
-                    $validator->sometimes('jscexamlevel', 'required', function () use ($job){
-                        return $job->jsc==1;
-                    });
-                    $validator->sometimes('jscinstitute_name', 'required', function () use ($job){
-                        return $job->jsc==1;
-                    });
-                    $validator->sometimes('jscresult', 'required', function () use ($job){
-                        return $job->jsc==1;
-                    });
-                    $validator->sometimes('jscboard', 'required', function () use ($job){
-                        return $job->jsc==1;
-                    });
-                    $validator->sometimes('jscpassyear', 'required', function () use ($job){
-                        return $job->jsc==1;
-                    });
-                }
-
-                elseif ($job->min_education=="SSC"){
-                    $validator->sometimes('sscexamlevel', 'required', function () use ($job){
-                        return $job->ssc==1;
-                    });
-                    $validator->sometimes('sscinstitute_name', 'required', function () use ($job){
-                        return $job->ssc==1;
-                    });
-                    $validator->sometimes('sscresult', 'required', function () use ($job){
-                        return $job->ssc==1;
-                    });
-                    $validator->sometimes('sscSubject', 'required', function () use ($job){
-                        return $job->ssc==1;
-                    });
-                    $validator->sometimes('sscboard', 'required', function () use ($job){
-                        return $job->ssc==1;
-                    });
-                    $validator->sometimes('sscpassyear', 'required', function () use ($job){
-                        return $job->ssc==1;
-                    });
-                }
-                elseif($job->min_education=="HSC"){
-                    $validator->sometimes('hscexamlevel', 'required', function () use ($job){
-                        return $job->hsc==1;
-                    });
-                    $validator->sometimes('hscinstitute_name', 'required', function () use ($job){
-                        return $job->hsc==1;
-                    });
-                    $validator->sometimes('hscresult', 'required', function () use ($job){
-                        return $job->hsc==1;
-                    });
-                    $validator->sometimes('hscubject', 'required', function () use ($job){
-                        return $job->hsc==1;
-                    });
-                    $validator->sometimes('hscboard', 'required', function () use ($job){
-                        return $job->hsc==1;
-                    });
-                    $validator->sometimes('hscpassyear', 'required', function () use ($job){
-                        return $job->hsc==1;
-                    });
-
-                }
-                elseif($job->min_education=="Graduation"){
-                    $validator->sometimes('graduationexamlevel', 'required', function () use ($job){
-                        return $job->graduation==1;
-                    });
-                    $validator->sometimes('graduationinstitute_name', 'required', function () use ($job){
-                        return $job->graduation==1;
-                    });
-                    $validator->sometimes('graduationresult', 'required', function () use ($job){
-                        return $job->graduation==1;
-                    });
-                    $validator->sometimes('graduationsubject', 'required', function () use ($job){
-                        return $job->graduation==1;
-                    });
-                    $validator->sometimes('graduationuniversity', 'required', function () use ($job){
-                        return $job->graduation==1;
-                    });
-                    $validator->sometimes('graduationpassyear', 'required', function () use ($job){
-                        return $job->graduation==1;
-                    });
-
-                }
-                elseif($job->min_education=="Masters"){
-                    $validator->sometimes('mastersexamlevel', 'required', function () use ($job){
-                        return $job->masters==1;
-                    });
-                    $validator->sometimes('mastersinstitute_name', 'required', function () use ($job){
-                        return $job->masters==1;
-                    });
-                    $validator->sometimes('mastersresult', 'required', function () use ($job){
-                        return $job->masters==1;
-                    });
-                    $validator->sometimes('mastersSubject', 'required', function () use ($job){
-                        return $job->masters==1;
-                    });
-                    $validator->sometimes('mastersuniversity', 'required', function () use ($job){
-                        return $job->masters==1;
-                    });
-                    $validator->sometimes('masterspassyear', 'required', function () use ($job){
-                        return $job->masters==1;
-                    });
-
-                }
-
-            }
-*/
             if ($validator->fails()) {
                 return redirect()->back()
                     ->withErrors($validator)
@@ -767,19 +516,6 @@ dd($e->getMessage());
         }
 
 
-//        $request->validate([
-//            'name_en' => 'required|max:255',
-//            'name_bn' => 'required|max:255',
-//            'father_name' => 'required|max:255',
-//            'mother_name' => 'required|max:255',
-//            'date_of_birth' => 'required|max:255',
-//            'mobile_no' => 'required|max:255',
-//            'nationality' => 'required|max:255',
-//            'religion' => 'required|max:255',
-//            'gender' => 'required|max:255',
-//            'date_of_place' => 'required|max:255',
-//
-//        ]);
     }
 
     public function applicantPreview(Request $request, $uuid)
@@ -787,7 +523,7 @@ dd($e->getMessage());
 
         try {
 
-            $applicationinfo = Applicant::with(['educations', 'job', 'birthplace', 'zila', 'upozilla', 'permanentzila', 'permanentupozilla'])->where('uuid', $uuid)->first();
+            $applicationinfo = Applicant::with(['educations', 'job', 'birthplace', 'zila', 'upozilla', 'permanentzila', 'permanentupozilla','applicantCertificate'])->where('uuid', $uuid)->first();
             //dd($applicationinfo);
             if ($applicationinfo->eligible == 0) {
                 return view('jobs.applyformPreview', ['applicationinfo' => $applicationinfo]);
@@ -834,11 +570,12 @@ dd($e->getMessage());
         $job= Job::find($applicationinfo->job_id);
         if($applicationinfo && $job){
             $validator = Validator::make($request->all(), [
+                'uuid' => 'required',
                 'name_en' => 'required|max:255',
                 'name_bn' => 'required|max:255',
                 'father_name' => 'required|max:255',
                 'mother_name' => 'required|max:255',
-                'date_of_birth' => 'required|max:255',
+                'date_of_birth' => 'required|date_format:Y-m-d',
                 'mobile_no' => 'required|max:255',
                 'nationality' => 'required|max:255',
                 'religion' => 'required|max:255',
@@ -852,105 +589,137 @@ dd($e->getMessage());
                 'permanent_postcode' => 'required|max:255',
                 'permanent_zilla' => 'required|max:255',
                 'permanent_upozilla' => 'required|max:255',
-                'image' => 'nullable|mimes:jpeg,png,jpg,gif|max:1024',
-                'signature' => 'nullable|mimes:jpeg,png,jpg,gif|max:1024|dimensions:max_width=300,max_height=300',
+                'image' => 'required|mimes:jpeg,png,jpg,gif|max:1024',
+                'signature' => 'required|mimes:jpeg,png,jpg,gif|max:1024|dimensions:max_width=300,max_height=300',
+                'jscexamlevel' => 'sometimes|required|max:255',
+                'jscinstitute_name' => 'sometimes|required|max:255',
+                'jscresult' => 'sometimes|required|max:255',
+                'jscboard' => 'sometimes|required|max:255',
+                'jscpassyear' => 'sometimes|required|max:255',
+                'sscexamlevel' => 'sometimes|required|max:255',
+                'sscinstitute_name' => 'sometimes|required|max:255',
+                'sscresult' => 'sometimes|required|max:255',
+                'sscSubject' => 'sometimes|required|max:255',
+                'sscboard' => 'sometimes|required|max:255',
+                'sscpassyear' => 'sometimes|required|max:255',
+            
+                'hscexamlevel' => 'sometimes|required|max:255',
+                'hscinstitute_name' => 'sometimes|required|max:255',
+                'hscresult' => 'sometimes|required|max:255',
+                'hscubject' => 'sometimes|required|max:255',
+                'hscboard' => 'sometimes|required|max:255',
+                'hscpassyear' => 'sometimes|required|max:255',
 
-            ]);
+                'graduationexamlevel' => 'sometimes|required|max:255',
+                'graduationinstitute_name' => 'sometimes|required|max:255',
+                'graduationresult' => 'sometimes|required|max:255',
+                'graduationsubject' => 'sometimes|required|max:255',
+                'graduationuniversity' => 'sometimes|required|max:255',
+                'graduationpassyear' => 'sometimes|required|max:255',
 
-            $validator->sometimes('jscexamlevel', 'required', function () use ($job){
+                'mastersexamlevel' => 'sometimes|required|max:255',
+                'mastersinstitute_name' => 'sometimes|required|max:255',
+                'mastersresult' => 'sometimes|required|max:255',
+                'mastersSubject' => 'sometimes|required|max:255',
+                'mastersuniversity' => 'sometimes|required|max:255',
+                'certificate' => 'sometimes|required|max:255',
+                'certificateinstitute_name' => 'sometimes|required|max:255',
+                'certificateduration' => 'sometimes|required|max:255',
+            ],
+            [
+                'name_en.required' => 'প্রার্থীর নাম ইংরেজীতে (বড় অক্ষরে) লিখুন',
+                'name_bn.required'  => 'প্রার্থীর নাম বাংলায় লিখুন',
+                'father_name.required' => 'পিতার নাম লিখুন ',
+                'mother_name.required' => 'মাতার নাম লিখুন',
+                'date_of_birth.required' => 'জন্ম তারিখ লিখুন',
+                'date_of_birth.date_format' => 'জন্ম তারিখের ফরমেট ঠিক নেই',
+                'mobile_no.required' => 'মোবাইল/টেলিফোন নম্বর লিখুন',
+                'nationality.required' => 'জাতীয়তা নির্বাচন করুন',
+                'religion.required' => 'ধর্ম নির্বাচন করুন',
+                'gender.required' => 'জেন্ডার নির্বাচন করুন',
+                'date_of_place.required' => 'জন্ম স্থান (জেলা) নির্বাচন করুন',
+                'present_postoffice.required' => 'বর্তমান ঠিকানার ডাকঘর লিখুন',
+                'present_postcode.required' => 'বর্তমান ঠিকানার পোস্টকোড নম্বর লিখুন',
+                'present_zilla.required' => 'বর্তমান ঠিকানার জেলা নির্বাচন করুন ',
+                'present_upozilla.required' => 'বর্তমান ঠিকানার উপজেলা/থানা নির্বাচন করুন ',
+                'permanent_postoffice.required' => 'স্থায়ী ঠিকানার ডাকঘর লিখুন',
+                'permanent_postcode.required' => 'স্থায়ী ঠিকানার পোস্টকোড নম্বর লিখুন',
+                'permanent_zilla.required' => 'স্থায়ী ঠিকানার জেলা নির্বাচন করুন',
+                'permanent_upozilla.required' => 'স্থায়ী ঠিকানার উপজেলা/থানা নির্বাচন করুন',
+                'image.required' => 'প্রার্থীর ছবি নির্বাচন করুন',
+                'signature.required' => 'প্রার্থীর স্বাক্ষর নির্বাচন করুন',
+                'jscexamlevel.required' => 'জে.এস.সি/ সমমান পরীক্ষার নাম নির্বাচন করুন',
+                'jscinstitute_name.required' => 'শিক্ষা প্রতিষ্ঠানের নাম লিখুন',
+                'jscresult.required' => 'গ্রেড/শ্রেণি/বিভাগ নির্বাচন করুন',
+                'jscboard.required' => 'বোর্ড নির্বাচন করুন',
+                'jscpassyear.required' => 'পাসের সন লিখুন',
+            
+                'sscexamlevel.required' => 'এস.এস.সি/ সমমান পরীক্ষার নাম নির্বাচন করুন',
+                'sscinstitute_name.required' => 'এস.এস.সি/ সমমান শিক্ষা প্রতিষ্ঠানের নাম লিখুন',
+                'sscresult.required' => 'এস.এস.সি/ সমমান গ্রেড/শ্রেণি/বিভাগ নির্বাচন করুন',
+                'sscSubject.required' => 'এস.এস.সি/ সমমান বিষয় নির্বাচন করুন',
+                'sscboard.required' => 'এস.এস.সি/ সমমান বোর্ড নির্বাচন করুন ',
+                'sscpassyear.required' => 'এস.এস.সি/ সমমান পাসের সন লিখুন',
+
+                'hscexamlevel.required' => 'এইচএসসি /সমমূল্য পরীক্ষার নাম নির্বাচন করুন',
+                'hscinstitute_name.required' => 'এইচএসসি /সমমূল্য শিক্ষা প্রতিষ্ঠানের নাম লিখুন',
+                'hscresult.required' => 'এইচএসসি /সমমূল্য গ্রেড/শ্রেণি/বিভাগ নির্বাচন করুন',
+                'hscubject.required' => 'এইচএসসি /সমমূল্য বিষয় নির্বাচন করুন',
+                'hscboard.required' => 'এইচএসসি /সমমূল্য বোর্ড নির্বাচন করুন ',
+                'hscpassyear.required' => 'এইচএসসি /সমমূল্য পাসের সন লিখুন',
+
+                'graduationexamlevel.required' => 'স্নাতক ডিগ্রী পরীক্ষার নাম নির্বাচন করুন',
+                'graduationinstitute_name.required' => 'স্নাতক ডিগ্রী শিক্ষা প্রতিষ্ঠানের নাম লিখুন',
+                'graduationresult.required' => 'স্নাতক ডিগ্রী গ্রেড/শ্রেণি/বিভাগ নির্বাচন করুন',
+                'graduationsubject.required' => 'স্নাতক ডিগ্রী বিষয় নির্বাচন করুন',
+                'graduationuniversity.required' => 'স্নাতক ডিগ্রী বিশ্ববিদ্যালয়/ইনস্টিটিউট নির্বাচন করুন ',
+                'graduationpassyear.required' => 'স্নাতক ডিগ্রী পাসের সন লিখুন',
+
+                'mastersexamlevel.required' => 'স্নাতকোত্তর পরীক্ষার নাম নির্বাচন করুন',
+                'mastersinstitute_name.required' => 'স্নাতকোত্তর শিক্ষা প্রতিষ্ঠানের নাম লিখুন',
+                'mastersresult.required' => 'স্নাতকোত্তর গ্রেড/শ্রেণি/বিভাগ নির্বাচন করুন',
+                'mastersSubject.required' => 'স্নাতকোত্তর বিষয় নির্বাচন করুন',
+                'mastersuniversity.required' => 'স্নাতকোত্তর বিশ্ববিদ্যালয়/ইনস্টিটিউট নির্বাচন করুন ',
+                'masterspassyear.required' => 'স্নাতকোত্তর পাসের সন লিখুন',
+
+                 'certificate.required' => 'সার্টিফিকেশন নাম নির্বাচন করুন',
+                 'certificateinstitute_name.required' => 'সার্টিফিকেশন প্রতিষ্ঠান নাম লিখুন',
+                 'certificateduration.required' => 'সার্টিফিকেশন গ্রেড/শ্রেণি/বিভাগ লিখুন',
+
+           
+
+              ]
+            );
+
+            $validator->sometimes(['jscexamlevel', 'jscinstitute_name','jscresult','jscboard','jscpassyear'], 'required', function () use ($job){
                 return (($job->min_education=='JSC' OR $job->min_education=='SSC' OR  $job->min_education=='HSC' OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->jsc==1);
             });
-            $validator->sometimes('jscinstitute_name', 'required', function () use ($job){
-                return (($job->min_education=='JSC' OR $job->min_education=='SSC' OR  $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->jsc==1);
-            });
-            $validator->sometimes('jscresult', 'required', function () use ($job){
-                return (($job->min_education=='JSC' OR $job->min_education=='SSC' OR  $job->min_education=='HSC' OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->jsc==1);
-            });
-            $validator->sometimes('jscboard', 'required', function () use ($job){
-                return (($job->min_education=='JSC' OR $job->min_education=='SSC' OR  $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->jsc==1);
-            });
-            $validator->sometimes('jscpassyear', 'required', function () use ($job){
-                return (($job->min_education=='JSC' OR $job->min_education=='SSC' OR  $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->jsc==1);
-            });
 
-            $validator->sometimes('sscexamlevel', 'required', function () use ($job){
-                return (( $job->min_education=='SSC' OR  $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->ssc==1);
-            });
-            $validator->sometimes('sscinstitute_name', 'required', function () use ($job){
-                return (( $job->min_education=='SSC' OR  $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->ssc==1);
-            });
-            $validator->sometimes('sscresult', 'required', function () use ($job){
-                return (( $job->min_education=='SSC' OR  $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->ssc==1);
-            });
-            $validator->sometimes('sscSubject', 'required', function () use ($job){
-                return (( $job->min_education=='SSC' OR  $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->ssc==1);
-            });
-            $validator->sometimes('sscboard', 'required', function () use ($job){
-                return (( $job->min_education=='SSC' OR  $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->ssc==1);
-            });
-            $validator->sometimes('sscpassyear', 'required', function () use ($job){
+            $validator->sometimes(['sscexamlevel','sscinstitute_name','sscresult','sscSubject','sscboard','sscpassyear'], 'required', function () use ($job){
                 return (( $job->min_education=='SSC' OR  $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->ssc==1);
             });
 
-            $validator->sometimes('hscexamlevel', 'required', function () use ($job){
+            $validator->sometimes(['hscexamlevel','hscinstitute_name','hscresult','hscubject','hscboard','hscpassyear'], 'required', function () use ($job){
                 return (( $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->hsc==1);
             });
-            $validator->sometimes('hscinstitute_name', 'required', function () use ($job){
-                return (( $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->hsc==1);
+            $validator->sometimes(['graduationexamlevel','graduationinstitute_name','graduationresult','graduationsubject','graduationuniversity','graduationpassyear'], 'required', function () use ($job){
+                return (( $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->graduation==1);
             });
-            $validator->sometimes('hscresult', 'required', function () use ($job){
-                return (( $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->hsc==1);
-            });
-            $validator->sometimes('hscubject', 'required', function () use ($job){
-                return (( $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->hsc==1);
-            });
-            $validator->sometimes('hscboard', 'required', function () use ($job){
-                return (( $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->hsc==1);
-            });
-            $validator->sometimes('hscpassyear', 'required', function () use ($job){
-                return (( $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->hsc==1);
-            });
+          
 
-            $validator->sometimes('graduationexamlevel', 'required', function () use ($job){
-                return (( $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->graduation==1);
+            $validator->sometimes(['mastersexamlevel','mastersinstitute_name','mastersresult','mastersSubject','mastersuniversity','masterspassyear'], 'required', function () use ($job){
+                return (( $job->min_education=='Masters') AND  $job->masters==1);
             });
-            $validator->sometimes('graduationinstitute_name', 'required', function () use ($job){
-                return (( $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->graduation==1);
-            });
-            $validator->sometimes('graduationresult', 'required', function () use ($job){
-                return (( $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->graduation==1);
-            });
-            $validator->sometimes('graduationsubject', 'required', function () use ($job){
-                return (( $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->graduation==1);
-            });
-            $validator->sometimes('graduationuniversity', 'required', function () use ($job){
-                return (( $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->graduation==1);
-            });
-            $validator->sometimes('graduationpassyear', 'required', function () use ($job){
-                return (( $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->graduation==1);
-            });
+            
 
-
-            $validator->sometimes('mastersexamlevel', 'required', function () use ($job){
-                return (( $job->min_education=='Masters') AND  $job->masters==1);
-            });
-            $validator->sometimes('mastersinstitute_name', 'required', function () use ($job){
-                return (( $job->min_education=='Masters') AND  $job->masters==1);
-            });
-            $validator->sometimes('mastersresult', 'required', function () use ($job){
-                return (( $job->min_education=='Masters') AND  $job->masters==1);
-            });
-            $validator->sometimes('mastersSubject', 'required', function () use ($job){
-                return (( $job->min_education=='Masters') AND  $job->masters==1);
-            });
-            $validator->sometimes('mastersuniversity', 'required', function () use ($job){
-                return (( $job->min_education=='Masters') AND  $job->masters==1);
-            });
-            $validator->sometimes('masterspassyear', 'required', function () use ($job){
-                return (( $job->min_education=='Masters') AND  $job->masters==1);
-            });
+            $validator->sometimes('date_of_birth_cal', 'required', function () use ($request){
+                $result= $this->applyAgeCalculationComon($request);
+                return ($result==='No');   
+                
+          });
 
             if($job->min_education_con=="AND"){
+             
                 $validator->sometimes('jscexamlevel', 'required', function () use ($job){
                     return (($job->min_education=='JSC' OR $job->min_education=='SSC' OR  $job->min_education=='HSC' OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->jsc==1);
                 });
@@ -1043,6 +812,26 @@ dd($e->getMessage());
                 $validator->sometimes('masterspassyear', 'required', function () use ($job){
                     return (( $job->min_education=='Masters') AND  $job->masters==1);
                 });
+
+                $validator->sometimes('mastersexamlevel', 'required', function () use ($job){
+                    return (( $job->min_education_with=='Masters') AND  $job->masters==1);
+                });
+                $validator->sometimes('mastersinstitute_name', 'required', function () use ($job){
+                    return (( $job->min_education_with=='Masters') AND  $job->masters==1);
+                });
+                $validator->sometimes('mastersresult', 'required', function () use ($job){
+                    return (( $job->min_education_with=='Masters') AND  $job->masters==1);
+                });
+                $validator->sometimes('mastersSubject', 'required', function () use ($job){
+                    return (( $job->min_education_with=='Masters') AND  $job->masters==1);
+                });
+                $validator->sometimes('mastersuniversity', 'required', function () use ($job){
+                    return (( $job->min_education_with=='Masters') AND  $job->masters==1);
+                });
+                $validator->sometimes('masterspassyear', 'required', function () use ($job){
+                    return (( $job->min_education_with=='Masters') AND  $job->masters==1);
+                });
+
             }
 
             $validator->sometimes('certificate', 'required', function () use ($job){
@@ -1055,6 +844,14 @@ dd($e->getMessage());
             $validator->sometimes('certificateduration', 'required', function () use ($job){
                 return $job->certificate_isrequired==1;
             });
+
+            $validator->after(function ($validator) {
+                if ($validator->errors()->isNotEmpty()) {
+                    $validator->errors()->add('date_of_birth', 'বয়স এর কারণে আপনি এই পদে আবেদন করতে পারবেন না!');
+                
+                }
+            });
+
             if ($validator->fails()) {
                 return redirect()->back()
                     ->withErrors($validator)
@@ -1299,6 +1096,19 @@ dd($e->getMessage());
     }
 
     public function PrintCopy(Request $request){
+
+        if ($request->has('applied_code')) {
+            $applicant= JobApply::with('applicant')->where([
+                'token'=> $request->input('applied_code')
+            ])->first();
+            return view('jobs.printCopy',[
+                'applicationinfo'=>$applicant,
+            ]);
+        }
+        
+
+        
+      
         return view('jobs.printCopy',[
             'applicationinfo'=>[],
         ]);
@@ -1323,4 +1133,454 @@ dd($e->getMessage());
             'applicationinfo'=>[],
         ]);
     }
+
+    public function ageCalculation(Request $request){
+
+
+        date_default_timezone_set('Asia/Dhaka');
+        $bday=$request->input('bday');
+        $fixedday=$request->input('fixedday');
+        $datetime1 = new \DateTime($fixedday);
+        $datetime2 = new \DateTime($bday);
+        $interval = $datetime1->diff($datetime2);
+        return response()->json(['success' => true, 'data' =>  '<strong>'.$fixedday.' তারিখে প্রার্থীর বয়স :'.$interval->format('%y years %m months and %d days').'<strong>']);
+
+    
+
+    }
+
+    public function applyAgeCalculation(Request $request){
+
+        date_default_timezone_set('Asia/Dhaka');
+        $bday=$request->input('bday');
+        $fixedday=$request->input('fixedday');
+        $freedom=$request->input('quota');
+        $divisioncaplicant=$request->input('divisioncaplicant');
+       // dd($bday, $fixedday, $freedom, $divisioncaplicant);
+        $datetime1 = new \DateTime($fixedday);
+        $datetime2 = new \DateTime($bday);
+         $interval = $datetime1->diff($datetime2);
+        $year= $interval->format('%y');
+        $month= $interval->format('%m');
+        $day= $interval->format('%d');
+        
+        $total=$total=($year*365)+$day+$month;
+        $minimumage=$request->input('minimumage')*365;
+        $mamximumage=$request->input('mamximumage')*365;
+        
+    
+        if($divisioncaplicant=='হ্যাঁ'){
+            
+            $divisionalAge=$request->input('divisional')*365;
+        //echo $total.'='.divisionalAge;
+                if($total <= $divisionalAge){
+                echo 'Yes';
+                }
+                else{
+                echo 'No';
+                }
+        
+            return;
+        }
+        
+        
+        
+        if(empty($freedom) && $freedom==''){
+        
+                if($total >= $minimumage){
+        
+                    if($total <= $mamximumage){
+                        echo 'Yes';
+                        return;
+                    }
+                    else{
+                    echo 'No';
+                        return;
+                    }
+                }
+        
+                else{
+                echo 'No';
+                    return;
+                }
+        
+        
+        }
+        
+        if(!empty($freedom)){
+    
+if($freedom=='মুক্তিযোদ্ধা / শহীদ মুক্তিযোদ্ধার পুত্র -কন্যা'){
+    $freedom=$request->input('freedom_fighter')*365;
 }
+elseif($freedom=='মুক্তিযোদ্ধা / শহীদ মুক্তিযোদ্ধার পুত্র -কন্যার পুত্র -কন্যা'){
+    $freedom=$request->input('freedom_fighter')*365;
+}
+elseif($freedom=='ক্ষুদ্র নৃ -গোষ্ঠী'){
+    $freedom=$request->input('freedom_fighter')*365;
+}
+elseif($freedom=='শারীরিক প্রতিবন্দী'){
+    $freedom=$request->input('handicapped_age')*365;
+}
+elseif($freedom=='এতিম'){
+    $freedom=$request->input('freedom_fighter')*365;
+}
+elseif($freedom=='আনসার ও গ্রাম প্রতিরক্ষা সদস্য'){
+    $freedom=$request->input('freedom_fighter')*365;
+}
+
+
+
+       
+                if($total <= $freedom){
+                        echo 'Yes';
+                        return;
+        
+                }
+        
+                if($total >= $freedom){
+                        echo 'No';
+                        return;
+        
+                }
+        
+        }
+
+
+    }
+
+
+    public function applyAgeCalculationComon(Request $request){
+
+        date_default_timezone_set('Asia/Dhaka');
+        $bday=$request->input('date_of_birth');
+        $fixedday=$request->input('age_calculation');
+        $freedom=$request->input('quota');
+        $divisioncaplicant=$request->input('divisioncaplicant_age');
+       // dd($bday, $fixedday, $freedom, $divisioncaplicant);
+        $datetime1 = new \DateTime($fixedday);
+        $datetime2 = new \DateTime($bday);
+         $interval = $datetime1->diff($datetime2);
+        $year= $interval->format('%y');
+        $month= $interval->format('%m');
+        $day= $interval->format('%d');
+        
+        $total=$total=($year*365)+$day+$month;
+        $minimumage=$request->input('min_age')*365;
+        $mamximumage=$request->input('max_age')*365;
+        
+    
+        if($divisioncaplicant=='হ্যাঁ'){
+            
+            $divisionalAge=$request->input('divisioncaplicant_age')*365;
+        //echo $total.'='.divisionalAge;
+                if($total <= $divisionalAge){
+                return 'Yes';
+                }
+                else{
+                    return 'No';
+                }
+        
+            return;
+        }
+        
+        
+        
+        if(empty($freedom) && $freedom==''){
+        
+                if($total >= $minimumage){
+        
+                    if($total <= $mamximumage){
+                        return 'Yes';
+                        return;
+                    }
+                    else{
+                        return 'No';
+                        return;
+                    }
+                }
+        
+                else{
+                    return 'No';
+                    return;
+                }
+        
+        
+        }
+        
+        if(!empty($freedom)){
+    
+if($freedom=='মুক্তিযোদ্ধা / শহীদ মুক্তিযোদ্ধার পুত্র -কন্যা'){
+    $freedom=$request->input('freedom_fighter')*365;
+}
+elseif($freedom=='মুক্তিযোদ্ধা / শহীদ মুক্তিযোদ্ধার পুত্র -কন্যার পুত্র -কন্যা'){
+    $freedom=$request->input('freedom_fighter')*365;
+}
+elseif($freedom=='ক্ষুদ্র নৃ -গোষ্ঠী'){
+    $freedom=$request->input('freedom_fighter')*365;
+}
+elseif($freedom=='শারীরিক প্রতিবন্দী'){
+    $freedom=$request->input('handicapped_age')*365;
+}
+elseif($freedom=='এতিম'){
+    $freedom=$request->input('freedom_fighter')*365;
+}
+elseif($freedom=='আনসার ও গ্রাম প্রতিরক্ষা সদস্য'){
+    $freedom=$request->input('freedom_fighter')*365;
+}
+
+
+
+       
+                if($total <= $freedom){
+                    return 'Yes';
+                        return;
+        
+                }
+        
+                if($total >= $freedom){
+                    return 'No';
+                        return;
+        
+                }
+        
+        }
+
+
+    }
+
+    
+
+
+}
+
+
+
+//            $validator->sometimes('hscexamlevel', 'required', function () use ($job){
+//                return $job->min_education=='HSC';
+//            });
+//            $validator->sometimes('hscexamlevel', 'required', function () use ($job){
+//                return $job->min_education=='JSC';
+//            });\
+
+//            if($request->min_education_con=="OR"){
+//
+//            }
+//            if($request->min_education_con=="AND"){
+//
+//            }
+
+            /*
+            if($request->min_education_con){
+                //   dd($job->min_education, $job->min_education_con, $job->min_education_with);
+
+                if($job->min_education=="JSC"){
+                    $validator->sometimes('jscexamlevel', 'required', function () use ($job){
+                        return $job->jsc==1;
+                    });
+                    $validator->sometimes('jscinstitute_name', 'required', function () use ($job){
+                        return $job->jsc==1;
+                    });
+                    $validator->sometimes('jscresult', 'required', function () use ($job){
+                        return $job->jsc==1;
+                    });
+                    $validator->sometimes('jscboard', 'required', function () use ($job){
+                        return $job->jsc==1;
+                    });
+                    $validator->sometimes('jscpassyear', 'required', function () use ($job){
+                        return $job->jsc==1;
+                    });
+                }
+
+                elseif ($job->min_education=="SSC"){
+                    $validator->sometimes('sscexamlevel', 'required', function () use ($job){
+                        return $job->ssc==1;
+                    });
+                    $validator->sometimes('sscinstitute_name', 'required', function () use ($job){
+                        return $job->ssc==1;
+                    });
+                    $validator->sometimes('sscresult', 'required', function () use ($job){
+                        return $job->ssc==1;
+                    });
+                    $validator->sometimes('sscSubject', 'required', function () use ($job){
+                        return $job->ssc==1;
+                    });
+                    $validator->sometimes('sscboard', 'required', function () use ($job){
+                        return $job->ssc==1;
+                    });
+                    $validator->sometimes('sscpassyear', 'required', function () use ($job){
+                        return $job->ssc==1;
+                    });
+                }
+                elseif($job->min_education=="HSC"){
+                    $validator->sometimes('hscexamlevel', 'required', function () use ($job){
+                        return $job->hsc==1;
+                    });
+                    $validator->sometimes('hscinstitute_name', 'required', function () use ($job){
+                        return $job->hsc==1;
+                    });
+                    $validator->sometimes('hscresult', 'required', function () use ($job){
+                        return $job->hsc==1;
+                    });
+                    $validator->sometimes('hscubject', 'required', function () use ($job){
+                        return $job->hsc==1;
+                    });
+                    $validator->sometimes('hscboard', 'required', function () use ($job){
+                        return $job->hsc==1;
+                    });
+                    $validator->sometimes('hscpassyear', 'required', function () use ($job){
+                        return $job->hsc==1;
+                    });
+
+                }
+                elseif($job->min_education=="Graduation"){
+                    $validator->sometimes('graduationexamlevel', 'required', function () use ($job){
+                        return $job->graduation==1;
+                    });
+                    $validator->sometimes('graduationinstitute_name', 'required', function () use ($job){
+                        return $job->graduation==1;
+                    });
+                    $validator->sometimes('graduationresult', 'required', function () use ($job){
+                        return $job->graduation==1;
+                    });
+                    $validator->sometimes('graduationsubject', 'required', function () use ($job){
+                        return $job->graduation==1;
+                    });
+                    $validator->sometimes('graduationuniversity', 'required', function () use ($job){
+                        return $job->graduation==1;
+                    });
+                    $validator->sometimes('graduationpassyear', 'required', function () use ($job){
+                        return $job->graduation==1;
+                    });
+
+                }
+                elseif($job->min_education=="Masters"){
+                    $validator->sometimes('mastersexamlevel', 'required', function () use ($job){
+                        return $job->masters==1;
+                    });
+                    $validator->sometimes('mastersinstitute_name', 'required', function () use ($job){
+                        return $job->masters==1;
+                    });
+                    $validator->sometimes('mastersresult', 'required', function () use ($job){
+                        return $job->masters==1;
+                    });
+                    $validator->sometimes('mastersSubject', 'required', function () use ($job){
+                        return $job->masters==1;
+                    });
+                    $validator->sometimes('mastersuniversity', 'required', function () use ($job){
+                        return $job->masters==1;
+                    });
+                    $validator->sometimes('masterspassyear', 'required', function () use ($job){
+                        return $job->masters==1;
+                    });
+
+                }
+
+            }
+
+            if($request->min_education_with){
+                //   dd($job->min_education, $job->min_education_con, $job->min_education_with);
+
+                if($job->min_education=="JSC"){
+                    $validator->sometimes('jscexamlevel', 'required', function () use ($job){
+                        return $job->jsc==1;
+                    });
+                    $validator->sometimes('jscinstitute_name', 'required', function () use ($job){
+                        return $job->jsc==1;
+                    });
+                    $validator->sometimes('jscresult', 'required', function () use ($job){
+                        return $job->jsc==1;
+                    });
+                    $validator->sometimes('jscboard', 'required', function () use ($job){
+                        return $job->jsc==1;
+                    });
+                    $validator->sometimes('jscpassyear', 'required', function () use ($job){
+                        return $job->jsc==1;
+                    });
+                }
+
+                elseif ($job->min_education=="SSC"){
+                    $validator->sometimes('sscexamlevel', 'required', function () use ($job){
+                        return $job->ssc==1;
+                    });
+                    $validator->sometimes('sscinstitute_name', 'required', function () use ($job){
+                        return $job->ssc==1;
+                    });
+                    $validator->sometimes('sscresult', 'required', function () use ($job){
+                        return $job->ssc==1;
+                    });
+                    $validator->sometimes('sscSubject', 'required', function () use ($job){
+                        return $job->ssc==1;
+                    });
+                    $validator->sometimes('sscboard', 'required', function () use ($job){
+                        return $job->ssc==1;
+                    });
+                    $validator->sometimes('sscpassyear', 'required', function () use ($job){
+                        return $job->ssc==1;
+                    });
+                }
+                elseif($job->min_education=="HSC"){
+                    $validator->sometimes('hscexamlevel', 'required', function () use ($job){
+                        return $job->hsc==1;
+                    });
+                    $validator->sometimes('hscinstitute_name', 'required', function () use ($job){
+                        return $job->hsc==1;
+                    });
+                    $validator->sometimes('hscresult', 'required', function () use ($job){
+                        return $job->hsc==1;
+                    });
+                    $validator->sometimes('hscubject', 'required', function () use ($job){
+                        return $job->hsc==1;
+                    });
+                    $validator->sometimes('hscboard', 'required', function () use ($job){
+                        return $job->hsc==1;
+                    });
+                    $validator->sometimes('hscpassyear', 'required', function () use ($job){
+                        return $job->hsc==1;
+                    });
+
+                }
+                elseif($job->min_education=="Graduation"){
+                    $validator->sometimes('graduationexamlevel', 'required', function () use ($job){
+                        return $job->graduation==1;
+                    });
+                    $validator->sometimes('graduationinstitute_name', 'required', function () use ($job){
+                        return $job->graduation==1;
+                    });
+                    $validator->sometimes('graduationresult', 'required', function () use ($job){
+                        return $job->graduation==1;
+                    });
+                    $validator->sometimes('graduationsubject', 'required', function () use ($job){
+                        return $job->graduation==1;
+                    });
+                    $validator->sometimes('graduationuniversity', 'required', function () use ($job){
+                        return $job->graduation==1;
+                    });
+                    $validator->sometimes('graduationpassyear', 'required', function () use ($job){
+                        return $job->graduation==1;
+                    });
+
+                }
+                elseif($job->min_education=="Masters"){
+                    $validator->sometimes('mastersexamlevel', 'required', function () use ($job){
+                        return $job->masters==1;
+                    });
+                    $validator->sometimes('mastersinstitute_name', 'required', function () use ($job){
+                        return $job->masters==1;
+                    });
+                    $validator->sometimes('mastersresult', 'required', function () use ($job){
+                        return $job->masters==1;
+                    });
+                    $validator->sometimes('mastersSubject', 'required', function () use ($job){
+                        return $job->masters==1;
+                    });
+                    $validator->sometimes('mastersuniversity', 'required', function () use ($job){
+                        return $job->masters==1;
+                    });
+                    $validator->sometimes('masterspassyear', 'required', function () use ($job){
+                        return $job->masters==1;
+                    });
+
+                }
+
+            }
+*/

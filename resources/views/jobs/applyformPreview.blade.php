@@ -33,7 +33,7 @@
                         <div class="col-md-2 fw-bold">বিজ্ঞপ্তি তারিখ</div>
                         <div class="col-md-10">
 
-                            {{$applicationinfo->job ? $applicationinfo->job->jobcurbday:''}}
+                            {{ $applicationinfo->job ? date("F j, Y", strtotime($applicationinfo->job->jobcurbday)) :'' }}
                         </div>
 
 
@@ -306,6 +306,20 @@ else{
                                                         </td>
                                                     </tr>
                                                 @endforeach
+                                                @if($applicationinfo->applicantCertificate)
+                                                <tr>
+                                            
+                                                    <td colspan='4'>
+
+                                        {{ App\Models\Crtificate::find($applicationinfo->applicantCertificate ? $applicationinfo->applicantCertificate->edu_level:'')->name}} 
+                                            
+                                                    </td>
+                                                   
+                                                
+                                                    <td>{{ $applicationinfo->applicantCertificate ? $applicationinfo->applicantCertificate->institute_name :'---' }}</td>
+
+                                                    <td>{{ $applicationinfo->applicantCertificate ? $applicationinfo->applicantCertificate->edu_level :'---' }}</td>
+                                                    @endif
                                                 </tbody>
                                             </table>
 

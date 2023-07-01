@@ -57,13 +57,21 @@
 
                         <div class="col-md-2 fw-bold">বিজ্ঞপ্তি তারিখ</div>
                         <div class="col-md-10">
-                            {{$job->jobcurbday ? $job->jobcurbday:''}}
+                            {{ $applicationinfo->job ? date("F j, Y", strtotime($applicationinfo->job->jobcurbday)) :'' }}
                         </div>
 
 
                     </div>
                     {!! Form::open(['route' => array('applicantPreviewConfirm', $applicationinfo->uuid), 'files' => true]) !!}
                     {!! Form::hidden('jobcurday', $job->jobcurbday ? $job->jobcurbday:'') !!}
+                    {!! Form::hidden('age_calculation', $job->age_calculation) !!}
+                    {!! Form::hidden('min_age', $job->min_age) !!}
+                    {!! Form::hidden('max_age', $job->max_age) !!}
+                    {!! Form::hidden('handicapped_age', $job->handicapped_age) !!}
+                    {!! Form::hidden('divisioncaplicant_age', $job->divisioncaplicant_age) !!}
+                    {!! Form::hidden('petition_age', $job->petition_age) !!}
+                    {!! Form::hidden('freedom_fighter', $job->freedom_fighter) !!}
+                     {!! Form::hidden('date_of_birth_cal', '') !!}
                     <div class="row mt-4">
                         <div class="col-md-12">
                             @include('layouts.shared.message')
@@ -75,8 +83,8 @@
                                     <table class="table table-bordered">
                                         <tbody>
                                         <tr>
-                                            <td>প্রার্থীর নাম ইংরেজীতে (বড় অক্ষরে) <span class="text-danger">*</span> </td>
-                                            <td> {!! Form::text('name_en', $applicationinfo->name_en, array('placeholder' => '','class' => 'form-control')) !!}
+                                            <td style="width: 40%">প্রার্থীর নাম ইংরেজীতে (বড় অক্ষরে) <span class="text-danger">*</span> </td>
+                                            <td style="width: 60%"> {!! Form::text('name_en', $applicationinfo->name_en, array('placeholder' => '','class' => 'form-control')) !!}
                                                 @if ($errors->has('name_en'))
                                                     <span class="text-danger">{{ $errors->first('name_en') }}</span>
                                                 @endif
@@ -116,6 +124,7 @@
                                                 @if ($errors->has('date_of_birth'))
                                                     <span class="text-danger">{{ $errors->first('date_of_birth') }}</span>
                                                 @endif
+                                                <span class="text-danger date_of_birth"></span>
                                             </td>
                                         </tr>
                                         <tr>
@@ -880,7 +889,7 @@
 
 
                                                                             @endphp
-                                                                            {!! Form::select('mastersexamlevel',$masters,$Mastresult->edu_level,['class'=>'form-control select2','placeholder'=>'','id'=>'mastersexamlevel']) !!}
+                                                                            {!! Form::select('mastersexamlevel',$masters,$Mastresult ? $Mastresult->edu_level:'',['class'=>'form-control select2','placeholder'=>'','id'=>'mastersexamlevel']) !!}
                                                                             @if ($errors->has('mastersexamlevel'))
                                                                                 <span class="text-danger">{{ $errors->first('mastersexamlevel') }}</span>
                                                                             @endif
@@ -892,7 +901,7 @@
                                                                         <label for="inputPassword"
                                                                                class="col-sm-4 col-form-label">শিক্ষা প্রতিষ্ঠান <span class="text-danger">*</span></label>
                                                                         <div class="col-sm-8">
-                                                                            {!! Form::text('mastersinstitute_name',$Mastresult->institute_name, array('placeholder' => '','class' => 'form-control')) !!}
+                                                                            {!! Form::text('mastersinstitute_name',$Mastresult  ? $Mastresult->institute_name:'', array('placeholder' => '','class' => 'form-control')) !!}
                                                                             @if ($errors->has('mastersinstitute_name'))
                                                                                 <span class="text-danger">{{ $errors->first('mastersinstitute_name') }}</span>
                                                                             @endif
@@ -908,11 +917,11 @@
                                                                         <label for="inputPassword"
                                                                                class="col-sm-4 col-form-label">গ্রেড/শ্রেণি/বিভাগ <span class="text-danger">*</span></label>
                                                                         <div class="col-sm-8">
-                                                                            {!! Form::select('mastersresult',\App\Helpers\StaticValue::RESULTSSC,$Mastresult->result,['class'=>'select2 form-control','placeholder'=>'','id'=>'mastersresult']) !!}
+                                                                            {!! Form::select('mastersresult',\App\Helpers\StaticValue::RESULTSSC,$Mastresult ? $Mastresult->result:'',['class'=>'select2 form-control','placeholder'=>'','id'=>'mastersresult']) !!}
                                                                             @if ($errors->has('mastersexamlevel'))
                                                                                 <span class="text-danger">{{ $errors->first('mastersexamlevel') }}</span>
                                                                             @endif
-                                                                            {!! Form::text('mastersresult_score', $Mastresult->cgpa, array('placeholder' => '','class' => 'form-control mastersresult_score','style'=>$Mastresult->result==4 || $Mastresult->result==5 ? '':'display:none',)) !!}
+                                                                            {!! Form::text('mastersresult_score', $Mastresult ? $Mastresult->cgpa:'', array('placeholder' => '','class' => 'form-control mastersresult_score','style'=>$Mastresult ? ($Mastresult->result==4 || $Mastresult->result==5 ? '':'display:none'):"",)) !!}
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -921,7 +930,7 @@
                                                                         <label for="inputPassword"
                                                                                class="col-sm-4 col-form-label">বিষয় <span class="text-danger">*</span></label>
                                                                         <div class="col-sm-8">
-                                                                            {!! Form::select('mastersSubject',[],$Mastresult->group_subject,['class'=>'form-control mastersSubject select2','placeholder'=>'','id'=>'mastersSubject']) !!}
+                                                                            {!! Form::select('mastersSubject',[],$Mastresult ? $Mastresult->group_subject:'',['class'=>'form-control mastersSubject select2','placeholder'=>'','id'=>'mastersSubject']) !!}
                                                                             @if ($errors->has('mastersSubject'))
                                                                                 <span class="text-danger">{{ $errors->first('mastersSubject') }}</span>
                                                                             @endif
@@ -1110,7 +1119,7 @@
                     </div>
                     <div class="row mb-5">
                         <div class="col-md-7 ">
-                            <button type="submit" class="btn btn-primary mt-4 btn-lg float-end">Submit Application & Preview </button>
+                            <button type="submit" class="btn btn-primary mt-4 btn-lg float-end" id="submitb">Submit Application & Preview </button>
                         </div>
 
                     </div>
@@ -1132,6 +1141,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://momentjs.com/downloads/moment-with-locales.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script type="text/javascript">
         $.ajaxSetup({
             headers: {
@@ -1143,7 +1154,7 @@
 
         $(document).ready(function () {
             $( "#date_of_birth" ).datepicker({
-                dateFormat:"mm-dd-yy",
+                dateFormat: "yy-mm-dd",
                 changeMonth: true,
                 changeYear: true,
                // maxDate: "+1m +1w"
@@ -1628,6 +1639,100 @@ $.ajax({
 
 
             });
+
+
+            $('#date_of_birth').on('change', function (e) {
+
+var date_of_birth = $('#date_of_birth').val();
+var ageCalculationDate = {{$job->age_calculation}};
+var min_age = {{$job->min_age}};
+var max_age = {{$job->max_age}};
+var handicapped_age = {{$job->handicapped_age}};
+var divisioncaplicant_age = {{$job->divisioncaplicant_age}};
+var petition_age = {{$job->petition_age}};
+var quota= $('#quota').val();
+var divisioncaplicant= $('#divisioncaplicant').val();
+console.log(quota);
+
+
+
+$.ajax({
+    url:"{{ route('ageCalculation') }}",
+    type:"POST",
+    cache: false,
+    data: {
+        "bday": date_of_birth,
+        "fixedday": "{{$job->age_calculation}}",
+        "_token": "{{ csrf_token() }}",
+    },
+    success:function (data) {
+      console.log(data);
+      $('span.date_of_birth').html(data.data);
+    }
+});
+
+ applicationAgeCalculation(date_of_birth, quota, divisioncaplicant);
+
+});
+
+
+$('#quota').on('change', function (e) {
+var quota= $('#quota').val();
+var date_of_birth = $('#date_of_birth').val();
+var divisioncaplicant = $('#divisioncaplicant').val();
+console.log(quota);
+applicationAgeCalculation(date_of_birth, quota, divisioncaplicant);
+
+});
+
+$('#divisioncaplicant').on('change', function (e) {
+var quota= $('#quota').val();
+var date_of_birth = $('#date_of_birth').val();
+var divisioncaplicant = $('#divisioncaplicant').val();
+console.log(quota);
+applicationAgeCalculation(date_of_birth, quota, divisioncaplicant);
+
+});
+
+
+function applicationAgeCalculation(date_of_birth, quota='', divisioncaplicant=''){
+$.ajax({
+    url:"{{ route('applyAgeCalculation') }}",
+    type:"POST",
+    cache: false,
+    data: {
+        "bday": date_of_birth,
+        "fixedday": "{{$job->age_calculation}}",
+        "quota": quota,
+        "divisioncaplicant": divisioncaplicant,
+         "minimumage": "{{$job->min_age}}",
+         "mamximumage": "{{$job->max_age}}",
+         "divisional": "{{$job->divisioncaplicant_age}}",
+         "freedom_fighter": "{{$job->freedom_fighter}}",
+         "handicapped_age": "{{$job->handicapped_age}}",
+        "_token": "{{ csrf_token() }}",
+    },
+    success:function (data) {
+      console.log(data);
+      if(data=='Yes'){
+$("#submitb").attr("disabled", false);
+}
+if(data=='No'){
+	//$("#submitb").attr("disabled", true);
+Swal.fire({
+icon: 'error',
+text: 'বয়স এর কারণে আপনি এই পদে আবেদন করতে পারবেন না । কোটা  বা বিভাগীয় প্রাথী হলে OK ক্লিক করুন এবং ফর্মের নিচের দিকে  কোটা বা বিভাগীয় অপশন সিলেক্ট করলে আবেদন করতে পারবেন।',
+
+});
+
+
+}
+
+      
+    }
+});
+}
+
         });
     </script>
 

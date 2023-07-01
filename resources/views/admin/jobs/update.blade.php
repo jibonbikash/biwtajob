@@ -81,6 +81,12 @@
 
                         <div class="col-md-6">
                             <div class="form-group">
+                                <strong>Job circular Date</strong>
+                                {!! Form::text('jobcurbday', null, array('placeholder' => '','class' => 'form-control','id'=>'jobcurbday','autocomplete'=>'off')) !!}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
                                 <strong>No. of Vacancies</strong>
                                 {!! Form::text('vacancies', $job->vacancies, array('placeholder' => '','class' => 'form-control')) !!}
                             </div>
@@ -129,7 +135,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <strong>Petition Age Age</strong>
+                                <strong>Petition Age</strong>
                                 {!! Form::text('petition_age', $job->petition_age, array('placeholder' => '','class' => 'form-control')) !!}
                             </div>
                         </div>
@@ -273,6 +279,12 @@
                 dateFormat: "yy-mm-dd"
             });
             $( "#age_calculation" ).datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: "yy-mm-dd"
+            });
+
+            $( "#jobcurbday" ).datepicker({
                 changeMonth: true,
                 changeYear: true,
                 dateFormat: "yy-mm-dd"

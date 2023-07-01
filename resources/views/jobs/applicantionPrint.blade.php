@@ -18,14 +18,26 @@
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+<style>
+
+@media print {
+  .print {
+    display: none;
+  }
+}
+    </style>
 </head>
-<body>
+<body onload="window.print()">
 <div class="container">
     <table width="100%">
         <tr>
             <td width="33%">
                 <div class="col-md-4">
-                    {{-- <b style="font-size:40px;"> Roll:  {{ $applicationinfo->apliyedJob ? $applicationinfo->apliyedJob->roll:'' }} </b><br /> --}}
+           
+                    @if($applicationinfo->apliyedJob ? $applicationinfo->apliyedJob->roll:'')
+                    <b style="font-size:30px;"> Roll:  {{ $applicationinfo->apliyedJob ? $applicationinfo->apliyedJob->roll:'' }} </b><br />
+                    @endif
+                   
 
                     বরাবর <br />
                     পরিচালক  <br />
@@ -54,7 +66,7 @@
 
 
     &nbsp; &nbsp; &nbsp; &nbsp;   বিষয়: চাকরীতে নিয়োগের আবেদন। <br />
-    &nbsp; &nbsp; &nbsp; &nbsp; সূত্র : বিজ্ঞপ্তি নাম্বার {{ $applicationinfo->job?$applicationinfo->job->job_circular:'' }} , {{ $applicationinfo->job?$applicationinfo->job->jobcurday:'' }}  তারিখে প্রকাশিত বিজ্ঞপ্তি
+    &nbsp; &nbsp; &nbsp; &nbsp; সূত্র : বিজ্ঞপ্তি নাম্বার {{ $applicationinfo->job?$applicationinfo->job->job_id:'' }} , {{ $applicationinfo->job ? date("F j, Y", strtotime($applicationinfo->job->jobcurbday)) :'' }}  তারিখে প্রকাশিত বিজ্ঞপ্তি
     <br />
     <table class="table table-bordered">
         <tbody>
@@ -64,9 +76,9 @@
         </tr>
         <tr>
             <td>২. বিজ্ঞপ্তি নাম্বার   </td>
-            <td>{{ $applicationinfo->job?$applicationinfo->job->job_circular:'' }}</td>
+            <td>{{ $applicationinfo->job ?$applicationinfo->job->job_id:'' }}</td>
             <td>তারিখ </td>
-            <td>{{ $applicationinfo->job?$applicationinfo->job->jobcurday:'' }}</td>
+            <td> {{ $applicationinfo->job ? date("F j, Y", strtotime($applicationinfo->job->jobcurbday)) :'' }}</td>
         </tr>
 
         <tr>
@@ -347,5 +359,7 @@ echo 'university';
             Screen 5: Enter Bill Number: এর ক্ষেত্রে(Applied ID)দিতে হবে  --->Screen 6: Enter Amount: Application Fee --->Screen 7: Enter PIN (Successful)
         </strong></p>
 </div>
+
+<button class="btn btn-primary float-end mb-3 mr-2 print" onclick="window.print()">Print</button>
 </body>
 </html>
