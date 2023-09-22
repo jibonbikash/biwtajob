@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class HomeController extends Controller
 {
@@ -60,6 +61,8 @@ class HomeController extends Controller
             }])->active()->activeJobs()->where('uuid',$uuid)->firstOrFail();
         //    dd($job);
             $district_Upozilla = DB::table('district_upozilla')->orderBy('zilla_name','ASC')->get()->toArray();
+            $district = collect($district_Upozilla)->where('zilla_id',0)->pluck('zilla_name','id');
+            $Upozilla = collect($district_Upozilla)->where('zilla_id','>', 0)->pluck('upozilla','id');
             $boards = DB::table('boards')->orderBy('name','ASC')->get();
 
            $examlist= Examlevel::select('id','name','status')->with(['examGroups'=>function($quert){
@@ -75,6 +78,8 @@ class HomeController extends Controller
                 'boards'=>$boards,
                 'examlist'=>$examlist,
                 'uuid'=>$uuid,
+                 'district'=>$district,
+                 'Upozilla'=>$Upozilla,
                 ]);
         } catch (ModelNotFoundException $e) {
 
@@ -84,23 +89,27 @@ class HomeController extends Controller
     }
 
     public function examSubject(Request $request){
+$jobID=$request->JobID;
+      $subject=  ExamlevelSubject::whereHas('JobSubject', function ($query) use($jobID){
+        $query->where('job_id', $jobID);
+    })->with(['examGroup','examlevel'])
 
-      $subject=  ExamlevelSubject::with(['examGroup','examlevel'])
             ->where([
                 ['examlevel_id', $request->exam],
                 ['examlevel_group_id', $request->examgroup],
             ])->get();
+          //  dd($subject);
         return response()->json(['success' => true, 'data' => $subject]);
 
     }
 
     public function jobApply(Request $request){
 
-
+       // dd($request->all());
        $job= Job::where('uuid',$request->uuid )->first();
        //dd($job);
         if($job){
-
+// |regex:/^[\p{Bengali}]{0,100}$/u
             $validator = Validator::make($request->all(), [
                 'uuid' => 'required',
                 'name_en' => 'required|max:255',
@@ -122,45 +131,121 @@ class HomeController extends Controller
                 'permanent_zilla' => 'required|max:255',
                 'permanent_upozilla' => 'required|max:255',
                 'image' => 'required|mimes:jpeg,png,jpg,gif|max:1024',
-                'signature' => 'required|mimes:jpeg,png,jpg,gif|max:1024|dimensions:max_width=300,max_height=300',
-                'jscexamlevel' => 'sometimes|required|max:255',
-                'jscinstitute_name' => 'sometimes|required|max:255',
-                'jscresult' => 'sometimes|required|max:255',
-                'jscboard' => 'sometimes|required|max:255',
-                'jscpassyear' => 'sometimes|required|max:255',
-                'sscexamlevel' => 'sometimes|required|max:255',
-                'sscinstitute_name' => 'sometimes|required|max:255',
-                'sscresult' => 'sometimes|required|max:255',
-                'sscSubject' => 'sometimes|required|max:255',
-                'sscboard' => 'sometimes|required|max:255',
-                'sscpassyear' => 'sometimes|required|max:255',
-            
-                'hscexamlevel' => 'sometimes|required|max:255',
-                'hscinstitute_name' => 'sometimes|required|max:255',
-                'hscresult' => 'sometimes|required|max:255',
-                'hscubject' => 'sometimes|required|max:255',
-                'hscboard' => 'sometimes|required|max:255',
-                'hscpassyear' => 'sometimes|required|max:255',
+                'signature' => 'required|mimes:jpeg,png,jpg,gif|max:1024',
 
-                'graduationexamlevel' => 'sometimes|required|max:255',
-                'graduationinstitute_name' => 'sometimes|required|max:255',
-                'graduationresult' => 'sometimes|required|max:255',
-                'graduationsubject' => 'sometimes|required|max:255',
-                'graduationuniversity' => 'sometimes|required|max:255',
-                'graduationpassyear' => 'sometimes|required|max:255',
+                'jscexamlevel' => [Rule::requiredIf(function () use($job) {
+                    return (($job->min_education=='JSC' OR $job->min_education=='SSC' OR  $job->min_education=='HSC' OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->jsc==1);
+                })],
+                'jscinstitute_name' => [Rule::requiredIf(function () use($job) {
+                    return (($job->min_education=='JSC' OR $job->min_education=='SSC' OR  $job->min_education=='HSC' OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->jsc==1);
+                })],
+                'jscresult' => [Rule::requiredIf(function () use($job) {
+                    return (($job->min_education=='JSC' OR $job->min_education=='SSC' OR  $job->min_education=='HSC' OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->jsc==1);
+                })],
+                'jscboard' => [Rule::requiredIf(function () use($job) {
+                    return (($job->min_education=='JSC' OR $job->min_education=='SSC' OR  $job->min_education=='HSC' OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->jsc==1);
+                })],
+                'jscpassyear' => [Rule::requiredIf(function () use($job) {
+                    return (($job->min_education=='JSC' OR $job->min_education=='SSC' OR  $job->min_education=='HSC' OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->jsc==1);
+                })],
 
-                'mastersexamlevel' => 'sometimes|required|max:255',
-                'mastersinstitute_name' => 'sometimes|required|max:255',
-                'mastersresult' => 'sometimes|required|max:255',
-                'mastersSubject' => 'sometimes|required|max:255',
-                'mastersuniversity' => 'sometimes|required|max:255',
-                'certificate' => 'sometimes|required|max:255',
-                'certificateinstitute_name' => 'sometimes|required|max:255',
-                'certificateduration' => 'sometimes|required|max:255',
+
+                'sscexamlevel' => [Rule::requiredIf(function () use($job) {
+                    return (( $job->min_education=='SSC' OR  $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->ssc==1);
+                })],
+                'sscinstitute_name' => [Rule::requiredIf(function () use($job) {
+                    return (( $job->min_education=='SSC' OR  $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->ssc==1);
+                })],
+                'sscresult' => [Rule::requiredIf(function () use($job) {
+                    return (( $job->min_education=='SSC' OR  $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->ssc==1);
+                })],
+                'sscSubject' => [Rule::requiredIf(function () use($job) {
+                    return (( $job->min_education=='SSC' OR  $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->ssc==1);
+                })],
+                'sscboard' => [Rule::requiredIf(function () use($job) {
+                    return (( $job->min_education=='SSC' OR  $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->ssc==1);
+                })],
+                'sscpassyear' => [Rule::requiredIf(function () use($job) {
+                    return (( $job->min_education=='SSC' OR  $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->ssc==1);
+                })],
+
+
+                'hscexamlevel' => [Rule::requiredIf(function () use($job) {
+                    return (( $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->hsc==1);
+                })],
+                'hscinstitute_name' => [Rule::requiredIf(function () use($job) {
+
+                    return (( $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->hsc==1);
+                })],
+                'hscresult' => [Rule::requiredIf(function () use($job) {
+
+                    return (( $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->hsc==1);
+                })],
+                'hscubject' => [Rule::requiredIf(function () use($job) {
+
+                    return (( $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->hsc==1);
+                })],
+                'hscboard' => [Rule::requiredIf(function () use($job) {
+
+                    return (( $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->hsc==1);
+                })],
+                'hscpassyear' => [Rule::requiredIf(function () use($job) {
+
+                    return (( $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->hsc==1);
+                })],
+
+
+                'graduationexamlevel' => [Rule::requiredIf(function () use($job) {
+
+                    return (( $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->graduation==1);
+                })],
+                'graduationinstitute_name' => [Rule::requiredIf(function () use($job) {
+
+                    return (( $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->graduation==1);
+                })],
+                'graduationresult' => [Rule::requiredIf(function () use($job) {
+
+                    return (( $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->graduation==1);
+                })],
+                'graduationsubject' => [Rule::requiredIf(function () use($job) {
+
+                    return (( $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->graduation==1);
+                })],
+                'graduationuniversity' => [Rule::requiredIf(function () use($job) {
+
+                    return (( $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->graduation==1);
+                })],
+                'graduationpassyear' => [Rule::requiredIf(function () use($job) {
+
+                    return (( $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->graduation==1);
+                })],
+
+
+                'mastersexamlevel' => [Rule::requiredIf(function () use($job) {
+
+                    return (( $job->min_education=='Masters') AND  $job->masters==1);
+                })],
+
+                'certificate' => [Rule::requiredIf(function () use($job) {
+                    return $job->certificate_isrequired==1;
+                })],
+
+                'certificateinstitute_name' => [Rule::requiredIf(function () use($job) {
+                    return $job->certificate_isrequired==1;
+                })],
+
+                'certificate_no' => [Rule::requiredIf(function () use($job) {
+                    return $job->certificate_isrequired==1;
+                })],
+                'certificate_expire' => [Rule::requiredIf(function () use($job) {
+                    return $job->certificate_isrequired==1;
+                })],
+
             ],
             [
                 'name_en.required' => 'প্রার্থীর নাম ইংরেজীতে (বড় অক্ষরে) লিখুন',
                 'name_bn.required'  => 'প্রার্থীর নাম বাংলায় লিখুন',
+                'name_bn.regex'  => 'প্রার্থীর নাম বাংলায় লিখুন',
                 'father_name.required' => 'পিতার নাম লিখুন ',
                 'mother_name.required' => 'মাতার নাম লিখুন',
                 'date_of_birth.required' => 'জন্ম তারিখ লিখুন',
@@ -185,7 +270,7 @@ class HomeController extends Controller
                 'jscresult.required' => 'গ্রেড/শ্রেণি/বিভাগ নির্বাচন করুন',
                 'jscboard.required' => 'বোর্ড নির্বাচন করুন',
                 'jscpassyear.required' => 'পাসের সন লিখুন',
-            
+
                 'sscexamlevel.required' => 'এস.এস.সি/ সমমান পরীক্ষার নাম নির্বাচন করুন',
                 'sscinstitute_name.required' => 'এস.এস.সি/ সমমান শিক্ষা প্রতিষ্ঠানের নাম লিখুন',
                 'sscresult.required' => 'এস.এস.সি/ সমমান গ্রেড/শ্রেণি/বিভাগ নির্বাচন করুন',
@@ -216,52 +301,34 @@ class HomeController extends Controller
 
                  'certificate.required' => 'সার্টিফিকেশন নাম নির্বাচন করুন',
                  'certificateinstitute_name.required' => 'সার্টিফিকেশন প্রতিষ্ঠান নাম লিখুন',
-                 'certificateduration.required' => 'সার্টিফিকেশন গ্রেড/শ্রেণি/বিভাগ লিখুন',
+                 'certificate_no.required' => 'সার্টিফিকেশন গ্রেড/শ্রেণি/বিভাগ লিখুন',
+                'certificate_expire.required' => 'সার্টিফিকেশন গ্রেড/শ্রেণি/বিভাগ লিখুন',
 
-           
+
 
               ]
             );
             $flag=false;
-            $validator->sometimes(['jscexamlevel', 'jscinstitute_name','jscresult','jscboard','jscpassyear'], 'required', function () use ($job){
-                return (($job->min_education=='JSC' OR $job->min_education=='SSC' OR  $job->min_education=='HSC' OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->jsc==1);
-            });
+        if($request->input('repetition')){
 
-            $validator->sometimes(['sscexamlevel','sscinstitute_name','sscresult','sscSubject','sscboard','sscpassyear'], 'required', function () use ($job){
-            //    return $job->ssc==1;
-                return (( $job->min_education=='SSC' OR  $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->ssc==1);
-            });
-
-            $validator->sometimes(['hscexamlevel','hscinstitute_name','hscresult','hscubject','hscboard','hscpassyear'], 'required', function () use ($job){
-                return (( $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->hsc==1);
-             //   return $job->hsc==1;
-            });
-            $validator->sometimes(['graduationexamlevel','graduationinstitute_name','graduationresult','graduationsubject','graduationuniversity','graduationpassyear'], 'required', function () use ($job){
-              //  return $job->graduation==1;
-                return (( $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->graduation==1);
-            });
-          
-
-            $validator->sometimes(['mastersexamlevel','mastersinstitute_name','mastersresult','mastersSubject','mastersuniversity','masterspassyear'], 'required', function () use ($job){
-              //  return $job->masters==1;
-                return (( $job->min_education=='Masters') AND  $job->masters==1);
-            });
-            
-
+        }
+        else{
             $validator->sometimes('date_of_birth_cal', 'required', function () use ($request){
-
                 $result= $this->applyAgeCalculationComon($request);
-               // dd($result);
-                return ($result==='No');   
-                
-          });
 
-             
+                return ($result==='No');
+
+          });
+        }
+
+
+
+
             if($job->min_education_con=="AND"){
                 $validator->sometimes(['jscexamlevel', 'jscinstitute_name','jscresult','jscboard','jscpassyear'], 'required', function () use ($job){
                     return (($job->min_education=='JSC' OR $job->min_education=='SSC' OR  $job->min_education=='HSC' OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->jsc==1);
                 });
-              
+
 
                 $validator->sometimes(['sscexamlevel','sscinstitute_name','sscresult','sscSubject','sscboard','sscpassyear'], 'required', function () use ($job){
                     return (( $job->min_education=='SSC' OR  $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->ssc==1);
@@ -271,73 +338,51 @@ class HomeController extends Controller
                 $validator->sometimes(['hscexamlevel','hscinstitute_name','hscresult','hscubject','hscboard','hscpassyear'], 'required', function () use ($job){
                     return (( $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->hsc==1);
                 });
-             
+
 
                 $validator->sometimes(['graduationexamlevel','graduationinstitute_name','graduationresult','graduationsubject','graduationuniversity','graduationpassyear'], 'required', function () use ($job){
                     return (( $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->graduation==1);
                 });
-              
 
-                $validator->sometimes(['graduationexamlevel','graduationinstitute_name','graduationresult','graduationsubject','graduationuniversity','graduationpassyear'], 'required', function () use ($job){
-                
-                    return (( $job->min_education_with=='Masters') AND  $job->graduation==1);
-                });
-              
 
                 $validator->sometimes(['mastersexamlevel','mastersinstitute_name','mastersresult','mastersSubject','mastersuniversity','masterspassyear'], 'required', function () use ($job){
                     return (( $job->min_education=='Masters') AND  $job->masters==1);
                 });
-               
 
-                $validator->sometimes('mastersexamlevel', 'required', function () use ($job){
-                    return (( $job->min_education_with=='Masters') AND  $job->masters==1);
+                $validator->sometimes(['hscexamlevel','hscinstitute_name','hscresult','hscubject','hscboard','hscpassyear'], 'required', function () use ($job){
+                    return (( $job->min_education_with=='HSC') AND  $job->hsc==1);
                 });
-                $validator->sometimes('mastersinstitute_name', 'required', function () use ($job){
-                    return (( $job->min_education_with=='Masters') AND  $job->masters==1);
+
+                $validator->sometimes(['graduationexamlevel','graduationinstitute_name','graduationresult','graduationsubject','graduationuniversity','graduationpassyear'], 'required', function () use ($job){
+                    return (( $job->min_education_with=='Graduation') AND  $job->graduation==1);
                 });
-                $validator->sometimes('mastersresult', 'required', function () use ($job){
-                    return (( $job->min_education_with=='Masters') AND  $job->masters==1);
+
+                $validator->sometimes(['graduationexamlevel','graduationinstitute_name','graduationresult','graduationsubject','graduationuniversity','graduationpassyear'], 'required', function () use ($job){
+
+                    return (( $job->min_education_with=='Masters') AND  $job->graduation==1);
                 });
-                $validator->sometimes('mastersSubject', 'required', function () use ($job){
-                    return (( $job->min_education_with=='Masters') AND  $job->masters==1);
-                });
-                $validator->sometimes('mastersuniversity', 'required', function () use ($job){
-                    return (( $job->min_education_with=='Masters') AND  $job->masters==1);
-                });
-                $validator->sometimes('masterspassyear', 'required', function () use ($job){
-                    return (( $job->min_education_with=='Masters') AND  $job->masters==1);
-                });
+
+
             }
 
-            $validator->sometimes(['certificate','certificateinstitute_name','certificateduration'], 'required', function () use ($job){
-                return $job->certificate_isrequired==1;
-            });
 
-        
 
+/*
 $validator->after(function ($validator) {
     if ($validator->errors()->isNotEmpty()) {
         $validator->errors()->add('date_of_birth', 'বয়স এর কারণে আপনি এই পদে আবেদন করতে পারবেন না!');
-    /*    $validator->errors()->add('name_en', 'প্রার্থীর নাম ইংরেজীতে (বড় অক্ষরে) লিখুন ');
-        $validator->errors()->add('name_bn', 'প্রার্থীর নাম বাংলায় লিখুন ');
-        $validator->errors()->add('father_name', 'পিতার নাম লিখুন ');
-        $validator->errors()->add('mother_name', 'মাতার নাম লিখুন ');
-        $validator->errors()->add('mobile_no', 'মোবাইল/টেলিফোন নম্বর লিখুন ');
-        $validator->errors()->add('nid', 'জাতীয় পরিচয় নম্বর লিখুন ');
-        $validator->errors()->add('nationality', 'জাতীয়তা সিলেক্ট করুন');
-        $validator->errors()->add('religion', 'ধর্ম সিলেক্ট করুন');
-        $validator->errors()->add('gender', 'জেন্ডার সিলেক্ট করুন');
-        $validator->errors()->add('date_of_place', 'জন্ম স্থান (জেলা) সিলেক্ট করুন');
-        */
+
     }
 });
+*/
 
             if ($validator->fails()) {
+               // dd($validator);
                 return redirect()->back()
                     ->withErrors($validator)
                     ->withInput();
             }
-        //    dd($request->all());
+
            $jobinfo= Job::where('uuid', $request->input('uuid'))->first();
 
             $image = $request->file('image');
@@ -353,17 +398,29 @@ $validator->after(function ($validator) {
             $namesignature=date("Y").'/'.$jobinfo->job_id.'/'.$namesignature;
 
 
+            date_default_timezone_set('Asia/Dhaka');
+            $bday=$request->input('date_of_birth');
+            $fixedday=$request->input('age_calculation');
+
+            $datetime1 = new \DateTime($fixedday);
+            $datetime2 = new \DateTime($bday);
+             $interval = $datetime1->diff($datetime2);
+            $year= $interval->format('%y');
+            $month= $interval->format('%m');
+            $day= $interval->format('%d');
+            $age=$year.'.'.$month;
+
             DB::beginTransaction();
 
             try {
 
                 $applicant= Applicant::create([
                     'job_id' => $jobinfo->id,
-                    'uuid' => (string)Str::orderedUuid(),
+                    'uuid' => (string) Str::uuid(),
                     'name_bn' => $request->input('name_bn'),
                     'name_en' => $request->input('name_en'),
-                    'nid' => $request->input('nid'),
-                    'brn' => $request->input('brn'),
+                    'nid' => $request->input('nidorbrn')=="NID" ?  $request->input('nidorbrnnumber') :'',
+                    'brn' => $request->input('nidorbrn')=="BRN" ?  $request->input('nidorbrnnumber') :'',
                     'bday' => $request->input('date_of_birth'),
                     'bplace' => $request->input('date_of_place'),
                     'father_name' => $request->input('father_name'),
@@ -386,7 +443,7 @@ $validator->after(function ($validator) {
                     'quota_orphanages' => 0,
                     'village_police' => 0,
                     'others_quota' => 0,
-                    'quota' => $request->input('quota'),
+                    'quota' => $request->input('quota') ? json_encode($request->input('quota')):NULL,
                     'pa_house' => $request->input('present_house_no'),
                     'pa_village' => $request->input('present_village'),
                     'pa_union' => $request->input('present_union'),
@@ -407,9 +464,10 @@ $validator->after(function ($validator) {
                     'job_circular' => '',
                     'experienceyear' => $request->input('experienceyear'),
                     'experiencemonth' => $request->input('experiencemonth'),
-                    'age' => '',
+                    'age' => $age,
                     'code' => '',
                     'eligible' => 0,
+                    'repetition' => $request->input('repetition'),
                     'jobcurday' => $request->input('jobcurday'),
                 ]);
                 $education=[];
@@ -441,6 +499,7 @@ $validator->after(function ($validator) {
                         'out_of'=> $request->input('sscresult'),
                         'board_university'=> $request->input('sscboard'),
                         'passing_year'=> $request->input('sscpassyear'),
+                        'other'=> $request->input('sscSubject_other'),
                     ]);
 
                 }
@@ -457,6 +516,7 @@ $validator->after(function ($validator) {
                         'out_of'=> $request->input('hscresult'),
                         'board_university'=> $request->input('hscboard'),
                         'passing_year'=> $request->input('hscpassyear'),
+                        'other'=> $request->input('hscubject_other'),
                     ]);
 
                 }
@@ -472,6 +532,7 @@ $validator->after(function ($validator) {
                         'out_of'=> $request->input('graduationresult'),
                         'board_university'=> $request->input('graduationuniversity'),
                         'passing_year'=> $request->input('graduationpassyear'),
+                        'other'=> $request->input('graduationsubject_other'),
                     ]);
 
                 }
@@ -487,6 +548,7 @@ $validator->after(function ($validator) {
                         'out_of'=> $request->input('mastersresult'),
                         'board_university'=> $request->input('mastersuniversity'),
                         'passing_year'=> $request->input('masterspassyear'),
+                        'other'=> $request->input('mastersSubject_other'),
                     ]);
 
                 }
@@ -496,7 +558,8 @@ $validator->after(function ($validator) {
                         'job_id'=> $jobinfo->id,
                         'edu_level'=> $request->input('certificate'),
                         'institute_name'=> $request->input('certificateinstitute_name'),
-                        'duration'=> $request->input('certificateduration'),
+                        'certificate_no'=> $request->input('certificate_no'),
+                        'certificate_expire'=> $request->input('certificate_expire'),
                     ]);
 
                 }
@@ -505,9 +568,10 @@ $validator->after(function ($validator) {
                 return redirect()->route('applicantPreview', ['uuid' => $applicant->uuid]);
             } catch (\Exception $e) {
                 DB::rollback();
-dd($e->getMessage());
+//dd($e->getMessage());
+Log::info($e->getMessage());
             }
-            dd($request->all());
+
 
         }
         else{
@@ -570,12 +634,12 @@ dd($e->getMessage());
         $job= Job::find($applicationinfo->job_id);
         if($applicationinfo && $job){
             $validator = Validator::make($request->all(), [
-                'uuid' => 'required',
                 'name_en' => 'required|max:255',
-                'name_bn' => 'required|max:255',
+               'name_bn' => 'required|max:255',
                 'father_name' => 'required|max:255',
                 'mother_name' => 'required|max:255',
                 'date_of_birth' => 'required|date_format:Y-m-d',
+                'date_of_birth' => 'sometimes|required',
                 'mobile_no' => 'required|max:255',
                 'nationality' => 'required|max:255',
                 'religion' => 'required|max:255',
@@ -589,46 +653,184 @@ dd($e->getMessage());
                 'permanent_postcode' => 'required|max:255',
                 'permanent_zilla' => 'required|max:255',
                 'permanent_upozilla' => 'required|max:255',
-                'image' => 'required|mimes:jpeg,png,jpg,gif|max:1024',
-                'signature' => 'required|mimes:jpeg,png,jpg,gif|max:1024|dimensions:max_width=300,max_height=300',
-                'jscexamlevel' => 'sometimes|required|max:255',
-                'jscinstitute_name' => 'sometimes|required|max:255',
-                'jscresult' => 'sometimes|required|max:255',
-                'jscboard' => 'sometimes|required|max:255',
-                'jscpassyear' => 'sometimes|required|max:255',
-                'sscexamlevel' => 'sometimes|required|max:255',
-                'sscinstitute_name' => 'sometimes|required|max:255',
-                'sscresult' => 'sometimes|required|max:255',
-                'sscSubject' => 'sometimes|required|max:255',
-                'sscboard' => 'sometimes|required|max:255',
-                'sscpassyear' => 'sometimes|required|max:255',
-            
-                'hscexamlevel' => 'sometimes|required|max:255',
-                'hscinstitute_name' => 'sometimes|required|max:255',
-                'hscresult' => 'sometimes|required|max:255',
-                'hscubject' => 'sometimes|required|max:255',
-                'hscboard' => 'sometimes|required|max:255',
-                'hscpassyear' => 'sometimes|required|max:255',
+                'image' => 'nullable|mimes:jpeg,png,jpg,gif|max:1024',
+                'signature' => 'nullable|mimes:jpeg,png,jpg,gif|max:1024',
 
-                'graduationexamlevel' => 'sometimes|required|max:255',
-                'graduationinstitute_name' => 'sometimes|required|max:255',
-                'graduationresult' => 'sometimes|required|max:255',
-                'graduationsubject' => 'sometimes|required|max:255',
-                'graduationuniversity' => 'sometimes|required|max:255',
-                'graduationpassyear' => 'sometimes|required|max:255',
+                // 'jscexamlevel' => 'sometimes|required|max:255',
+                // 'jscinstitute_name' => 'sometimes|required|max:255',
+                // 'jscresult' => 'sometimes|required|max:255',
+                // 'jscboard' => 'sometimes|required|max:255',
+                // 'jscpassyear' => 'sometimes|required|max:255',
+                // 'sscexamlevel' => 'sometimes|required|max:255',
+                // 'sscinstitute_name' => 'sometimes|required|max:255',
+                // 'sscresult' => 'sometimes|required|max:255',
+                // 'sscSubject' => 'sometimes|required|max:255',
+                // 'sscboard' => 'sometimes|required|max:255',
+                // 'sscpassyear' => 'sometimes|required|max:255',
 
-                'mastersexamlevel' => 'sometimes|required|max:255',
-                'mastersinstitute_name' => 'sometimes|required|max:255',
-                'mastersresult' => 'sometimes|required|max:255',
-                'mastersSubject' => 'sometimes|required|max:255',
-                'mastersuniversity' => 'sometimes|required|max:255',
-                'certificate' => 'sometimes|required|max:255',
-                'certificateinstitute_name' => 'sometimes|required|max:255',
-                'certificateduration' => 'sometimes|required|max:255',
+                // 'hscexamlevel' => 'sometimes|required|max:255',
+                // 'hscinstitute_name' => 'sometimes|required|max:255',
+                // 'hscresult' => 'sometimes|required|max:255',
+                // 'hscubject' => 'sometimes|required|max:255',
+                // 'hscboard' => 'sometimes|required|max:255',
+                // 'hscpassyear' => 'sometimes|required|max:255',
+
+                // 'graduationexamlevel' => 'sometimes|required|max:255',
+                // 'graduationinstitute_name' => 'sometimes|required|max:255',
+                // 'graduationresult' => 'sometimes|required|max:255',
+                // 'graduationsubject' => 'sometimes|required|max:255',
+                // 'graduationuniversity' => 'sometimes|required|max:255',
+                // 'graduationpassyear' => 'sometimes|required|max:255',
+
+                // 'mastersexamlevel' => 'sometimes|required|max:255',
+                // 'mastersinstitute_name' => 'sometimes|required|max:255',
+                // 'mastersresult' => 'sometimes|required|max:255',
+                // 'mastersSubject' => 'sometimes|required|max:255',
+                // 'mastersuniversity' => 'sometimes|required|max:255',
+                // 'certificate' => 'sometimes|required|max:255',
+                // 'certificateinstitute_name' => 'sometimes|required|max:255',
+                // 'certificateduration' => 'sometimes|required|max:255',
+
+
+                'jscexamlevel' => [Rule::requiredIf(function () use($job) {
+                    return (($job->min_education=='JSC' OR $job->min_education=='SSC' OR  $job->min_education=='HSC' OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->jsc==1);
+                })],
+                'jscinstitute_name' => [Rule::requiredIf(function () use($job) {
+                    return (($job->min_education=='JSC' OR $job->min_education=='SSC' OR  $job->min_education=='HSC' OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->jsc==1);
+                })],
+                'jscresult' => [Rule::requiredIf(function () use($job) {
+                    return (($job->min_education=='JSC' OR $job->min_education=='SSC' OR  $job->min_education=='HSC' OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->jsc==1);
+                })],
+                'jscboard' => [Rule::requiredIf(function () use($job) {
+                    return (($job->min_education=='JSC' OR $job->min_education=='SSC' OR  $job->min_education=='HSC' OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->jsc==1);
+                })],
+                'jscpassyear' => [Rule::requiredIf(function () use($job) {
+                    return (($job->min_education=='JSC' OR $job->min_education=='SSC' OR  $job->min_education=='HSC' OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->jsc==1);
+                })],
+
+
+                'sscexamlevel' => [Rule::requiredIf(function () use($job) {
+                    return (( $job->min_education=='SSC' OR  $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->ssc==1);
+                })],
+                'sscinstitute_name' => [Rule::requiredIf(function () use($job) {
+                    return (( $job->min_education=='SSC' OR  $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->ssc==1);
+                })],
+                'sscresult' => [Rule::requiredIf(function () use($job) {
+                    return (( $job->min_education=='SSC' OR  $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->ssc==1);
+                })],
+                'sscSubject' => [Rule::requiredIf(function () use($job) {
+                    return (( $job->min_education=='SSC' OR  $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->ssc==1);
+                })],
+                'sscboard' => [Rule::requiredIf(function () use($job) {
+                    return (( $job->min_education=='SSC' OR  $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->ssc==1);
+                })],
+                'sscpassyear' => [Rule::requiredIf(function () use($job) {
+                    return (( $job->min_education=='SSC' OR  $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->ssc==1);
+                })],
+
+
+                'hscexamlevel' => [Rule::requiredIf(function () use($job) {
+                    return (( $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->hsc==1);
+                })],
+                'hscinstitute_name' => [Rule::requiredIf(function () use($job) {
+
+                    return (( $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->hsc==1);
+                })],
+                'hscresult' => [Rule::requiredIf(function () use($job) {
+
+                    return (( $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->hsc==1);
+                })],
+                'hscubject' => [Rule::requiredIf(function () use($job) {
+
+                    return (( $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->hsc==1);
+                })],
+                'hscboard' => [Rule::requiredIf(function () use($job) {
+
+                    return (( $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->hsc==1);
+                })],
+                'hscpassyear' => [Rule::requiredIf(function () use($job) {
+
+                    return (( $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->hsc==1);
+                })],
+
+
+                'graduationexamlevel' => [Rule::requiredIf(function () use($job) {
+
+                    return (( $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->graduation==1);
+                })],
+                'graduationinstitute_name' => [Rule::requiredIf(function () use($job) {
+
+                    return (( $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->graduation==1);
+                })],
+                'graduationresult' => [Rule::requiredIf(function () use($job) {
+
+                    return (( $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->graduation==1);
+                })],
+                'graduationsubject' => [Rule::requiredIf(function () use($job) {
+
+                    return (( $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->graduation==1);
+                })],
+                'graduationuniversity' => [Rule::requiredIf(function () use($job) {
+
+                    return (( $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->graduation==1);
+                })],
+                'graduationpassyear' => [Rule::requiredIf(function () use($job) {
+
+                    return (( $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->graduation==1);
+                })],
+
+
+                'mastersexamlevel' => [Rule::requiredIf(function () use($job) {
+
+                    return (( $job->min_education=='Masters') AND  $job->masters==1);
+                })],
+
+                'mastersinstitute_name' => [Rule::requiredIf(function () use($job) {
+
+                    return (( $job->min_education=='Masters') AND  $job->masters==1);
+                })],
+
+                'mastersresult' => [Rule::requiredIf(function () use($job) {
+
+                    return (( $job->min_education=='Masters') AND  $job->masters==1);
+                })],
+
+                'mastersSubject' => [Rule::requiredIf(function () use($job) {
+
+                    return (( $job->min_education=='Masters') AND  $job->masters==1);
+                })],
+
+                'mastersuniversity' => [Rule::requiredIf(function () use($job) {
+
+                    return (( $job->min_education=='Masters') AND  $job->masters==1);
+                })],
+
+                'masterspassyear' => [Rule::requiredIf(function () use($job) {
+
+                    return (( $job->min_education=='Masters') AND  $job->masters==1);
+                })],
+
+                'certificate' => [Rule::requiredIf(function () use($job) {
+                    return $job->certificate_isrequired==1;
+                })],
+
+                'certificateinstitute_name' => [Rule::requiredIf(function () use($job) {
+                    return $job->certificate_isrequired==1;
+                })],
+
+                'certificate_no' => [Rule::requiredIf(function () use($job) {
+                    return $job->certificate_isrequired==1;
+                })],
+                'certificate_expire' => [Rule::requiredIf(function () use($job) {
+                    return $job->certificate_isrequired==1;
+                })],
+
+
             ],
             [
                 'name_en.required' => 'প্রার্থীর নাম ইংরেজীতে (বড় অক্ষরে) লিখুন',
                 'name_bn.required'  => 'প্রার্থীর নাম বাংলায় লিখুন',
+                'name_bn.regex'  => 'প্রার্থীর নাম বাংলায় লিখুন',
                 'father_name.required' => 'পিতার নাম লিখুন ',
                 'mother_name.required' => 'মাতার নাম লিখুন',
                 'date_of_birth.required' => 'জন্ম তারিখ লিখুন',
@@ -653,7 +855,7 @@ dd($e->getMessage());
                 'jscresult.required' => 'গ্রেড/শ্রেণি/বিভাগ নির্বাচন করুন',
                 'jscboard.required' => 'বোর্ড নির্বাচন করুন',
                 'jscpassyear.required' => 'পাসের সন লিখুন',
-            
+
                 'sscexamlevel.required' => 'এস.এস.সি/ সমমান পরীক্ষার নাম নির্বাচন করুন',
                 'sscinstitute_name.required' => 'এস.এস.সি/ সমমান শিক্ষা প্রতিষ্ঠানের নাম লিখুন',
                 'sscresult.required' => 'এস.এস.সি/ সমমান গ্রেড/শ্রেণি/বিভাগ নির্বাচন করুন',
@@ -686,7 +888,7 @@ dd($e->getMessage());
                  'certificateinstitute_name.required' => 'সার্টিফিকেশন প্রতিষ্ঠান নাম লিখুন',
                  'certificateduration.required' => 'সার্টিফিকেশন গ্রেড/শ্রেণি/বিভাগ লিখুন',
 
-           
+                 'date_of_birth.sometimes' => 'বয়স এর কারণে আপনি এই পদে আবেদন করতে পারবেন না!',
 
               ]
             );
@@ -705,152 +907,72 @@ dd($e->getMessage());
             $validator->sometimes(['graduationexamlevel','graduationinstitute_name','graduationresult','graduationsubject','graduationuniversity','graduationpassyear'], 'required', function () use ($job){
                 return (( $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->graduation==1);
             });
-          
+
 
             $validator->sometimes(['mastersexamlevel','mastersinstitute_name','mastersresult','mastersSubject','mastersuniversity','masterspassyear'], 'required', function () use ($job){
                 return (( $job->min_education=='Masters') AND  $job->masters==1);
             });
-            
 
-            $validator->sometimes('date_of_birth_cal', 'required', function () use ($request){
-                $result= $this->applyAgeCalculationComon($request);
-                return ($result==='No');   
-                
-          });
+            if($request->input('repetition')==1){
 
-            if($job->min_education_con=="AND"){
-             
-                $validator->sometimes('jscexamlevel', 'required', function () use ($job){
+            }
+            else{
+                $validator->sometimes('date_of_birth', 'required', function () use ($request){
+                    $result= $this->applyAgeCalculationComon($request);
+                    return ($result==='No');
+
+              });
+            }
+
+
+
+
+           if($job->min_education_con=="AND"){
+                $validator->sometimes(['jscexamlevel', 'jscinstitute_name','jscresult','jscboard','jscpassyear'], 'required', function () use ($job){
                     return (($job->min_education=='JSC' OR $job->min_education=='SSC' OR  $job->min_education=='HSC' OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->jsc==1);
                 });
-                $validator->sometimes('jscinstitute_name', 'required', function () use ($job){
-                    return (($job->min_education=='JSC' OR $job->min_education=='SSC' OR  $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->jsc==1);
-                });
-                $validator->sometimes('jscresult', 'required', function () use ($job){
-                    return (($job->min_education=='JSC' OR $job->min_education=='SSC' OR  $job->min_education=='HSC' OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->jsc==1);
-                });
-                $validator->sometimes('jscboard', 'required', function () use ($job){
-                    return (($job->min_education=='JSC' OR $job->min_education=='SSC' OR  $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->jsc==1);
-                });
-                $validator->sometimes('jscpassyear', 'required', function () use ($job){
-                    return (($job->min_education=='JSC' OR $job->min_education=='SSC' OR  $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->jsc==1);
-                });
 
-                $validator->sometimes('sscexamlevel', 'required', function () use ($job){
-                    return (( $job->min_education=='SSC' OR  $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->ssc==1);
-                });
-                $validator->sometimes('sscinstitute_name', 'required', function () use ($job){
-                    return (( $job->min_education=='SSC' OR  $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->ssc==1);
-                });
-                $validator->sometimes('sscresult', 'required', function () use ($job){
-                    return (( $job->min_education=='SSC' OR  $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->ssc==1);
-                });
-                $validator->sometimes('sscSubject', 'required', function () use ($job){
-                    return (( $job->min_education=='SSC' OR  $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->ssc==1);
-                });
-                $validator->sometimes('sscboard', 'required', function () use ($job){
-                    return (( $job->min_education=='SSC' OR  $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->ssc==1);
-                });
-                $validator->sometimes('sscpassyear', 'required', function () use ($job){
+
+                $validator->sometimes(['sscexamlevel','sscinstitute_name','sscresult','sscSubject','sscboard','sscpassyear'], 'required', function () use ($job){
                     return (( $job->min_education=='SSC' OR  $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->ssc==1);
                 });
 
-                $validator->sometimes('hscexamlevel', 'required', function () use ($job){
-                    return (( $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->hsc==1);
-                });
-                $validator->sometimes('hscinstitute_name', 'required', function () use ($job){
-                    return (( $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->hsc==1);
-                });
-                $validator->sometimes('hscresult', 'required', function () use ($job){
-                    return (( $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->hsc==1);
-                });
-                $validator->sometimes('hscubject', 'required', function () use ($job){
-                    return (( $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->hsc==1);
-                });
-                $validator->sometimes('hscboard', 'required', function () use ($job){
-                    return (( $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->hsc==1);
-                });
-                $validator->sometimes('hscpassyear', 'required', function () use ($job){
+
+                $validator->sometimes(['hscexamlevel','hscinstitute_name','hscresult','hscubject','hscboard','hscpassyear'], 'required', function () use ($job){
                     return (( $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->hsc==1);
                 });
 
-                $validator->sometimes('graduationexamlevel', 'required', function () use ($job){
-                    return (( $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->graduation==1);
-                });
-                $validator->sometimes('graduationinstitute_name', 'required', function () use ($job){
-                    return (( $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->graduation==1);
-                });
-                $validator->sometimes('graduationresult', 'required', function () use ($job){
-                    return (( $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->graduation==1);
-                });
-                $validator->sometimes('graduationsubject', 'required', function () use ($job){
-                    return (( $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->graduation==1);
-                });
-                $validator->sometimes('graduationuniversity', 'required', function () use ($job){
-                    return (( $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->graduation==1);
-                });
-                $validator->sometimes('graduationpassyear', 'required', function () use ($job){
+
+                $validator->sometimes(['graduationexamlevel','graduationinstitute_name','graduationresult','graduationsubject','graduationuniversity','graduationpassyear'], 'required', function () use ($job){
                     return (( $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->graduation==1);
                 });
 
 
-                $validator->sometimes('mastersexamlevel', 'required', function () use ($job){
-                    return (( $job->min_education=='Masters') AND  $job->masters==1);
-                });
-                $validator->sometimes('mastersinstitute_name', 'required', function () use ($job){
-                    return (( $job->min_education=='Masters') AND  $job->masters==1);
-                });
-                $validator->sometimes('mastersresult', 'required', function () use ($job){
-                    return (( $job->min_education=='Masters') AND  $job->masters==1);
-                });
-                $validator->sometimes('mastersSubject', 'required', function () use ($job){
-                    return (( $job->min_education=='Masters') AND  $job->masters==1);
-                });
-                $validator->sometimes('mastersuniversity', 'required', function () use ($job){
-                    return (( $job->min_education=='Masters') AND  $job->masters==1);
-                });
-                $validator->sometimes('masterspassyear', 'required', function () use ($job){
+                $validator->sometimes(['mastersexamlevel','mastersinstitute_name','mastersresult','mastersSubject','mastersuniversity','masterspassyear'], 'required', function () use ($job){
                     return (( $job->min_education=='Masters') AND  $job->masters==1);
                 });
 
-                $validator->sometimes('mastersexamlevel', 'required', function () use ($job){
-                    return (( $job->min_education_with=='Masters') AND  $job->masters==1);
+                $validator->sometimes(['hscexamlevel','hscinstitute_name','hscresult','hscubject','hscboard','hscpassyear'], 'required', function () use ($job){
+                    return (( $job->min_education_with=='HSC') AND  $job->hsc==1);
                 });
-                $validator->sometimes('mastersinstitute_name', 'required', function () use ($job){
-                    return (( $job->min_education_with=='Masters') AND  $job->masters==1);
+
+                $validator->sometimes(['graduationexamlevel','graduationinstitute_name','graduationresult','graduationsubject','graduationuniversity','graduationpassyear'], 'required', function () use ($job){
+                    return (( $job->min_education_with=='Graduation') AND  $job->graduation==1);
                 });
-                $validator->sometimes('mastersresult', 'required', function () use ($job){
-                    return (( $job->min_education_with=='Masters') AND  $job->masters==1);
+
+                $validator->sometimes(['graduationexamlevel','graduationinstitute_name','graduationresult','graduationsubject','graduationuniversity','graduationpassyear'], 'required', function () use ($job){
+
+                    return (( $job->min_education_with=='Masters') AND  $job->graduation==1);
                 });
-                $validator->sometimes('mastersSubject', 'required', function () use ($job){
-                    return (( $job->min_education_with=='Masters') AND  $job->masters==1);
-                });
-                $validator->sometimes('mastersuniversity', 'required', function () use ($job){
-                    return (( $job->min_education_with=='Masters') AND  $job->masters==1);
-                });
-                $validator->sometimes('masterspassyear', 'required', function () use ($job){
-                    return (( $job->min_education_with=='Masters') AND  $job->masters==1);
-                });
+
 
             }
 
-            $validator->sometimes('certificate', 'required', function () use ($job){
-                return $job->certificate_isrequired==1;
-            });
+        $validator->sometimes(['certificate','certificateinstitute_name','certificate_no','certificate_expire'], 'required', function () use ($job){
+            return $job->certificate_isrequired==1;
+        });
 
-            $validator->sometimes('certificateinstitute_name', 'required', function () use ($job){
-                return $job->certificate_isrequired==1;
-            });
-            $validator->sometimes('certificateduration', 'required', function () use ($job){
-                return $job->certificate_isrequired==1;
-            });
 
-            $validator->after(function ($validator) {
-                if ($validator->errors()->isNotEmpty()) {
-                    $validator->errors()->add('date_of_birth', 'বয়স এর কারণে আপনি এই পদে আবেদন করতে পারবেন না!');
-                
-                }
-            });
 
             if ($validator->fails()) {
                 return redirect()->back()
@@ -874,6 +996,18 @@ dd($e->getMessage());
                 $namesignature = date("Y") . '/' . $job->job_id . '/' . $namesignature;
             }
 
+            date_default_timezone_set('Asia/Dhaka');
+            $bday=$request->input('date_of_birth');
+            $fixedday=$job->age_calculation;
+
+            $datetime1 = new \DateTime($fixedday);
+            $datetime2 = new \DateTime($bday);
+             $interval = $datetime1->diff($datetime2);
+            $year= $interval->format('%y');
+            $month= $interval->format('%m');
+            $day= $interval->format('%d');
+            $age=$year.'.'.$month;
+
             DB::beginTransaction();
 
             try {
@@ -882,8 +1016,8 @@ dd($e->getMessage());
                     ->update([
                         'name_bn' => $request->input('name_bn'),
                         'name_en' => $request->input('name_en'),
-                        'nid' => $request->input('nid'),
-                        'brn' => $request->input('brn'),
+                        'nid' => $request->input('nidorbrn')=="NID" ?  $request->input('nidorbrnnumber') :'',
+                        'brn' => $request->input('nidorbrn')=="BRN" ?  $request->input('nidorbrnnumber') :'',
                         'bday' => $request->input('date_of_birth'),
                         'bplace' => $request->input('date_of_place'),
                         'father_name' => $request->input('father_name'),
@@ -897,7 +1031,7 @@ dd($e->getMessage());
                         'extra_qualification' => $request->input('extQualification'),
                         'experience' => $request->input('Experience'),
                         'division_appli' => $request->input('divisioncaplicant'),
-                        'quota' => $request->input('quota'),
+                        'quota' => $request->input('quota') ? json_encode($request->input('quota')):NULL,
                         'pa_house' => $request->input('present_house_no'),
                         'pa_village' => $request->input('present_village'),
                         'pa_union' => $request->input('present_union'),
@@ -918,9 +1052,10 @@ dd($e->getMessage());
                         'job_circular' => '',
                         'experienceyear' => $request->input('experienceyear'),
                         'experiencemonth' => $request->input('experiencemonth'),
-                        'age' => '',
+                        'age' => $age,
                         'code' => $code,
                         'eligible' => 0,
+                        'repetition' => $request->input('repetition'),
                         'jobcurday' => $request->input('jobcurday'),
                     ]);
 
@@ -938,6 +1073,7 @@ dd($e->getMessage());
                         'out_of'=> $request->input('jscresult'),
                         'board_university'=> $request->input('jscboard'),
                         'passing_year'=> $request->input('jscpassyear'),
+
                     ]);
                 }
 
@@ -953,6 +1089,7 @@ dd($e->getMessage());
                         'out_of'=> $request->input('sscresult'),
                         'board_university'=> $request->input('sscboard'),
                         'passing_year'=> $request->input('sscpassyear'),
+                        'other'=> $request->input('sscSubject_other'),
                     ]);
 
                 }
@@ -969,6 +1106,7 @@ dd($e->getMessage());
                         'out_of'=> $request->input('hscresult'),
                         'board_university'=> $request->input('hscboard'),
                         'passing_year'=> $request->input('hscpassyear'),
+                        'other'=> $request->input('hscubject_other'),
                     ]);
 
                 }
@@ -984,6 +1122,7 @@ dd($e->getMessage());
                         'out_of'=> $request->input('graduationresult'),
                         'board_university'=> $request->input('graduationuniversity'),
                         'passing_year'=> $request->input('graduationpassyear'),
+                        'other'=> $request->input('graduationsubject_other'),
                     ]);
 
                 }
@@ -999,6 +1138,7 @@ dd($e->getMessage());
                         'out_of'=> $request->input('mastersresult'),
                         'board_university'=> $request->input('mastersuniversity'),
                         'passing_year'=> $request->input('masterspassyear'),
+                        'other'=> $request->input('mastersSubject_other'),
                     ]);
 
                 }
@@ -1010,7 +1150,8 @@ dd($e->getMessage());
                         'job_id'=> $job->id,
                         'edu_level'=> $request->input('certificate'),
                         'institute_name'=> $request->input('certificateinstitute_name'),
-                        'duration'=> $request->input('certificateduration'),
+                        'certificate_no'=> $request->input('certificate_no'),
+                        'certificate_expire'=> $request->input('certificate_expire'),
                     ]);
 
                 }
@@ -1033,8 +1174,9 @@ dd($e->getMessage());
             }
             catch (\Exception $e) {
                 DB::rollback();
-                dd($e->getMessage());
                 Log::info($e->getMessage());
+              //  dd($e->getMessage());
+             //   Log::info($e->getMessage());
                 return redirect()->route('home')
                     ->with('error', 'something wrong!!!');;
             }
@@ -1074,7 +1216,7 @@ dd($e->getMessage());
 
     public function applicationPrint(Request $request, $uuid){
 
-        $applicationinfo= Applicant::with(['educations','job', 'birthplace','zila','upozilla','permanentzila','permanentupozilla','apliyedJob'])->where('uuid', $uuid)->first();
+        $applicationinfo= Applicant::with(['educations','job', 'birthplace','zila','upozilla','permanentzila','permanentupozilla','apliyedJob','applicantCertificate'])->where('uuid', $uuid)->first();
       // dd($applicationinfo);
        if($applicationinfo->eligible==1){
         return view('jobs.applicantionPrint',[
@@ -1105,10 +1247,10 @@ dd($e->getMessage());
                 'applicationinfo'=>$applicant,
             ]);
         }
-        
 
-        
-      
+
+
+
         return view('jobs.printCopy',[
             'applicationinfo'=>[],
         ]);
@@ -1145,105 +1287,158 @@ dd($e->getMessage());
         $interval = $datetime1->diff($datetime2);
         return response()->json(['success' => true, 'data' =>  '<strong>'.$fixedday.' তারিখে প্রার্থীর বয়স :'.$interval->format('%y years %m months and %d days').'<strong>']);
 
-    
+
 
     }
 
-    public function applyAgeCalculation(Request $request){
+    public function applyAgeCalculation(Request $request)
+    {
+        //  dd($request->input('repetition'));
+        //  dd($request->all());
+        //  dd($request->input('repetition'));
+
 
         date_default_timezone_set('Asia/Dhaka');
-        $bday=$request->input('bday');
-        $fixedday=$request->input('fixedday');
-        $freedom=$request->input('quota');
-        $divisioncaplicant=$request->input('divisioncaplicant');
-       // dd($bday, $fixedday, $freedom, $divisioncaplicant);
+        $bday = $request->input('bday');
+        $fixedday = $request->input('fixedday');
+
+        $job = Job::find($request->input('RndID'));
+        $max_age = $job->max_age;
+        $min_age = $job->min_age;
+        $freedom_fighter = $job->freedom_fighter;
+        $handicapped_age = $job->handicapped_age;
+        $petition_age = $job->petition_age;
+        $divisioncaplicant_age = $job->divisioncaplicant_age;
+        // dd(max(array($max_age,$freedom_fighter,$handicapped_age,$petition_age)));
+
+
+//dd($agearray);
+//dd(max($agearray));
+        $freedom = $request->input('quota');
+        $divisioncaplicant = $request->input('divisioncaplicant');
+        // dd($bday, $fixedday, $freedom, $divisioncaplicant);
         $datetime1 = new \DateTime($fixedday);
         $datetime2 = new \DateTime($bday);
-         $interval = $datetime1->diff($datetime2);
-        $year= $interval->format('%y');
-        $month= $interval->format('%m');
-        $day= $interval->format('%d');
-        
-        $total=$total=($year*365)+$day+$month;
-        $minimumage=$request->input('minimumage')*365;
-        $mamximumage=$request->input('mamximumage')*365;
-        
-    
-        if($divisioncaplicant=='হ্যাঁ'){
-            
-            $divisionalAge=$request->input('divisional')*365;
-        //echo $total.'='.divisionalAge;
-                if($total <= $divisionalAge){
-                echo 'Yes';
-                }
-                else{
-                echo 'No';
-                }
-        
+        $interval = $datetime1->diff($datetime2);
+        $year = $interval->format('%y');
+        $month = $interval->format('%m');
+        $day = $interval->format('%d');
+
+        $total = $total = ($year * 365) + $day + ($month * 30);
+        $minimumage = $request->input('minimumage') * 365;
+        $mamximumage = $request->input('mamximumage') * 365;
+
+        if (is_float($request->input('minimumage'))) {
+            list($whole, $decimal) = explode('.', $request->input('minimumage'));
+            $minimumage = ($whole * 365) + ($decimal * 30);
+        } else {
+            $minimumage = $request->input('minimumage') * 365;
+        }
+
+        if (is_float($request->input('mamximumage'))) {
+            list($whole, $decimal) = explode('.', $request->input('mamximumage'));
+            $minimumage = ($whole * 365) + ($decimal * 30);
+        } else {
+            $mamximumage = $request->input('mamximumage') * 365;
+        }
+
+        if ($request->input('repetition') == 'true' && (float)$total >= (float)$minimumage) {
+            echo 'Yes';
             return;
         }
-        
-        
-        
-        if(empty($freedom) && $freedom==''){
-        
-                if($total >= $minimumage){
-        
-                    if($total <= $mamximumage){
-                        echo 'Yes';
-                        return;
-                    }
-                    else{
-                    echo 'No';
-                        return;
-                    }
+
+
+        $maxage = 0.0;
+        $agearray = [];
+        if ($request->has('quota')) {
+            foreach ($request->input('quota') as $quota) {
+                //echo $quota;
+                if ($quota == "মুক্তিযোদ্ধা / শহীদ মুক্তিযোদ্ধার পুত্র -কন্যা") {
+                    $agearray[] = $job->freedom_fighter;
+
                 }
-        
-                else{
+                if ($quota == "মুক্তিযোদ্ধা / শহীদ মুক্তিযোদ্ধার পুত্র -কন্যার পুত্র -কন্যা") {
+
+                    $agearray[] = $job->freedom_fighter;
+                }
+                if ($quota == "ক্ষুদ্র নৃ -গোষ্ঠী") {
+                    $agearray[] = $job->freedom_fighter;
+
+                }
+
+                if ($quota == "শারীরিক প্রতিবন্দী") {
+
+                    $agearray[] = $job->handicapped_age;
+                }
+                if ($quota == "এতিম") {
+
+                    $agearray[] = $job->handicapped_age;
+                }
+
+                $maxage = sprintf("%.1f", max($agearray));
+
+            }
+
+
+            if ($maxage > 0) {
+
+                list($whole, $decimal) = explode('.', $maxage);
+                $maxage = ($whole * 365) + ($decimal * 30);
+            }
+
+
+            if ((float)$total <= (float)$maxage && (float)$total >= (float)$minimumage) {
+
+                return 'Yes';
+
+
+            }
+
+            if ((float)$total >= (float)$maxage && (float)$total >= (float)$minimumage) {
+
+                return 'No';
+
+
+            }
+
+
+        }
+
+
+//dd($total,$maxage );
+
+
+        if ($divisioncaplicant == 'হ্যাঁ' && (float)$total >= (float)$minimumage) {
+
+            $divisionalAge = $request->input('divisional') * 365;
+            if ((float)$total <= (float)$divisionalAge) {
+                echo 'Yes';
+            } else {
                 echo 'No';
-                    return;
-                }
-        
-        
+            }
+
+            return;
         }
-        
-        if(!empty($freedom)){
-    
-if($freedom=='মুক্তিযোদ্ধা / শহীদ মুক্তিযোদ্ধার পুত্র -কন্যা'){
-    $freedom=$request->input('freedom_fighter')*365;
-}
-elseif($freedom=='মুক্তিযোদ্ধা / শহীদ মুক্তিযোদ্ধার পুত্র -কন্যার পুত্র -কন্যা'){
-    $freedom=$request->input('freedom_fighter')*365;
-}
-elseif($freedom=='ক্ষুদ্র নৃ -গোষ্ঠী'){
-    $freedom=$request->input('freedom_fighter')*365;
-}
-elseif($freedom=='শারীরিক প্রতিবন্দী'){
-    $freedom=$request->input('handicapped_age')*365;
-}
-elseif($freedom=='এতিম'){
-    $freedom=$request->input('freedom_fighter')*365;
-}
-elseif($freedom=='আনসার ও গ্রাম প্রতিরক্ষা সদস্য'){
-    $freedom=$request->input('freedom_fighter')*365;
-}
 
 
+        if ($total <= (float)$minimumage) {
 
-       
-                if($total <= $freedom){
-                        echo 'Yes';
-                        return;
-        
-                }
-        
-                if($total >= $freedom){
-                        echo 'No';
-                        return;
-        
-                }
-        
+            return 'No';
         }
+        if ((float)$total >= (float)$mamximumage) {
+            return 'No';
+        }
+
+        if ((float)$total >= (float)$minimumage && (float)$total <= (float)$mamximumage) {
+            return 'Yes';
+        } else {
+            return 'No';
+        }
+
+//dd($minimumage, $total);
+// else{
+//     return 'No';
+// }
 
 
     }
@@ -1263,92 +1458,132 @@ elseif($freedom=='আনসার ও গ্রাম প্রতিরক্�
         $year= $interval->format('%y');
         $month= $interval->format('%m');
         $day= $interval->format('%d');
-        
-        $total=$total=($year*365)+$day+$month;
-        $minimumage=$request->input('min_age')*365;
-        $mamximumage=$request->input('max_age')*365;
-        
-    
+
+        $total=$total=($year*365)+$day+($month*30);
+
+        if(is_float($request->input('min_age'))){
+            list($whole, $decimal) = explode('.', $request->input('min_age'));
+            $minimumage=($whole*365)+($decimal*30);
+            }
+            else{
+                $minimumage=$request->input('min_age')*365;
+            }
+
+            if(is_float($request->input('max_age'))){
+                list($whole, $decimal) = explode('.', $request->input('max_age'));
+                $minimumage=($whole*365)+($decimal*30);
+                }
+                else{
+                    $mamximumage=$request->input('max_age')*365;
+                }
+
+
+
+                if($request->input('repetition')=='true' && (float)$total >=(float)$minimumage){
+                    return 'Yes';
+                }
+
         if($divisioncaplicant=='হ্যাঁ'){
-            
-            $divisionalAge=$request->input('divisioncaplicant_age')*365;
+            if(is_float($request->input('divisioncaplicant_age'))){
+                list($whole, $decimal) = explode('.', $request->input('divisioncaplicant_age'));
+                $minimumage=($whole*365)+($decimal*30);
+                }
+                else{
+                    $divisionalAge=$request->input('divisioncaplicant_age')*365;
+                }
+
         //echo $total.'='.divisionalAge;
-                if($total <= $divisionalAge){
+                if((float)$total <= (float)$divisionalAge && $minimumage >= (float)$total){
                 return 'Yes';
                 }
                 else{
                     return 'No';
                 }
-        
+
             return;
         }
-        
-        
-        
-        if(empty($freedom) && $freedom==''){
-        
-                if($total >= $minimumage){
-        
-                    if($total <= $mamximumage){
-                        return 'Yes';
-                        return;
+
+        $job= Job::find($request->input('RndID'));
+        $max_age=$job->max_age;
+        $min_age=$job->min_age;
+        $freedom_fighter=$job->freedom_fighter;
+        $handicapped_age=$job->handicapped_age;
+        $petition_age=$job->petition_age;
+        $divisioncaplicant_age=$job->divisioncaplicant_age;
+
+        $maxage=0.0;
+        $agearray=[];
+        if($request->has('quota')){
+            foreach($request->input('quota') as $quota){
+                //echo $quota;
+                                    if($quota=="মুক্তিযোদ্ধা / শহীদ মুক্তিযোদ্ধার পুত্র -কন্যা"){
+                                        $agearray[]=$job->freedom_fighter;
+
+                                    }
+                                    if($quota=="মুক্তিযোদ্ধা / শহীদ মুক্তিযোদ্ধার পুত্র -কন্যার পুত্র -কন্যা"){
+
+                                        $agearray[]=$job->freedom_fighter;
+                                    }
+                                    if($quota=="ক্ষুদ্র নৃ -গোষ্ঠী"){
+                                        $agearray[]=$job->freedom_fighter;
+
+                                    }
+
+                                    if($quota=="শারীরিক প্রতিবন্দী"){
+
+                                        $agearray[]=$job->handicapped_age;
+                                    }
+                                    if($quota=="এতিম"){
+
+                                        $agearray[]=$job->handicapped_age;
+                                    }
+
+                                  $maxage= max($agearray);
+
+                }
+
+                if($maxage > 0){
+
+                    if(is_float($maxage)){
+                      $agge=  explode('.', $maxage);
+                      $whole=$agge[0];
+                     if(!empty($agge[1])){
+                        $decimal=$agge[1] ? $agge[1]:0;
+                     }
+                     else{
+                        $decimal=0;
+                     }
+
+                   // list($whole, $decimal) = explode('.', $maxage);
+                    $maxage=($whole*365)+($decimal*30);
                     }
                     else{
-                        return 'No';
-                        return;
+
+                        $maxage=$maxage*365;
                     }
+
+
+                  }
+
+                if((float)$total <= (float)$maxage){
+
+                    return 'Yes';
+
+
                 }
-        
                 else{
                     return 'No';
-                    return;
                 }
-        
-        
         }
-        
-        if(!empty($freedom)){
-    
-if($freedom=='মুক্তিযোদ্ধা / শহীদ মুক্তিযোদ্ধার পুত্র -কন্যা'){
-    $freedom=$request->input('freedom_fighter')*365;
-}
-elseif($freedom=='মুক্তিযোদ্ধা / শহীদ মুক্তিযোদ্ধার পুত্র -কন্যার পুত্র -কন্যা'){
-    $freedom=$request->input('freedom_fighter')*365;
-}
-elseif($freedom=='ক্ষুদ্র নৃ -গোষ্ঠী'){
-    $freedom=$request->input('freedom_fighter')*365;
-}
-elseif($freedom=='শারীরিক প্রতিবন্দী'){
-    $freedom=$request->input('handicapped_age')*365;
-}
-elseif($freedom=='এতিম'){
-    $freedom=$request->input('freedom_fighter')*365;
-}
-elseif($freedom=='আনসার ও গ্রাম প্রতিরক্ষা সদস্য'){
-    $freedom=$request->input('freedom_fighter')*365;
-}
 
 
 
-       
-                if($total <= $freedom){
-                    return 'Yes';
-                        return;
-        
-                }
-        
-                if($total >= $freedom){
-                    return 'No';
-                        return;
-        
-                }
-        
-        }
+
+
+
 
 
     }
-
-    
 
 
 }

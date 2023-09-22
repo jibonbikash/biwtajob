@@ -232,16 +232,61 @@
                                             {!! Form::label('Certificates',  "Certificates") !!}
                                         </div>
                                         <div class="col-md-6" id="Certificateslist">
-
+                                            <strong>Text Heading</strong>
+                                            {!! Form::text('Certificates_title_name', null, array('placeholder' => '','class' => 'form-control')) !!}
                                         </div>
-                                        <div class="col-md-3" id="certificate_isrequired">
+                                        <div class="col-md-3 mt-3" id="certificate_isrequired">
                                             {{ Form::checkbox('certificate_isrequired', '1', false, array( 'id'=>'certificates')) }}
                                             {!! Form::label('Is required?',  "Is required?") !!}
                                         </div>
                                     </div>
+
+                                    
+
                                 </div>
                             </div>
                         </div>
+
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Others Setting</h5>
+                                </div>
+                                <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <strong>Experience in related field Text </strong>
+                                        {!! Form::text('related_experience_text', null, array('placeholder' => '','class' => 'form-control')) !!}
+                                    </div>  
+                                    <div class="col-md-4">
+                                        <strong>Experience in related field selection </strong>
+                                        {!! Form::select('related_experience[]',\App\Helpers\StaticValue::RELATED_EXPERIENCE,null,['class'=>'form-control select2','id'=>'related_experience', 'multiple'=>true, ]) !!}
+                                    </div>  
+                                    <div class="col-md-4">
+                                        <strong>Writ Petitioner  </strong>
+                                        {!! Form::text('repetition', null, array('placeholder' => '','class' => 'form-control')) !!}
+                                    </div>  
+                                    <div class="col-md-4">
+                                        <strong>Minimum Duration of Experience (Years)</strong>
+                                        {!! Form::text('minimum_job_experience', null, array('placeholder' => '','class' => 'form-control')) !!}
+                                    </div>  
+                                </div>   
+                            </div>  
+
+                                </div>
+                                
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 mb-3">
+                           
+                                <strong>Status</strong>
+                                {!! Form::select('status',\App\Helpers\StaticValue::STATUS_ADMIN,null,['class'=>'form-control select2','placeholder'=>'Select ']) !!}
+                            
+                        
+                        </div>
+
+
                     </div>
                     <div class="row">
                         <div class="col-md-6">
@@ -264,13 +309,23 @@
 @endsection
 
 @section('script')
-    <!-- optional plugins -->
+<style>
+    .select2-container .select2-selection--multiple .select2-selection__choice{
+        background-color: #5369f8 !important;
+    }
+     </style>   
 
 @endsection
 
 @section('script-bottom')
+<link href="{{ URL::asset('assets/libs/select2/select2.min.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ URL::asset('assets/libs/multiselect/multi-select.css') }}" rel="stylesheet" type="text/css" />
+
     <script src="https://cdn.ckeditor.com/4.12.1/standard/ckeditor.js"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script src="{{ URL::asset('assets/libs/select2/select2.min.js') }}"></script>
+    <script src="{{ URL::asset('assets/libs/multiselect/multiselect.min.js') }}"></script>
+
     <script type="text/javascript">
         CKEDITOR.replace('description', {
             filebrowserUploadUrl: "{{route('ckeditor.upload', ['_token' => csrf_token() ])}}",
@@ -287,6 +342,13 @@
                 changeYear: true,
                 dateFormat: "yy-mm-dd"
             });
+
+            $('.select2').select2({
+                placeholder: 'নির্বাচন করুন',
+                language: "bn",
+                minimumResultsForSearch: -1
+            });
+
 //             $('#jsc').on('click',function(e) {
 // alert('dfdfd ffgf')
 //             });

@@ -32,16 +32,60 @@
                 </div>
      {!! Form::open(['route' => array('applicants'), 'files' => false, 'method'=>'get']) !!}
 <div class="row mt-1 mb-3">
-    <div class="col-md-3">
+    <div class="col-md-4">
         {!! Form::select('job_id',$jobs,request()->get('job_id'),['class'=>'form-control select2','placeholder'=>'Select Job']) !!}
     </div>
-    <div class="col-md-3">
+    <div class="col-md-4">
         {!! Form::text('q', request()->get('q'), array('placeholder' => 'Applicant Name, Mobile, email','class' => 'form-control')) !!}
     </div>
-    <div class="col-md-3">
+    <div class="col-md-4">
         {!! Form::text('code', request()->get('code'), array('placeholder' => 'code, roll, transaction id','class' => 'form-control')) !!}
     </div>
-    <div class="col-md-3">
+</div>
+<div class="row mt-1 mb-3">
+    <div class="col-md-4">
+        {!! Form::select('gender',\App\Helpers\StaticValue::GENDER,request()->get('gender'),['class'=>'form-control select2','placeholder'=>'Gender']) !!}
+    </div>
+
+        <div class="col-md-4">
+        {!! Form::select('religion',\App\Helpers\StaticValue::RELIGIONS,request()->get('religion'),['class'=>'form-control select2','placeholder'=>'Religion']) !!}
+    </div>
+    <div class="col-md-4">
+        @php
+        $Examlevel = \App\Models\ExamlevelGroup::orderBy('examlevel_id')->pluck('name','id')
+      ->all();
+    @endphp
+
+        {!! Form::select('education',$Examlevel,request()->get('education'),['class'=>'form-control','placeholder'=>'Education','id'=>'Education']) !!}
+    </div>
+</div>
+<div class="row mt-1 mb-3">
+
+    <div class="col-md-4">
+        {!! Form::text('minimum_age', request()->get('minimum_age'), array('placeholder' => 'Minimum Age','class' => 'form-control')) !!}
+    </div>
+    <div class="col-md-4">
+        {!! Form::text('maximum_age', request()->get('maximum_age'), array('placeholder' => 'Maximum Age','class' => 'form-control')) !!}
+    </div>
+    <div class="col-md-4">
+        {!! Form::text('experience', request()->get('experience'), array('placeholder' => 'Experience','class' => 'form-control')) !!}
+    </div>
+</div>
+<div class="row mt-1 mb-3">
+    <div class="col-md-4">
+        @php
+        $crtificates = \App\Models\Crtificate::pluck('name','id')
+      ->all();
+    @endphp
+ {!! Form::select('certification',$crtificates,request()->get('certification'),['class'=>'form-control','placeholder'=>'Certification','id'=>'Certification']) !!}
+       
+    </div>
+    <div class="col-md-4">
+        {!! Form::select('quota',\App\Helpers\StaticValue::QTOTA,request()->get('quota'),['class'=>'form-control','placeholder'=>'Quota','id'=>'quota']) !!}
+    </div>
+
+
+    <div class="col-md-4">
         <button type="submit" name="search" value="q" class="btn btn-success btn-lg float-end" title="Search"><i data-feather="search"></i></button>
         @if (request()->input('search')=='q')
          <a href="{{ route('applicants') }}" class="btn btn-warning btn-lg" title="Reset"><i data-feather="refresh-cw" class="text-white"></i></a>

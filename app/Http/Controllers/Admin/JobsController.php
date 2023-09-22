@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\JobCreateRequest;
+use App\Http\Requests\JobUpdateRequest;
+
 use App\Models\Applicant;
 use App\Models\Crtificate;
 use App\Models\Examlevel;
@@ -98,6 +100,12 @@ class JobsController extends Controller
                     'masters' => $request->input('MastersExam') == 'Masters' ? true : false,
                     'certificate_isrequired' => $request->input('certificate_isrequired') == '1' ? true : false,
                     'certificate' => $request->input('certificates') == 'YES' ? "YES" : "NO",
+                    'certificate_text' => $request->input('certificate_text'),
+                    'related_experience_text' => $request->input('related_experience_text'),
+                    'related_experience' => $request->input('related_experience'),
+                    'repetition' => $request->input('repetition'),
+                    'minimum_job_experience' => $request->input('minimum_job_experience'),
+                    'status' => $request->input('status'),
                 ]);
                 if (count((array)$request->input('JSC')) > 0) {
                     foreach ($request->input('JSC') as $key => $value) {
@@ -204,9 +212,12 @@ class JobsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(JobUpdateRequest $request, $id)
     {
-       $update= Job::where('id', $id)
+       // dd($request->all());
+        try {
+
+            $update= Job::where('id', $id)
             ->update([
                 'title' => $request->input('title'),
                 'description' => $request->input('description'),
@@ -234,12 +245,29 @@ class JobsController extends Controller
                 'hsc' => $request->input('HSCExam') == 'HSC' ? true : false,
                 'graduation' => $request->input('GradExam') == 'graduation' ? true : false,
                 'masters' => $request->input('MastersExam') == 'Masters' ? true : false,
+                'certificate_isrequired' => $request->input('certificate_isrequired') == '1' ? true : false,
+                    'certificate' => $request->input('certificates') == 'YES' ? "YES" : "NO",
+                    'certificate_text' => $request->input('certificate_text'),
+                    'related_experience_text' => $request->input('related_experience_text'),
+                    'related_experience' => $request->input('related_experience'),
+                    'repetition' => $request->input('repetition'),
+                    'minimum_job_experience' => $request->input('minimum_job_experience'),
+                    'graduation_result' => $request->input('Graduation_grade'),
+                    'masters_result' => $request->input('Masters_grade'),
+                    'status' => $request->input('status'),
             ]);
         if ($update) {
             return redirect()->route('jobs.index')
                 ->with('success', 'Data update successfully!!');
         }
-        dd($request->all());
+          
+          } catch (\Exception $e) {
+          
+              return $e->getMessage();
+          }
+
+      
+       
     }
 
     /**
@@ -282,15 +310,31 @@ class JobsController extends Controller
         $q=$request->input('q') ?? null;
         $job_id=$request->input('job_id') ?? null;
         $code=$request->input('code') ?? null;
-
+        $gender=$request->input('gender') ?? null;
+        $religion=$request->input('religion') ?? null;
+        $education=$request->input('education') ?? null;
+        $minimum_age=$request->input('minimum_age') ?? null;
+        $maximum_age=$request->input('maximum_age') ?? null;
+        $experience=$request->input('experience') ?? null;
+        $certification=$request->input('certification') ?? null;
+        $quota=$request->input('quota') ?? null;
+        DB::enableQueryLog();
         $applicants = DB::table('applicants')
             ->join('job_applies', 'applicants.id', '=', 'job_applies.applicants_id')
             ->join('jobs', function (JoinClause $join) {
-            $join->on('applicants.job_id', '=', 'jobs.id')->On('job_applies.job_id', '=', 'jobs.id');
+            $join->on('applicants.job_id', '=', 'jobs.id')->on('job_applies.job_id', '=', 'jobs.id');
         })
+        ->join('applicant_certificates', function (JoinClause $join) {
+            $join->on('applicants.job_id', '=', 'applicant_certificates.job_id')->on('applicants.id', '=', 'applicant_certificates.applicants_id');
+        })
+      //  ->join('applicant_educations', 'applicants.id', '=', 'applicant_educations.applicants_id')
+
+        // ->join('applicant_educations', function (JoinClause $join) {
+        //     $join->on('applicants.job_id', '=', 'applicant_educations.job_id')->on('applicants.id', '=', 'applicant_educations.applicants_id');
+        // })
             ->select('applicants.*', 'job_applies.token', 'jobs.title as job_title', 'job_applies.received as received', 'job_applies.txnid as txnid', 'job_applies.txndate as txndate', 'job_applies.roll as roll',
             'job_applies.exam_hall as exam_hall','job_applies.exam_date as exam_date','job_applies.exam_time as exam_time', 'job_applies.exam_time as apply_date',
-            'jobs.age_calculation as age_calculation',
+            'jobs.age_calculation as age_calculation', 'applicant_certificates.applicants_id',
             )
             ->whereNull('applicants.deleted_at')
             ->whereNull('job_applies.deleted_at')
@@ -305,6 +349,33 @@ class JobsController extends Controller
             ->when($job_id, function ($query) use ($job_id){
                 $query->where('applicants.job_id', $job_id);
             }) 
+            ->when($gender, function ($query) use ($gender){
+                $query->where('applicants.gender', $gender);
+            }) 
+            ->when($religion, function ($query) use ($religion){
+                $query->where('applicants.religious', $religion);
+            }) 
+            ->when($quota, function ($query) use ($quota){
+                $query->where('applicants.quota', $quota);
+            }) 
+            ->when($experience, function ($query) use ($experience){
+                $query->where('applicants.experienceyear', $quota);
+            }) 
+            // ->when($certification, function ($query) use ($certification){
+            //     $query->where('applicant_certificates.edu_level', $certification);
+            // }) 
+            ->when($minimum_age, function ($query) use ($minimum_age){
+                $query->where('applicants.age', '>=', $minimum_age);
+            })
+
+            ->when($maximum_age, function ($query) use ($maximum_age){
+                $query->where('applicants.age', '<=', $maximum_age);
+            })
+
+            // ->when($education, function ($query) use ($education){
+            //     $query->where('applicant_educations.edu_level', $education);
+            // })
+
             ->when($code, function ($query) use ($code){
                 $query->where(function ($query) use ($request){
                     $query->where('job_applies.token','like', '%'.$code.'%')
@@ -317,7 +388,9 @@ class JobsController extends Controller
             }) 
 
             ->whereIn('applicants.eligible',[1,2])
+          //  ->groupBy('applicants.id','applicant_certificates.applicants_id')
             ->latest()->paginate(50);
+          //  dd(DB::getQueryLog());
 
         return view('admin.jobs.applicants', ['applicants' => $applicants, 'jobs'=>$job]);
     }

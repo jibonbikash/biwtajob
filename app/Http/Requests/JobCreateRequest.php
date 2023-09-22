@@ -26,6 +26,15 @@ class JobCreateRequest extends FormRequest
         return [
             'title' => 'required|max:255',
             'description' => 'required',
+            'vacancies' => 'required',
+            'job_id' => 'required',
+            'age_calculation' => 'required',
+            'apply_fee' => 'required',
+            'application_deadline' => 'required',
+            'jobcurbday' => 'required',
+             'min_age' => 'required',
+             'max_age' => 'required',
+
         ];
     }
     public function messages()

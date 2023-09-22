@@ -26,6 +26,7 @@ class StaticValue
     const GENDER = [
         'পুরুষ' => "পুরুষ",
         'মহিলা' => "মহিলা",
+         'অন্যান্য' => "অন্যান্য",
     ];
 
     const RELIGIONS = [
@@ -45,18 +46,37 @@ class StaticValue
         '2' => "Inactive",
     ];
 
+    const STATUS_ADMIN = [
+        '1' => "Publish",
+        '0' => "Draft",
+    ];
+
+    const NIDORBRN = [
+        'BRN' => "জন্ম নিবন্ধন",
+        'NID' => "জাতীয় পরিচয়",
+    
+    ];
+
+
+    const RELATED_EXPERIENCE = [
+        'আছে' => "আছে",
+        'নাই' => "নাই",
+        'প্রযোজ্য নয়' => "প্রযোজ্য নয়",
+    
+    ];
+
     const RESULTJSC = [
-        '4' => "GPA(out of 4)",
-        '5' => "GPA(out of 5)",
-        '6' => "Passed",
+        'জিপিএ(আউট অফ ৪)' => "জিপিএ(আউট অফ ৪)",
+        'জিপিএ(আউট অফ ৫)' => "জিপিএ(আউট অফ ৫)",
+        'পাস' => "পাস",
     ];
 
     const RESULTSSC = [
-        '1' => "1st Division",
-        '2' => "2nd Division",
-        '3' => "3rd Division",
-        '4' => "GPA(out of 4)",
-        '5' => "GPA(out of 5)",
+        'প্রথম বিভাগ' => "প্রথম বিভাগ",
+        'দ্বিতীয় বিভাগ' => "দ্বিতীয় বিভাগ",
+        'তৃতীয় বিভাগ' => "তৃতীয় বিভাগ",
+        'জিপিএ/সিজিপিএ(আউট অফ ৪)' => "জিপিএ/সিজিপিএ(আউট অফ ৪)",
+        'জিপিএ/সিজিপিএ(আউট অফ ৫)' => "জিপিএ/সিজিপিএ(আউট অফ ৫)",
     ];
     const UNIVERSITIES = [
         1 => "Ad-din Womens Medical College, Dhaka",
@@ -332,6 +352,17 @@ class StaticValue
 
         return preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
     }
+
+
+
+    public static function  englishToBengaliNumberConverter($number) {
+        $englishNumbers = array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
+        $bengaliNumbers = array('০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯');
+        $bengaliNumber = str_replace($englishNumbers, $bengaliNumbers, $number);
+        
+        return $bengaliNumber;
+    }
+
 }
 
 

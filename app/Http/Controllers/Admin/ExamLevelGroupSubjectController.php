@@ -56,7 +56,8 @@ class ExamLevelGroupSubjectController extends Controller
         $this->validate($request, [
             'examlevel_id' => 'required',
             'examlevel_group_id' => 'required',
-            'name' => 'required|unique:examlevel_subjects,name',
+           // 'name' => 'required|unique:examlevel_subjects,name',
+            'name' => 'required',
             'status' => 'required'
         ]);
         if(ExamlevelSubject::create([

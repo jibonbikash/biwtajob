@@ -19,4 +19,9 @@ class ExamlevelSubject extends Model
     {
         return $this->belongsTo(Examlevel::class);
     }
+    public function JobSubject()
+    {
+        return $this->hasMany(JobExamSubject::class);
+    }
+
 }

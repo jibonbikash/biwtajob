@@ -32,6 +32,10 @@ class Applicant extends Model
     {
         return $this->hasOne(JobApply::class,'applicants_id','id');
     }
+    public function apliyedJobPayment()
+    {
+        return $this->hasOne(JobApply::class,'applicants_id','id')->where('received',1);
+    }
 
     public function applicantCertificate()
     {
@@ -55,3 +59,4 @@ class Applicant extends Model
 
 
 }
+//ALTER TABLE `jb18_applicants` ADD `repetition` BOOLEAN NOT NULL DEFAULT FALSE AFTER `jobcurday`;

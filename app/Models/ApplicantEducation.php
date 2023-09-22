@@ -22,3 +22,5 @@ class ApplicantEducation extends Model
 
 
 }
+
+// ALTER TABLE `jb18_applicant_educations` CHANGE `result` `result` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, CHANGE `cgpa` `cgpa` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `out_of` `out_of` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;

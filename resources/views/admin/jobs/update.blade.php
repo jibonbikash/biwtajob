@@ -82,7 +82,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <strong>Job circular Date</strong>
-                                {!! Form::text('jobcurbday', null, array('placeholder' => '','class' => 'form-control','id'=>'jobcurbday','autocomplete'=>'off')) !!}
+                                {!! Form::text('jobcurbday', $job->jobcurbday, array('placeholder' => '','class' => 'form-control','id'=>'jobcurbday','autocomplete'=>'off')) !!}
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -227,18 +227,81 @@
                                             {!! Form::label('Certificates',  "Certificates") !!}
                                         </div>
                                         <div class="col-md-6" id="Certificateslist">
-
+                                          
+                                            {!! Form::text('certificate_text', $job->certificate_text, array('placeholder' => 'Certificate Text Heading','class' => 'form-control')) !!}
                                         </div>
                                         <div class="col-md-3" id="certificate_isrequired">
                                             {{ Form::checkbox('certificate_isrequired', '1', $job->certificate_isrequired, array( 'id'=>'certificatesre')) }}
                                             {!! Form::label('Is required?',  "Is required?") !!}
                                         </div>
                                     </div>
+
+                                    
                                 </div>
                             </div>
                         </div>
 
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Others Setting</h5>
+                                </div>
+                                <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <strong>Experience in related field Text </strong>
+                                        {!! Form::text('related_experience_text', $job->related_experience_text, array('placeholder' => '','class' => 'form-control')) !!}
+                                    </div>  
+                                    <div class="col-md-4">
+                                        <strong>Experience in related field selection </strong>
+                                        <?php
+$dbValue = $job->related_experience;
+$myArray = json_decode($dbValue, true);
+
+$graduation_result= $job->graduation_result;
+$graduation_result= json_decode($graduation_result, true);
+
+$masters_result= $job->masters_result;
+$masters_result= json_decode($masters_result, true);
+
+
+?>
+
+                                        {!! Form::select('related_experience[]',\App\Helpers\StaticValue::RELATED_EXPERIENCE,$myArray,['class'=>'form-control select2','id'=>'related_experience', 'multiple'=>true, ]) !!}
+                                    </div>  
+                                    <div class="col-md-4">
+                                        <strong>Writ Petitioner  </strong>
+                                        {!! Form::text('repetition', $job->repetition, array('placeholder' => '','class' => 'form-control')) !!}
+                                    </div>  
+                                    <div class="col-md-4 mt-2">
+                                        <strong>Minimum Duration of Experience (Years)</strong>
+                                        {!! Form::number('minimum_job_experience', $job->minimum_job_experience, array('placeholder' => '','class' => 'form-control')) !!}
+                                    </div>  
+                                    <div class="col-md-4 mt-2">
+                                        <strong>Graduation/Equivalent grade/class </strong>
+                                        {!! Form::select('Graduation_grade[]',\App\Helpers\StaticValue::RESULTSSC,$graduation_result,['class'=>'form-control select2','id'=>'Graduation_grade', 'multiple'=>true, ]) !!}
+                                    </div>  
+                                    <div class="col-md-4 mt-2">
+                                        <strong>Masters/Equivalent grade/class</strong>
+                                        {!! Form::select('Masters_grade[]',\App\Helpers\StaticValue::RESULTSSC,$masters_result,['class'=>'form-control select2','id'=>'Masters_grade', 'multiple'=>true, ]) !!}
+                                    </div>  
+                                    
+                                </div>   
+                            </div>  
+
+                                </div>
+                                
+                            </div>
+
                     </div>
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <strong>Status</strong>
+                            {!! Form::select('status',\App\Helpers\StaticValue::STATUS_ADMIN,$job->status,['class'=>'form-control','placeholder'=>'Select ']) !!}
+                        
+                        </div>
+                    </div>
+
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
@@ -260,13 +323,22 @@
 @endsection
 
 @section('script')
-    <!-- optional plugins -->
 
+<style>
+    .select2-container .select2-selection--multiple .select2-selection__choice{
+        background-color: #5369f8 !important;
+    }
+     </style>   
 @endsection
 
 @section('script-bottom')
+<link href="{{ URL::asset('assets/libs/select2/select2.min.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ URL::asset('assets/libs/multiselect/multiselect.min.css') }}" rel="stylesheet" type="text/css" />
     <script src="https://cdn.ckeditor.com/4.12.1/standard/ckeditor.js"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+
+<script src="{{ URL::asset('assets/libs/select2/select2.min.js') }}"></script>
+<script src="{{ URL::asset('assets/libs/multiselect/multiselect.min.js') }}"></script>
     <script type="text/javascript">
         CKEDITOR.replace('description', {
             filebrowserUploadUrl: "{{route('ckeditor.upload', ['_token' => csrf_token() ])}}",
@@ -288,6 +360,12 @@
                 changeMonth: true,
                 changeYear: true,
                 dateFormat: "yy-mm-dd"
+            });
+
+            $('.select2').select2({
+                placeholder: 'নির্বাচন করুন',
+                language: "bn",
+                minimumResultsForSearch: -1
             });
         } );
     </script>

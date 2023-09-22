@@ -62,7 +62,7 @@
 
 
                     </div>
-                    {!! Form::open(['route' => array('applicantPreviewConfirm', $applicationinfo->uuid), 'files' => true]) !!}
+                    {!! Form::open(['route' => array('applicantPreviewConfirm', $applicationinfo->uuid), 'files' => true, 'id' => 'applicationForm', 'class' => 'applicationForm']) !!}
                     {!! Form::hidden('jobcurday', $job->jobcurbday ? $job->jobcurbday:'') !!}
                     {!! Form::hidden('age_calculation', $job->age_calculation) !!}
                     {!! Form::hidden('min_age', $job->min_age) !!}
@@ -72,6 +72,7 @@
                     {!! Form::hidden('petition_age', $job->petition_age) !!}
                     {!! Form::hidden('freedom_fighter', $job->freedom_fighter) !!}
                      {!! Form::hidden('date_of_birth_cal', '') !!}
+                     {!! Form::hidden('RndID', $job->id, ['id'=>'RndID']) !!}
                     <div class="row mt-4">
                         <div class="col-md-12">
                             @include('layouts.shared.message')
@@ -93,7 +94,7 @@
 
                                         <tr>
                                             <td>প্রার্থীর নাম বাংলায় <span class="text-danger">*</span></td>
-                                            <td> {!! Form::text('name_bn', $applicationinfo->name_bn, array('placeholder' => '','class' => 'form-control')) !!}
+                                            <td> {!! Form::text('name_bn', $applicationinfo->name_bn, array('placeholder' => '','class' => 'form-control banglainput')) !!}
                                                 @if ($errors->has('name_bn'))
                                                     <span class="text-danger">{{ $errors->first('name_bn') }}</span>
                                                 @endif
@@ -102,7 +103,7 @@
 
                                         <tr>
                                             <td>পিতার নাম <span class="text-danger">*</span></td>
-                                            <td>{!! Form::text('father_name', $applicationinfo->father_name, array('placeholder' => '','class' => 'form-control')) !!}
+                                            <td>{!! Form::text('father_name', $applicationinfo->father_name, array('placeholder' => '','class' => 'form-control banglainput')) !!}
                                                 @if ($errors->has('father_name'))
                                                     <span class="text-danger">{{ $errors->first('father_name') }}</span>
                                                 @endif
@@ -111,7 +112,7 @@
 
                                         <tr>
                                             <td>মাতার নাম <span class="text-danger">*</span></td>
-                                            <td>{!! Form::text('mother_name', $applicationinfo->mother_name, array('placeholder' => '','class' => 'form-control')) !!}
+                                            <td>{!! Form::text('mother_name', $applicationinfo->mother_name, array('placeholder' => '','class' => 'form-control banglainput')) !!}
                                                 @if ($errors->has('mother_name'))
                                                     <span class="text-danger">{{ $errors->first('mother_name') }}</span>
                                                 @endif
@@ -129,20 +130,26 @@
                                         </tr>
                                         <tr>
                                             <td>মোবাইল/টেলিফোন নম্বর <span class="text-danger">*</span></td>
-                                            <td> {!! Form::text('mobile_no', $applicationinfo->mobile, array('placeholder' => '','class' => 'form-control',)) !!}
+                                            <td> {!! Form::text('mobile_no', $applicationinfo->mobile, array('placeholder' => '','class' => 'form-control banglainput',)) !!}
                                                 @if ($errors->has('mobile_no'))
                                                     <span class="text-danger">{{ $errors->first('mobile_no') }}</span>
                                                 @endif
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>জাতীয় পরিচয় নম্বর <span class="text-danger">*</span></td>
-                                            <td> {!! Form::text('nid', $applicationinfo->nid, array('placeholder' => '','class' => 'form-control',)) !!}
-                                                @if ($errors->has('nid'))
-                                                    <span class="text-danger">{{ $errors->first('nid') }}</span>
+                                            <td>জাতীয় পরিচয় নম্বর/জন্ম নিবন্ধন নম্বর<span class="text-danger">*</span></td>
+                                            <td> 
+                                                
+                                                {!! Form::select('nidorbrn',\App\Helpers\StaticValue::NIDORBRN,$applicationinfo->nid ? 'NID':'BRN',['class'=>'form-control select2 nidorbrn','placeholder'=>'' ,'id'=>'nidorbrn']) !!}
+                                                
+                                                {!! Form::text('nidorbrnnumber', $applicationinfo->nid ? $applicationinfo->nid:$applicationinfo->brn, array('class' => 'form-control banglainput nidorbrnnumber', 'required'=>true, )) !!}
+                                                @if ($errors->has('nidorbrnnumber'))
+                                                    <span class="text-danger">{{ $errors->first('nidorbrnnumber') }}</span>
                                                 @endif
                                             </td>
                                         </tr>
+
+                                        
                                         <tr>
                                             <td>জাতীয়তা <span class="text-danger">*</span></td>
                                             <td> {!! Form::select('nationality',\App\Helpers\StaticValue::NATIONALITY,$applicationinfo->nationality,['class'=>'form-control select2','placeholder'=>'']) !!}
@@ -179,7 +186,7 @@
                                         </tr>
                                         <tr>
                                             <td>পেশা</td>
-                                            <td>{!! Form::text('occupation', $applicationinfo->occupation, array('placeholder' => '','class' => 'form-control')) !!}
+                                            <td>{!! Form::text('occupation', $applicationinfo->occupation, array('placeholder' => '','class' => 'form-control banglainput')) !!}
                                                 @if ($errors->has('occupation'))
                                                     <span class="text-danger">{{ $errors->first('occupation') }}</span>
                                                 @endif
@@ -200,19 +207,19 @@
                                         <tbody>
                                         <tr>
                                             <td>বাসা ও সড়ক (নাম/নম্বর)</td>
-                                            <td> {!! Form::text('present_house_no', $applicationinfo->pa_house, array('placeholder' => '','class' => 'form-control','id'=>'present_house_no')) !!}</td>
+                                            <td> {!! Form::text('present_house_no', $applicationinfo->pa_house, array('placeholder' => '','class' => 'form-control banglainput','id'=>'present_house_no')) !!}</td>
                                         </tr>
                                         <tr>
                                             <td>গ্রাম/পাড়া/মহল্লা</td>
-                                            <td> {!! Form::text('present_village', $applicationinfo->pa_village, array('placeholder' => '','class' => 'form-control','id'=>'present_village')) !!}</td>
+                                            <td> {!! Form::text('present_village', $applicationinfo->pa_village, array('placeholder' => '','class' => 'form-control banglainput','id'=>'present_village')) !!}</td>
                                         </tr>
                                         <tr>
                                             <td>ইউনিয়ন/ওয়ার্ড</td>
-                                            <td> {!! Form::text('present_union', $applicationinfo->pa_union, array('placeholder' => '','class' => 'form-control','id'=>'present_union')) !!}</td>
+                                            <td> {!! Form::text('present_union', $applicationinfo->pa_union, array('placeholder' => '','class' => 'form-control banglainput','id'=>'present_union')) !!}</td>
                                         </tr>
                                         <tr>
                                             <td>ডাকঘর <span class="text-danger">*</span></td>
-                                            <td> {!! Form::text('present_postoffice', $applicationinfo->pa_postoffice, array('placeholder' => '','class' => 'form-control','id'=>'present_postoffice')) !!}
+                                            <td> {!! Form::text('present_postoffice', $applicationinfo->pa_postoffice, array('placeholder' => '','class' => 'form-control banglainput','id'=>'present_postoffice')) !!}
                                                 @if ($errors->has('present_postoffice'))
                                                     <span class="text-danger">{{ $errors->first('present_postoffice') }}</span>
                                                 @endif
@@ -220,7 +227,7 @@
                                         </tr>
                                         <tr>
                                             <td>পোস্টকোড নম্বর <span class="text-danger">*</span></td>
-                                            <td> {!! Form::text('present_postcode', $applicationinfo->pa_postcode, array('placeholder' => '','class' => 'form-control','id'=>'present_postcode')) !!}
+                                            <td> {!! Form::text('present_postcode', $applicationinfo->pa_postcode, array('placeholder' => '','class' => 'form-control banglainput','id'=>'present_postcode')) !!}
                                                 @if ($errors->has('present_postcode'))
                                                     <span class="text-danger">{{ $errors->first('present_postcode') }}</span>
                                                 @endif
@@ -229,7 +236,7 @@
                                         <tr>
                                             <td>জেলা <span class="text-danger">*</span></td>
                                             <td>
-                                                {!! Form::select('present_zilla',[],$applicationinfo->pa_zilla,['class'=>'form-control present_zilla select2','placeholder'=>'','id'=>'present_zilla']) !!}
+                                                {!! Form::select('present_zilla',[],$applicationinfo->pa_zilla,['class'=>'form-control present_zilla select2','id'=>'present_zilla']) !!}
                                                 @if ($errors->has('present_zilla'))
                                                     <span class="text-danger">{{ $errors->first('present_zilla') }}</span>
                                                 @endif
@@ -239,7 +246,7 @@
                                         <tr>
                                             <td>উপজেলা/থানা <span class="text-danger">*</span></td>
                                             <td>
-                                                {!! Form::select('present_upozilla',[],$applicationinfo->pa_upozilla,['class'=>'form-control present_upozilla select2','placeholder'=>'','id'=>'present_upozilla']) !!}
+                                                {!! Form::select('present_upozilla',[],$applicationinfo->pa_upozilla,['class'=>'form-control present_upozilla select2','id'=>'present_upozilla']) !!}
                                                 @if ($errors->has('present_upozilla'))
                                                     <span class="text-danger">{{ $errors->first('present_upozilla') }}</span>
                                                 @endif
@@ -258,19 +265,19 @@
                                         <tbody>
                                         <tr>
                                             <td>বাসা ও সড়ক (নাম/নম্বর)</td>
-                                            <td> {!! Form::text('permanent_house_no', $applicationinfo->pr_house, array('placeholder' => '','class' => 'form-control','id'=>'permanent_house_no')) !!}</td>
+                                            <td> {!! Form::text('permanent_house_no', $applicationinfo->pr_house, array('placeholder' => '','class' => 'form-control banglainput','id'=>'permanent_house_no')) !!}</td>
                                         </tr>
                                         <tr>
                                             <td>গ্রাম/পাড়া/মহল্লা</td>
-                                            <td> {!! Form::text('permanent_village', $applicationinfo->pr_village, array('placeholder' => '','class' => 'form-control','id'=>'permanent_village')) !!}</td>
+                                            <td> {!! Form::text('permanent_village', $applicationinfo->pr_village, array('placeholder' => '','class' => 'form-control banglainput','id'=>'permanent_village')) !!}</td>
                                         </tr>
                                         <tr>
                                             <td>ইউনিয়ন/ওয়ার্ড</td>
-                                            <td> {!! Form::text('permanent_union', $applicationinfo->pr_union, array('placeholder' => '','class' => 'form-control','id'=>'permanent_union')) !!}</td>
+                                            <td> {!! Form::text('permanent_union', $applicationinfo->pr_union, array('placeholder' => '','class' => 'form-control banglainput','id'=>'permanent_union')) !!}</td>
                                         </tr>
                                         <tr>
                                             <td>ডাকঘর <span class="text-danger">*</span></td>
-                                            <td> {!! Form::text('permanent_postoffice', $applicationinfo->pr_postoffice, array('placeholder' => '','class' => 'form-control','id'=>'permanent_postoffice')) !!}
+                                            <td> {!! Form::text('permanent_postoffice', $applicationinfo->pr_postoffice, array('placeholder' => '','class' => 'form-control banglainput','id'=>'permanent_postoffice')) !!}
                                                 @if ($errors->has('permanent_postoffice'))
                                                     <span class="text-danger">{{ $errors->first('permanent_postoffice') }}</span>
                                                 @endif
@@ -278,7 +285,7 @@
                                         </tr>
                                         <tr>
                                             <td>পোস্টকোড নম্বর <span class="text-danger">*</span></td>
-                                            <td> {!! Form::text('permanent_postcode', $applicationinfo->pr_postcode, array('placeholder' => '','class' => 'form-control','id'=>'permanent_postcode')) !!}
+                                            <td> {!! Form::text('permanent_postcode', $applicationinfo->pr_postcode, array('placeholder' => '','class' => 'form-control banglainput','id'=>'permanent_postcode')) !!}
                                                 @if ($errors->has('permanent_postcode'))
                                                     <span class="text-danger">{{ $errors->first('permanent_postcode') }}</span>
                                                 @endif</td>
@@ -286,7 +293,7 @@
                                         <tr>
                                             <td>জেলা <span class="text-danger">*</span></td>
                                             <td>
-                                                {!! Form::select('permanent_zilla',[],$applicationinfo->pr_zilla,['class'=>'form-control permanent_zilla select2','placeholder'=>'','id'=>'permanent_zilla']) !!}
+                                                {!! Form::select('permanent_zilla',[],$applicationinfo->pr_zilla,['class'=>'form-control permanent_zilla select2','id'=>'permanent_zilla']) !!}
                                                 @if ($errors->has('permanent_zilla'))
                                                     <span class="text-danger">{{ $errors->first('permanent_zilla') }}</span>
                                                 @endif
@@ -296,7 +303,7 @@
                                         <tr>
                                             <td>উপজেলা/থানা <span class="text-danger">*</span></td>
                                             <td>
-                                                {!! Form::select('permanent_upozilla',[],$applicationinfo->pr_upozilla,['class'=>'form-control permanent_upozilla select2','placeholder'=>'','id'=>'permanent_upozilla']) !!}
+                                                {!! Form::select('permanent_upozilla',[],$applicationinfo->pr_upozilla,['class'=>'form-control permanent_upozilla select2','id'=>'permanent_upozilla']) !!}
                                                 @if ($errors->has('permanent_upozilla'))
                                                     <span class="text-danger">{{ $errors->first('permanent_upozilla') }}</span>
                                                 @endif
@@ -370,7 +377,7 @@
                                                                     <label for="inputPassword"
                                                                            class="col-sm-4 col-form-label">শিক্ষা প্রতিষ্ঠান <span class="text-danger">*</span></label>
                                                                     <div class="col-sm-8">
-                                                                        {!! Form::text('jscinstitute_name', $jscresult ? $jscresult->institute_name:null, array('placeholder' => '','class' => 'form-control')) !!}
+                                                                        {!! Form::text('jscinstitute_name', $jscresult ? $jscresult->institute_name:null, array('placeholder' => '','class' => 'form-control banglainput')) !!}
                                                                         @if ($errors->has('jscinstitute_name'))
                                                                             <span class="text-danger">{{ $errors->first('jscinstitute_name') }}</span>
                                                                         @endif
@@ -390,7 +397,7 @@
                                                                         @if ($errors->has('jscresult'))
                                                                             <span class="text-danger">{{ $errors->first('jscresult') }}</span>
                                                                         @endif
-                                                                        {!! Form::text('jscresult_score', $jscresult->cgpa, array('placeholder' => '','class' => 'form-control jscresult_score','style'=>$jscresult->result==4 || $jscresult->result==5 ? '':'display:none')) !!}
+                                                                        {!! Form::text('jscresult_score', $jscresult->cgpa, array('placeholder' => '','class' => 'form-control jscresult_score banglainput','style'=>$jscresult->result=='জিপিএ(আউট অফ ৪)' || $jscresult->result=='জিপিএ(আউট অফ ৫)' ? '':'display:none')) !!}
                                                                         @if ($errors->has('jscresult_score'))
                                                                             <span class="text-danger">{{ $errors->first('jscresult_score') }}</span>
                                                                         @endif
@@ -419,7 +426,7 @@
                                                                     <label for="inputPassword"
                                                                            class="col-sm-4 col-form-label">পাসের সন <span class="text-danger">*</span></label>
                                                                     <div class="col-sm-8">
-                                                                        {!! Form::number('jscpassyear', $jscresult ? $jscresult->passing_year:null, array('placeholder' => '','class' => 'form-control', 'maxlength'=>4, 'maxlength'=>4)) !!}
+                                                                        {!! Form::text('jscpassyear', $jscresult ? $jscresult->passing_year:null, array('placeholder' => '','class' => 'form-control banglainput', 'maxlength'=>4, 'maxlength'=>4)) !!}
                                                                         @if ($errors->has('jscpassyear'))
                                                                             <span class="text-danger">{{ $errors->first('jscpassyear') }}</span>
                                                                         @endif
@@ -455,7 +462,7 @@
 
 
                                     $SSresult= collect($applicationinfo->educations)->whereIn('edu_level', \App\Models\ExamlevelGroup::where('examlevel_id', 2)->pluck('id'));
-                                  //dd($SSresult);
+                                //  dd(count((array)$SSresult));
                                   if(count((array)$SSresult)){
                                     if(isset($SSresult[0])){
                                     $SSresult=$SSresult[0];
@@ -468,14 +475,24 @@
                                   elseif ($SSresult[2]) {
                                     $SSresult=$SSresult[2];
                                   }
+                                  elseif ($SSresult[3]) {
+                                    $SSresult=$SSresult[3];
+                                  }
+                                  elseif ($SSresult[4]) {
+                                     
+                                    $SSresult=$SSresult[4];
+                                  }
 
                                   }
                             
                                   else{
                                     $SSresult=[];
                                   }
-                                  //dd($SSresult);
+                              //    dd($SSresult);
+                                
+                                
                                                                             @endphp
+                                                                           
                                                                             {!! Form::select('sscexamlevel',$ssc,$SSresult->edu_level,['class'=>'select2 form-control','placeholder'=>'','id'=>'sscexamlevel']) !!}
                                                                             @if ($errors->has('sscexamlevel'))
                                                                                 <span class="text-danger">{{ $errors->first('sscexamlevel') }}</span>
@@ -488,7 +505,7 @@
                                                                         <label for="inputPassword"
                                                                                class="col-sm-4 col-form-label">শিক্ষা প্রতিষ্ঠান <span class="text-danger">*</span></label>
                                                                         <div class="col-sm-8">
-                                                                            {!! Form::text('sscinstitute_name', $SSresult->institute_name, array('placeholder' => '','class' => 'form-control')) !!}
+                                                                            {!! Form::text('sscinstitute_name', $SSresult->institute_name, array('placeholder' => '','class' => 'form-control banglainput')) !!}
                                                                             @if ($errors->has('sscinstitute_name'))
                                                                                 <span class="text-danger">{{ $errors->first('sscinstitute_name') }}</span>
                                                                             @endif
@@ -508,7 +525,7 @@
                                                                             @if ($errors->has('sscresult'))
                                                                                 <span class="text-danger">{{ $errors->first('sscresult') }}</span>
                                                                             @endif
-                                                                            {!! Form::text('sscresult_score', $SSresult->cgpa, array('placeholder' => '','class' => 'form-control sscresult_score','style'=>$SSresult->result==4 || $SSresult->result==5 ? '':'display:none')) !!}
+                                                                            {!! Form::text('sscresult_score', $SSresult->cgpa, array('placeholder' => '','class' => 'form-control sscresult_score banglainput','style'=>$SSresult->result=='জিপিএ/সিজিপিএ(আউট অফ ৪)' || $SSresult->result=='জিপিএ/সিজিপিএ(আউট অফ ৫)' ? '':'display:none')) !!}
                                                                             @if ($errors->has('sscresult_score'))
                                                                                 <span class="text-danger">{{ $errors->first('sscresult_score') }}</span>
                                                                             @endif
@@ -520,11 +537,15 @@
                                                                         <label for="inputPassword"
                                                                                class="col-sm-4 col-form-label">বিষয় <span class="text-danger">*</span></label>
                                                                         <div class="col-sm-8">
+                                                                        
                                                                             {!! Form::select('sscSubject',[],$SSresult->group_subject,['class'=>'form-control sscsubject select2','placeholder'=>'','id'=>'sscsubject']) !!}
                                                                             @if ($errors->has('sscSubject'))
                                                                                 <span class="text-danger">{{ $errors->first('sscSubject') }}</span>
                                                                             @endif
-
+                                                                            {!! Form::text('sscSubject_other', $SSresult->other, array('placeholder' => '', 'class' => 'form-control banglainput', 'id'=>'sscSubject_other', 'required'=>true, 'style'=>'display:none')) !!}
+                                                                            @if ($errors->has('sscSubject_other'))
+                                                                                <span class="text-danger">{{ $errors->first('sscSubject_other') }}</span>
+                                                                            @endif
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -549,7 +570,7 @@
                                                                         <label for="inputPassword"
                                                                                class="col-sm-4 col-form-label">পাসের সন <span class="text-danger">*</span></label>
                                                                         <div class="col-sm-8">
-                                                                            {!! Form::number('sscpassyear', $SSresult->passing_year, array('placeholder' => '','class' => 'form-control sscpassyear', 'maxlength'=>4, 'maxlength'=>4)) !!}
+                                                                            {!! Form::text('sscpassyear', $SSresult->passing_year, array('placeholder' => '','class' => 'form-control sscpassyear banglainput', 'maxlength'=>4, 'maxlength'=>4)) !!}
                                                                             @if ($errors->has('sscpassyear'))
                                                                                 <span class="text-danger">{{ $errors->first('sscpassyear') }}</span>
                                                                             @endif
@@ -612,7 +633,7 @@
                                                                         <label for="inputPassword"
                                                                                class="col-sm-4 col-form-label">শিক্ষা প্রতিষ্ঠান <span class="text-danger">*</span></label>
                                                                         <div class="col-sm-8">
-                                                                            {!! Form::text('hscinstitute_name', $HSCresult->institute_name, array('placeholder' => '','class' => 'form-control')) !!}
+                                                                            {!! Form::text('hscinstitute_name', $HSCresult->institute_name, array('placeholder' => '','class' => 'form-control banglainput')) !!}
                                                                             @if ($errors->has('hscinstitute_name'))
                                                                                 <span class="text-danger">{{ $errors->first('hscinstitute_name') }}</span>
                                                                             @endif
@@ -628,11 +649,11 @@
                                                                         <label for="inputPassword"
                                                                                class="col-sm-4 col-form-label">গ্রেড/শ্রেণি/বিভাগ <span class="text-danger">*</span></label>
                                                                         <div class="col-sm-8">
-                                                                            {!! Form::select('hscresult',\App\Helpers\StaticValue::RESULTSSC,$HSCresult->result,['class'=>'select2 form-control','placeholder'=>'','id'=>'hscresult']) !!}
+                                                                            {!! Form::select('hscresult',\App\Helpers\StaticValue::RESULTSSC,$HSCresult->result,['class'=>'select2 form-control','id'=>'hscresult']) !!}
                                                                             @if ($errors->has('hscresult'))
                                                                                 <span class="text-danger">{{ $errors->first('hscresult') }}</span>
                                                                             @endif
-                                                                            {!! Form::text('hscresult_score', $HSCresult->cgpa, array('placeholder' => '','class' => 'form-control hscresult_score','style'=>$HSCresult->result==4 || $HSCresult->result==5 ? '':'display:none',)) !!}
+                                                                            {!! Form::text('hscresult_score', $HSCresult->cgpa, array('placeholder' => '','class' => 'form-control hscresult_score banglainput','style'=>$HSCresult->result=='জিপিএ/সিজিপিএ(আউট অফ ৪)' || $HSCresult->result=='জিপিএ/সিজিপিএ(আউট অফ ৫)' ? '':'display:none',)) !!}
                                                                             @if ($errors->has('hscresult_score'))
                                                                                 <span class="text-danger">{{ $errors->first('hscresult_score') }}</span>
                                                                             @endif
@@ -644,11 +665,14 @@
                                                                         <label for="inputPassword"
                                                                                class="col-sm-4 col-form-label">বিষয় <span class="text-danger">*</span></label>
                                                                         <div class="col-sm-8">
-                                                                            {!! Form::select('hscubject',[],$HSCresult->group_subject,['class'=>'form-control select2 hscubject','placeholder'=>'','id'=>'hscubject']) !!}
+                                                                            {!! Form::select('hscubject',[],$HSCresult->group_subject,['class'=>'form-control select2 hscubject','id'=>'hscubject']) !!}
                                                                             @if ($errors->has('hscubject'))
                                                                                 <span class="text-danger">{{ $errors->first('hscubject') }}</span>
                                                                             @endif
-
+                                                                            {!! Form::text('hscubject_other', $HSCresult->other, array('placeholder' => '',  'class' => 'form-control banglainput', 'id'=>'hscubject_other', 'required'=>true, 'style'=>'display:none')) !!}
+                                                                            @if ($errors->has('hscubject_other'))
+                                                                                <span class="text-danger">{{ $errors->first('hscubject_other') }}</span>
+                                                                            @endif
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -661,7 +685,7 @@
                                                                                class="col-sm-4 col-form-label">বোর্ড <span class="text-danger">*</span></label>
                                                                         <div class="col-sm-8">
 
-                                                                            {!! Form::select('hscboard',collect($boards)->where('type',1)->pluck('name','id'),$HSCresult->board_university,['class'=>'form-control select2','placeholder'=>'']) !!}
+                                                                            {!! Form::select('hscboard',collect($boards)->where('type',1)->pluck('name','id'),$HSCresult->board_university,['class'=>'form-control select2']) !!}
                                                                             @if ($errors->has('hscboard'))
                                                                                 <span class="text-danger">{{ $errors->first('hscboard') }}</span>
                                                                             @endif
@@ -673,7 +697,7 @@
                                                                         <label for="inputPassword"
                                                                                class="col-sm-4 col-form-label">পাসের সন <span class="text-danger">*</span></label>
                                                                         <div class="col-sm-8">
-                                                                            {!! Form::number('hscpassyear', $HSCresult->passing_year, array('placeholder' => '','class' => 'form-control','maxlength'=>4, 'maxlength'=>4)) !!}
+                                                                            {!! Form::text('hscpassyear', $HSCresult->passing_year, array('placeholder' => '','class' => 'form-control banglainput','maxlength'=>4, 'maxlength'=>4)) !!}
                                                                             @if ($errors->has('hscpassyear'))
                                                                                 <span class="text-danger">{{ $errors->first('hscpassyear') }}</span>
                                                                             @endif
@@ -753,7 +777,7 @@
                                                                         <label for="inputPassword"
                                                                                class="col-sm-4 col-form-label">শিক্ষা প্রতিষ্ঠান <span class="text-danger">*</span></label>
                                                                         <div class="col-sm-8">
-                                                                            {!! Form::text('graduationinstitute_name', $GRADresult->institute_name??'', array('placeholder' => '','class' => 'form-control')) !!}
+                                                                            {!! Form::text('graduationinstitute_name', $GRADresult->institute_name??'', array('placeholder' => '','class' => 'form-control banglainput')) !!}
                                                                             @if ($errors->has('graduationinstitute_name'))
                                                                                 <span class="text-danger">{{ $errors->first('graduationinstitute_name') }}</span>
                                                                             @endif
@@ -773,7 +797,7 @@
                                                                             @if ($errors->has('graduationresult'))
                                                                                 <span class="text-danger">{{ $errors->first('graduationresult') }}</span>
                                                                             @endif
-                                                                            {!! Form::text('graduationresult_score',  $GRADresult ? $GRADresult->cgpa:"", array('placeholder' => '','class' => 'form-control graduationresult_score ','style'=>$GRADresult ? ($GRADresult->result==4 || $GRADresult->result==5 ? '':'display:none'):"",)) !!}
+                                                                            {!! Form::text('graduationresult_score',  $GRADresult ? $GRADresult->cgpa:"", array('placeholder' => '','class' => 'form-control graduationresult_score banglainput','style'=>$GRADresult ? ($GRADresult->result=='জিপিএ/সিজিপিএ(আউট অফ ৪)' || $GRADresult->result=='জিপিএ/সিজিপিএ(আউট অফ ৫)' ? '':'display:none'):"",)) !!}
                                                                         
                                                                         </div>
                                                                     </div>
@@ -787,6 +811,12 @@
                                                                             @if ($errors->has('graduationsubject'))
                                                                                 <span class="text-danger">{{ $errors->first('graduationsubject') }}</span>
                                                                             @endif
+
+                                                                            {!! Form::text('graduationsubject_other', $GRADresult->other, array('placeholder' => '',  'class' => 'form-control banglainput', 'id'=>'graduationsubject_other', 'required'=>true, 'style'=>'display:none')) !!}
+                                                                            @if ($errors->has('graduationsubject_other'))
+                                                                                <span class="text-danger">{{ $errors->first('graduationsubject_other') }}</span>
+                                                                            @endif
+
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -810,7 +840,7 @@
                                                                         <label for="inputPassword"
                                                                                class="col-sm-4 col-form-label">পাসের সন <span class="text-danger">*</span></label>
                                                                         <div class="col-sm-8">
-                                                                            {!! Form::number('graduationpassyear', $GRADresult ? $GRADresult->passing_year:"", array('placeholder' => '','class' => 'form-control', 'maxlength'=>4, 'maxlength'=>4)) !!}
+                                                                            {!! Form::text('graduationpassyear', $GRADresult ? $GRADresult->passing_year:"", array('placeholder' => '','class' => 'form-control banglainput', 'maxlength'=>4, 'maxlength'=>4)) !!}
                                                                             @if ($errors->has('graduationpassyear'))
                                                                                 <span class="text-danger">{{ $errors->first('graduationpassyear') }}</span>
                                                                             @endif
@@ -901,7 +931,7 @@
                                                                         <label for="inputPassword"
                                                                                class="col-sm-4 col-form-label">শিক্ষা প্রতিষ্ঠান <span class="text-danger">*</span></label>
                                                                         <div class="col-sm-8">
-                                                                            {!! Form::text('mastersinstitute_name',$Mastresult  ? $Mastresult->institute_name:'', array('placeholder' => '','class' => 'form-control')) !!}
+                                                                            {!! Form::text('mastersinstitute_name',$Mastresult  ? $Mastresult->institute_name:'', array('placeholder' => '','class' => 'form-control banglainput')) !!}
                                                                             @if ($errors->has('mastersinstitute_name'))
                                                                                 <span class="text-danger">{{ $errors->first('mastersinstitute_name') }}</span>
                                                                             @endif
@@ -921,7 +951,7 @@
                                                                             @if ($errors->has('mastersexamlevel'))
                                                                                 <span class="text-danger">{{ $errors->first('mastersexamlevel') }}</span>
                                                                             @endif
-                                                                            {!! Form::text('mastersresult_score', $Mastresult ? $Mastresult->cgpa:'', array('placeholder' => '','class' => 'form-control mastersresult_score','style'=>$Mastresult ? ($Mastresult->result==4 || $Mastresult->result==5 ? '':'display:none'):"",)) !!}
+                                                                            {!! Form::text('mastersresult_score', $Mastresult ? $Mastresult->cgpa:'', array('placeholder' => '','class' => 'form-control mastersresult_score banglainput','style'=>$Mastresult ? ($Mastresult->result=='জিপিএ/সিজিপিএ(আউট অফ ৪)' || $Mastresult->result=='জিপিএ/সিজিপিএ(আউট অফ ৫)' ? '':'display:none'):'display:none',)) !!}
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -933,6 +963,11 @@
                                                                             {!! Form::select('mastersSubject',[],$Mastresult ? $Mastresult->group_subject:'',['class'=>'form-control mastersSubject select2','placeholder'=>'','id'=>'mastersSubject']) !!}
                                                                             @if ($errors->has('mastersSubject'))
                                                                                 <span class="text-danger">{{ $errors->first('mastersSubject') }}</span>
+                                                                            @endif
+
+                                                                            {!! Form::text('mastersSubject_other', $Mastresult ? $Mastresult->other:'', array('placeholder' => '', 'class' => 'form-control banglainput', 'id'=>'mastersSubject_other', 'required'=>true, 'style'=>'display:none')) !!}
+                                                                            @if ($errors->has('mastersSubject_other'))
+                                                                                <span class="text-danger">{{ $errors->first('mastersSubject_other') }}</span>
                                                                             @endif
                                                                         </div>
                                                                     </div>
@@ -960,7 +995,7 @@
                                                                         <label for="inputPassword"
                                                                                class="col-sm-4 col-form-label">পাসের সন <span class="text-danger">*</span></label>
                                                                         <div class="col-sm-8">
-                                                                            {!! Form::number('masterspassyear', $Mastresult ? $Mastresult->passing_year:null, array('placeholder' => '','class' => 'form-control', 'maxlength'=>4, 'maxlength'=>4)) !!}
+                                                                            {!! Form::text('masterspassyear', $Mastresult ? $Mastresult->passing_year:null, array('placeholder' => '','class' => 'form-control banglainput', 'maxlength'=>4, 'maxlength'=>4)) !!}
                                                                             @if ($errors->has('masterspassyear'))
                                                                                 <span class="text-danger">{{ $errors->first('masterspassyear') }}</span>
                                                                             @endif
@@ -1012,7 +1047,7 @@
                                                                     <label for="inputPassword"
                                                                            class="col-sm-4 col-form-label">প্রতিষ্ঠান নাম @if($job->certificate_isrequired==1) <span class="text-danger">*</span>@endif</label>
                                                                     <div class="col-sm-8">
-                                                                        {!! Form::text('certificateinstitute_name', $applicationinfo->applicantCertificate()->exists() ?  $applicationinfo->applicantCertificate->institute_name:'', array('placeholder' => '','class' => 'form-control')) !!}
+                                                                        {!! Form::text('certificateinstitute_name', $applicationinfo->applicantCertificate()->exists() ?  $applicationinfo->applicantCertificate->institute_name:'', array('placeholder' => '','class' => 'form-control banglainput')) !!}
                                                                         @if ($errors->has('certificateinstitute_name'))
                                                                             <span class="text-danger">{{ $errors->first('certificateinstitute_name') }}</span>
                                                                         @endif
@@ -1026,17 +1061,29 @@
                                                             <div class="col-md-6">
                                                                 <div class="mb-3 row">
                                                                     <label for="inputPassword"
-                                                                           class="col-sm-4 col-form-label">গ্রেড/শ্রেণি/বিভাগ  @if($job->certificate_isrequired==1) <span class="text-danger">*</span>@endif </label>
+                                                                           class="col-sm-4 col-form-label">সার্টিফিকেট/লাইসেন্স নম্বর @if($job->certificate_isrequired==1) <span class="text-danger">*</span>@endif </label>
                                                                     <div class="col-sm-8">
-                                                                        {!! Form::number('certificateduration', $applicationinfo->applicantCertificate()->exists() ? $applicationinfo->applicantCertificate->duration: null, array('placeholder' => '','class' => 'form-control')) !!}
-                                                                        @if ($errors->has('certificateduration'))
-                                                                            <span class="text-danger">{{ $errors->first('certificateduration') }}</span>
+                                                                        {!! Form::text('certificate_no', $applicationinfo->applicantCertificate->certificate_no, array('placeholder' => '','class' => 'form-control')) !!}
+                                                                        @if ($errors->has('certificate_no'))
+                                                                            <span class="text-danger">{{ $errors->first('certificate_no') }}</span>
                                                                         @endif
 
                                                                     </div>
                                                                 </div>
                                                             </div>
+                                                            <div class="col-md-6">
+                                                                <div class="mb-3 row">
+                                                                    <label for="inputPassword"
+                                                                           class="col-sm-4 col-form-label">সার্টিফিকেট/লাইসেন্সের মেয়াদ শেষ হওয়ার তারিখ @if($job->certificate_isrequired==1) <span class="text-danger">*</span>@endif </label>
+                                                                    <div class="col-sm-8">
+                                                                        {!! Form::text('certificate_expire', $applicationinfo->applicantCertificate->certificate_expire, array('placeholder' => '','class' => 'form-control certificate_expire')) !!}
+                                                                        @if ($errors->has('certificate_expire'))
+                                                                            <span class="text-danger">{{ $errors->first('certificate_expire') }}</span>
+                                                                        @endif
 
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                         </div>
 
 
@@ -1077,19 +1124,38 @@
                                         </div>
                                         <div class="col-md-3">
                                             <label for="extrq" class="form-label">অভিজ্ঞতার মেয়াদ (বৎসর )</label>
-                                            {!! Form::select('experienceyear',\App\Helpers\StaticValue::EXPERIENCE,$applicationinfo->experienceyear,['class'=>'form-control','placeholder'=>'','id'=>'experienceyear']) !!}
+                                            <?php 
+                                        $experience=[];
+                                        for ($x = $job->minimum_job_experience; $x <= 12; $x++) {
+                                        $experience[]=\App\Helpers\StaticValue::englishToBengaliNumberConverter($x); 
+
+                                        } 
+
+$experience= array_combine($experience, $experience);
+                                            ?>
+                                            {!! Form::select('experienceyear',array_merge($experience,['১২+'=>'১২+']),$applicationinfo->experienceyear,['class'=>'form-control','placeholder'=>'','id'=>'experienceyear']) !!}
 
                                         </div>
                                     </div>
                                     <div class="row" style="margin-top: 5px">
                                         <div class="col-md-3">
                                             <label for="extrq" class="form-label"> কোটা</label>
-                                            {!! Form::select('quota',\App\Helpers\StaticValue::QTOTA,$applicationinfo->quota,['class'=>'form-control','placeholder'=>'','id'=>'experienceyear']) !!}
+                                            <?php
+                                            $dbValue = $applicationinfo->quota;
+                                             $myArray = json_decode($dbValue, true);                                       
+                                            ?>
+                                            {!! Form::select('quota[]',\App\Helpers\StaticValue::QTOTA,$myArray,['class'=>'form-control quota','id'=>'quota', 'multiple'=>true]) !!}
                                         </div>
                                         <div class="col-md-3">
                                             <label for="extrq" class="form-label">বিভাগীয় প্রার্থী কিনা</label>
                                             {!! Form::select('divisioncaplicant',\App\Helpers\StaticValue::DIVISIONAPPLIANT,$applicationinfo->division_appli,['class'=>'form-control','placeholder'=>'','id'=>'divisioncaplicant']) !!}
                                         </div>
+                                        @if($job->repetition)
+                                        <div class="col-md-3">
+                                            {{ Form::checkbox('repetition', '1', $applicationinfo->repetition==1 ? true: false, array( 'id'=>'repetition')) }}
+                                            <label for="extrq" class="form-label">{{ $job->repetition}}</label>
+                                        </div>
+                                       @endif   
                                     </div>
 
                                     <div class="row" style="margin-top: 5px">
@@ -1138,11 +1204,14 @@
 
 @endsection
 @section('script-bottom')
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    <script src="https://momentjs.com/downloads/moment-with-locales.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/i18n/bn.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery.bangla@1/dist/jquery.bangla.js"></script>
+<script src="https://momentjs.com/downloads/moment-with-locales.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.js"></script>
     <script type="text/javascript">
         $.ajaxSetup({
             headers: {
@@ -1151,13 +1220,34 @@
         });
         var District_upozilla={!! json_encode($district_Upozilla) !!};
         var Examlist={!! json_encode($examlist) !!};
+        var RndID = $('#RndID').val();
 
         $(document).ready(function () {
+            $('.banglainput').bangla({ enable: true });
             $( "#date_of_birth" ).datepicker({
                 dateFormat: "yy-mm-dd",
                 changeMonth: true,
                 changeYear: true,
+                yearRange: "-80:+0",
                // maxDate: "+1m +1w"
+            });
+
+            $( ".certificate_expire" ).datepicker({
+                dateFormat: "yy-mm-dd",
+                changeMonth: true,
+                changeYear: true,
+               // maxDate: "+1m +1w"
+            });
+            $('.select2').select2({
+                placeholder: 'নির্বাচন করুন',
+                language: "bn",
+                minimumResultsForSearch: -1
+            });
+
+       $('.quota').select2({
+                placeholder: 'নির্বাচন করুন',
+                language: "bn",
+            
             });
 
            var selectElem = $("#present_zilla");
@@ -1288,7 +1378,7 @@
                 var optionSelected = $("option:selected", this);
                 var valueSelected = this.value;
                 console.log(valueSelected);
-                if(valueSelected==4 || valueSelected==5){
+                if(valueSelected=='জিপিএ(আউট অফ ৪)' || valueSelected=='জিপিএ(আউট অফ ৫)'){
 
                     $('.jscresult_score').css("display","block")
                 }
@@ -1301,7 +1391,7 @@
                 var optionSelected = $("option:selected", this);
                 var valueSelected = this.value;
                 console.log(valueSelected);
-                if(valueSelected==4 || valueSelected==5){
+                if(valueSelected=='জিপিএ/সিজিপিএ(আউট অফ ৪)' || valueSelected=='জিপিএ/সিজিপিএ(আউট অফ ৫)'){
 
                     $('.sscresult_score').css("display","block")
                 }
@@ -1314,8 +1404,7 @@
                 var optionSelected = $("option:selected", this);
                 var valueSelected = this.value;
                 console.log(valueSelected);
-                if(valueSelected==4 || valueSelected==5){
-
+                if(valueSelected=='জিপিএ/সিজিপিএ(আউট অফ ৪)' || valueSelected=='জিপিএ/সিজিপিএ(আউট অফ ৫)'){
                     $('.hscresult_score').css("display","block")
                 }
                 else{
@@ -1326,7 +1415,7 @@
                 var optionSelected = $("option:selected", this);
                 var valueSelected = this.value;
                 console.log(valueSelected);
-                if(valueSelected==4 || valueSelected==5){
+                if(valueSelected=='জিপিএ/সিজিপিএ(আউট অফ ৪)' || valueSelected=='জিপিএ/সিজিপিএ(আউট অফ ৫)'){
 
                     $('.graduationresult_score').css("display","block")
                 }
@@ -1338,12 +1427,13 @@
                 var optionSelected = $("option:selected", this);
                 var valueSelected = this.value;
                 console.log(valueSelected);
-                if(valueSelected==4 || valueSelected==5){
+                if(valueSelected=='জিপিএ/সিজিপিএ(আউট অফ ৪)' || valueSelected=='জিপিএ/সিজিপিএ(আউট অফ ৫)'){
 
                     $('.mastersresult_score').css("display","block")
                 }
                 else{
-                    $('.graduationresult_score').css("display","none")
+                    $('.mastersresult_score').css("display","none")
+                    
                 }
             });
 <?php
@@ -1356,6 +1446,7 @@ $.ajax({
     data: {
         examgroup: {{$SSresult->edu_level}},
         exam: 2,
+        JobID:RndID,
     },
     success:function (data) {
          console.log(data);
@@ -1366,11 +1457,11 @@ $.ajax({
                 text: value.name
             }).appendTo(selectElemssc);
         });
+        $(".sscsubject").val("{{ $SSresult ? $SSresult->group_subject:''}}").change();
 
     }
 })
-  $(".sscsubject").val("{{ $SSresult ? $SSresult->group_subject:''}}").change();
-
+  
 <?php
 }
 ?>
@@ -1384,6 +1475,7 @@ $.ajax({
                     data: {
                         examgroup: valueSelected,
                         exam: 2,
+                        JobID:RndID,
                     },
                     success:function (data) {
                        // console.log(data);
@@ -1416,6 +1508,7 @@ $.ajax({
                 data: {
                     examgroup: {{$HSCresult ? $HSCresult->edu_level:''}},
                     exam: 3,
+                    JobID:RndID,
                 },
                 success:function (data) {
                     console.log(data);
@@ -1447,6 +1540,7 @@ $.ajax({
                     data: {
                         examgroup: valueSelected,
                         exam: 3,
+                        JobID:RndID,
                     },
                     success:function (data) {
                         console.log(data);
@@ -1473,6 +1567,7 @@ $.ajax({
                 data: {
                     examgroup: {{$GRADresult ? $GRADresult->edu_level:''}},
                     exam: 4,
+                    JobID:RndID,
                 },
                 success:function (data) {
                     
@@ -1506,6 +1601,7 @@ $.ajax({
                     data: {
                         examgroup: valueSelected,
                         exam: 4,
+                        JobID:RndID,
                     },
                     success:function (data) {
                         console.log(data);
@@ -1531,6 +1627,7 @@ $.ajax({
                 data: {
                     examgroup: {{$Mastresult ? $Mastresult->edu_level:''}},
                     exam: 5,
+                    JobID:RndID,
                 },
                 success:function (data) {
                     console.log(data);
@@ -1561,6 +1658,7 @@ $.ajax({
                     data: {
                         examgroup: valueSelected,
                         exam: 5,
+                        JobID:RndID,
                     },
                     success:function (data) {
                         console.log(data);
@@ -1577,6 +1675,52 @@ $.ajax({
 
             });
 
+            $('#sscsubject').on('change', function (e) {
+                var optionSelected = $("option:selected", this);
+            console.log(optionSelected.text());
+            if(optionSelected.text()==='Other'){
+                $('#sscSubject_other').css("display","block")
+            }
+            else{
+            $('#sscSubject_other').css("display","none")
+            }
+                
+            });
+
+
+           $('#hscubject').on('change', function (e) {
+                var optionSelected = $("option:selected", this);
+            console.log(optionSelected.text());
+            if(optionSelected.text()==='Other'){
+                $('#hscubject_other').css("display","block")
+            }
+            else{
+                $('#hscubject_other').css("display","none")
+            }
+                
+            });
+            $('#graduationsubject').on('change', function (e) {
+                var optionSelected = $("option:selected", this);
+            console.log(optionSelected.text());
+            if(optionSelected.text()==='Other'){
+                $('#graduationsubject_other').css("display","block")
+            }
+            else{
+                $('#graduationsubject_other').css("display","none")
+            }
+                
+            });
+            $('#mastersSubject').on('change', function (e) {
+                var optionSelected = $("option:selected", this);
+            console.log(optionSelected.text());
+            if(optionSelected.text()==='Other'){
+                $('#mastersSubject_other').css("display","block")
+            }
+            else{
+                $('#mastersSubject_other').css("display","none")
+            }
+                
+            });
 
             $(document).on('change', '.file-input', function() {
                 var filesCount = $(this)[0].files.length;
@@ -1675,6 +1819,259 @@ $.ajax({
 
 });
 
+function getWordCount(wordString) {
+  var words = wordString.split(" ");
+  words = words.filter(function(words) { 
+    return words.length > 0
+  }).length;
+  return words;
+}
+
+//add the custom validation method
+$.validator.addMethod("wordCount",
+   function(value, element, params) {
+      var count = getWordCount(value);
+     
+      if(count < params[0]) {
+         return true;
+      }
+   },
+   $.validator.format("A maximum of {0} words is required here.")
+);
+$("#applicationForm").validate({
+			rules: {
+				name_en: "required",
+				name_bn: "required",
+                father_name: "required",
+                mother_name: "required",
+                date_of_birth: "required",
+                mobile_no: "required",
+                nidorbrn: "required",
+                nidorbrnnumber: "required",
+                nationality: "required",
+                religion: "required",
+                gender: "required",
+                date_of_place: "required",
+                present_postoffice: "required",
+                present_postcode: "required",
+                present_zilla: "required",
+                present_upozilla: "required",
+                permanent_postoffice: "required",
+                permanent_postcode: "required",
+                permanent_zilla: "required",
+                permanent_upozilla: "required",
+                agree: "required",
+                image: {
+                    required: false,
+                //    extension: "jpeg|jpg|png",
+				//	filesize : 102400
+					
+                },
+                signature: {
+                    required: false,
+                 //   extension: "jpeg|jpg|png",
+				//	 filesize : 102400
+					
+                },
+                experiencemonth:
+            {
+                required: false,
+                wordCount: ['300']
+            },
+            extQualification:
+            {
+                required: false,
+                wordCount: ['300']
+            },
+                <?php
+                if((($job->min_education=='JSC' OR $job->min_education=='SSC' OR  $job->min_education=='HSC' OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  ($job->jsc==1))){
+                ?>
+            jscexamlevel: "required",
+            jscinstitute_name: "required",
+            jscresult: "required",
+            jscboard: "required",
+            jscpassyear: "required",
+            <?php
+            }
+            ?>
+
+            <?php
+              if((( $job->min_education=='SSC' OR  $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->ssc==1)){
+                ?>
+            sscexamlevel: "required",
+            sscinstitute_name: "required",
+            sscresult: "required",
+            sscSubject: "required",
+            sscboard: "required",
+            sscpassyear: "required",
+            <?php
+            }
+            ?>
+
+            <?php
+              if(( $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->hsc==1){
+                ?>
+            hscexamlevel: "required",
+            hscinstitute_name: "required",
+            hscresult: "required",
+            hscubject: "required",
+            hscboard: "required",
+            hscpassyear: "required",
+            <?php
+            }
+            ?>
+            <?php
+              if(( $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->graduation==1){
+                ?>
+           graduationexamlevel: "required",
+           graduationinstitute_name: "required",
+           graduationresult: "required",
+           graduationsubject: "required",
+           graduationuniversity: "required",
+           graduationpassyear: "required",
+            <?php
+            }
+            ?>
+            <?php
+            if(( $job->min_education=='Masters') AND  $job->masters==1){
+                ?>
+           mastersexamlevel: "required",
+           mastersinstitute_name: "required",
+           mastersresult: "required",
+           mastersSubject: "required",
+           mastersuniversity: "required",
+           masterspassyear: "required",
+            <?php
+            }
+            ?>
+            <?php
+            if($job->certificate_isrequired==1){
+                ?>
+                certificate: "required",
+                certificateinstitute_name: "required",
+                certificate_no: "required",
+                certificate_expire: "required",
+            <?php
+            }
+            ?>
+
+            },
+            messages: {
+				name_en: "প্রার্থীর নাম ইংরেজীতে (বড় অক্ষরে) লিখুন",
+				name_bn: "প্রার্থীর নাম বাংলায় লিখুন",
+                father_name: "পিতার নাম লিখুন",
+                mother_name: "মাতার নাম লিখুন",
+                date_of_birth: "'জন্ম তারিখ লিখুন",
+                mobile_no: "মোবাইল/টেলিফোন নম্বর লিখুন",
+                nidorbrn: "জাতীয় পরিচয় নম্বর/জন্ম নিবন্ধন নম্বর নির্বাচন করুন",
+                nidorbrnnumber: "নিবন্ধন নম্বর লিখুন",
+                nationality: "জাতীয়তা নির্বাচন করুন",
+                religion: "ধর্ম নির্বাচন করুন",
+                gender: "জেন্ডার নির্বাচন করুন",
+                date_of_place: "জন্ম স্থান (জেলা) নির্বাচন করুন",
+
+
+                present_postoffice: "ডাকঘর লিখুন",
+                present_postcode: "পোস্টকোড নম্বর লিখুন",
+                present_zilla: "জেলা নির্বাচন করুন",
+                present_upozilla: "উপজেলা/থানা নির্বাচন করুন",
+
+                permanent_postoffice: "ডাকঘর লিখুন",
+                permanent_postcode: "পোস্টকোড নম্বর লিখুন",
+                permanent_zilla: "জেলা নির্বাচন করুন",
+                permanent_upozilla: "উপজেলা/থানা নির্বাচন করুন",
+                image: {
+					required: "প্রার্থীর ছবি নির্বাচন করুন",
+				//	extension: "প্রার্থীর ছবি jpeg|jpg|png নির্বাচন করুন"
+				},
+                signature: {
+					required: "প্রার্থীর স্বাক্ষর নির্বাচন করুন",
+				//	extension: "প্রার্থীর স্বাক্ষর jpeg|jpg|png নির্বাচন করুন"
+				},
+                agree: "নির্বাচন করুন",
+                <?php
+                if(($job->min_education=='JSC' OR $job->min_education=='SSC' OR  $job->min_education=='HSC' OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  ($job->jsc==1)){
+                ?>
+                jscexamlevel: 'জে.এস.সি/ সমমান পরীক্ষার নাম নির্বাচন করুন',
+                jscinstitute_name : 'শিক্ষা প্রতিষ্ঠানের নাম লিখুন',
+                jscresult : 'গ্রেড/শ্রেণি/বিভাগ নির্বাচন করুন',
+                jscboard : 'বোর্ড নির্বাচন করুন',
+                jscpassyear : 'পাসের সন লিখুন',
+             <?php
+            }
+            ?>
+            <?php
+            if((( $job->min_education=='SSC' OR  $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->ssc==1)){
+                ?>
+                sscexamlevel: 'এস.এস.সি/ সমমান পরীক্ষার নাম নির্বাচন করুন',
+                sscinstitute_name : 'শিক্ষা প্রতিষ্ঠানের নাম লিখুন',
+                sscresult : 'গ্রেড/শ্রেণি/বিভাগ নির্বাচন করুন',
+                sscSubject : 'বিষয় নির্বাচন করুন',
+                sscboard : 'বোর্ড নির্বাচন করুন',
+                sscpassyear : 'পাসের সন লিখুন',
+             <?php
+            }
+            ?>
+            <?php
+            if(( $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->hsc==1){
+                ?>
+                hscexamlevel: 'এইচএসসি /সমমূল্য পরীক্ষার নাম নির্বাচন করুন',
+                hscinstitute_name : 'শিক্ষা প্রতিষ্ঠানের নাম লিখুন',
+                hscresult : 'গ্রেড/শ্রেণি/বিভাগ নির্বাচন করুন',
+                hscubject : 'বিষয় নির্বাচন করুন',
+                hscboard : 'বোর্ড নির্বাচন করুন',
+                hscpassyear : 'পাসের সন লিখুন',
+             <?php
+            }
+            ?>
+            <?php
+            if(( $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->graduation==1){
+                ?>
+                graduationexamlevel: 'স্নাতক ডিগ্রী পরীক্ষার নাম নির্বাচন করুন',
+                graduationinstitute_name : 'শিক্ষা প্রতিষ্ঠানের নাম লিখুন',
+                graduationresult : 'গ্রেড/শ্রেণি/বিভাগ নির্বাচন করুন',
+                graduationsubject : 'বিষয় নির্বাচন করুন',
+                graduationuniversity : 'বিশ্ববিদ্যালয়/ইনস্টিটিউট নির্বাচন করুন',
+                graduationpassyear : 'পাসের সন লিখুন',
+             <?php
+            }
+            ?>
+            <?php
+            if(( $job->min_education=='Masters') AND  $job->masters==1){
+                ?>
+                mastersexamlevel: 'স্নাতকোত্তর পরীক্ষার নাম নির্বাচন করুন',
+                mastersinstitute_name : 'শিক্ষা প্রতিষ্ঠানের নাম লিখুন',
+                mastersresult : 'গ্রেড/শ্রেণি/বিভাগ নির্বাচন করুন',
+                mastersSubject : 'বিষয় নির্বাচন করুন',
+                mastersuniversity : 'বিশ্ববিদ্যালয়/ইনস্টিটিউট নির্বাচন করুন',
+                masterspassyear : 'পাসের সন লিখুন',
+             <?php
+            }
+            ?>
+            <?php
+            if($job->certificate_isrequired==1){
+                ?>
+                certificate: "সার্টিফিকেশন নাম নির্বাচন করুন",
+                certificateinstitute_name: "প্রতিষ্ঠান নাম লিখুন",
+                certificate_no: "সার্টিফিকেট/লাইসেন্স নম্বর লিখুন",
+                certificate_expire: "সার্টিফিকেট/লাইসেন্সের মেয়াদ শেষ হওয়ার তারিখ নির্বাচন করুন",
+            <?php
+            }
+            ?>
+				
+			},
+            errorPlacement: function(label, element) {
+    if (element.hasClass('select2')) {
+      label.insertAfter(element.next('.select2-container')).addClass('mt-2 text-danger');
+      select2label = label
+    } else {
+      label.addClass('mt-2 text-danger');
+      label.insertAfter(element);
+    }
+   
+  },
+            });
+
 
 $('#quota').on('change', function (e) {
 var quota= $('#quota').val();
@@ -1695,7 +2092,14 @@ applicationAgeCalculation(date_of_birth, quota, divisioncaplicant);
 });
 
 
-function applicationAgeCalculation(date_of_birth, quota='', divisioncaplicant=''){
+function applicationAgeCalculation(date_of_birth, quota=[], divisioncaplicant=''){
+    if ($('input#repetition').is(':checked')) {
+                    var repetition = true;
+                }
+                else{
+                    var repetition = false;
+                }
+
 $.ajax({
     url:"{{ route('applyAgeCalculation') }}",
     type:"POST",
@@ -1710,6 +2114,8 @@ $.ajax({
          "divisional": "{{$job->divisioncaplicant_age}}",
          "freedom_fighter": "{{$job->freedom_fighter}}",
          "handicapped_age": "{{$job->handicapped_age}}",
+         "repetition": repetition,
+          "RndID": $('#RndID').val(),
         "_token": "{{ csrf_token() }}",
     },
     success:function (data) {
@@ -1718,7 +2124,7 @@ $.ajax({
 $("#submitb").attr("disabled", false);
 }
 if(data=='No'){
-	//$("#submitb").attr("disabled", true);
+	$("#submitb").attr("disabled", true);
 Swal.fire({
 icon: 'error',
 text: 'বয়স এর কারণে আপনি এই পদে আবেদন করতে পারবেন না । কোটা  বা বিভাগীয় প্রাথী হলে OK ক্লিক করুন এবং ফর্মের নিচের দিকে  কোটা বা বিভাগীয় অপশন সিলেক্ট করলে আবেদন করতে পারবেন।',

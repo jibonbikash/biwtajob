@@ -13,7 +13,17 @@
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}">
     <!-- Scripts -->
+    <style>
+.select2-container--default .select2-selection--single{
+    border: 1px solid #dee2e6 !important;
+}
+.select2-container--default .select2-selection--single .select2-selection__rendered
+{
+    line-height: 37px !important;
+}
+        </style>
 </head>
 <body>
 
