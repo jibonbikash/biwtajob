@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Imports\ImportExamlevelGroup;
 use App\Models\Examlevel;
 use App\Models\ExamlevelGroup;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ExamLevelGroupController extends Controller
 {
@@ -148,5 +150,15 @@ class ExamLevelGroupController extends Controller
                 ['examlevel_id', $request->examlevel],
             ])->get();
         return response()->json(['success' => true, 'data' => $group]);
+    }
+
+    public function importView(Request $request){
+
+        return view('admin.examlevel.group.import');
+    }
+
+    public function import(Request $request){
+      Excel::import(new ImportExamlevelGroup, $request->file('file')->store('files'));
+        return redirect()->back()->with('success', 'Imported successfully!!');;
     }
 }

@@ -21,7 +21,7 @@
             <h4 class="mb-1 mt-0">Exam Level Group</h4>
         </div>
         <div class="col-sm-6 col-xl-6">
-            <a href="{{route('examlevelgroups.create')}}" class="btn btn-info btn-lg float-right"><i data-feather="plus-circle"></i> Group</a>
+            <a href="{{route('examlevelgroups.index')}}" class="btn btn-info btn-lg float-right"><i data-feather="plus-circle"></i> Group</a>
         </div>
     </div>
 @endsection

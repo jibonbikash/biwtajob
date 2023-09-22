@@ -77,4 +77,10 @@ Route::group(['middleware' => ['auth'], "prefix" => "admin"], function() {
     Route::get('print/{id}', [JobsController::class,'printCopy'])->name('print');
     Route::get('adminCard/{id}', [JobsController::class,'adminCard'])->name('adminCard');
     Route::get('certificateslist', [JobsController::class,'certificateslist'])->name('admin.certificateslist');
+
+
+    Route::get('/file-import',[ExamLevelGroupController::class,'importView'])->name('import-view');
+    Route::post('/importExamLevelGroup',[ExamLevelGroupController::class,'import'])->name('importExamLevelGroup');
+
+
 });
