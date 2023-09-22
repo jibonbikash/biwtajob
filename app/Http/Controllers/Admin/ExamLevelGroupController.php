@@ -158,6 +158,7 @@ class ExamLevelGroupController extends Controller
     }
 
     public function import(Request $request){
+
       Excel::import(new ImportExamlevelGroup, $request->file('file')->store('files'));
         return redirect()->back()->with('success', 'Imported successfully!!');;
     }

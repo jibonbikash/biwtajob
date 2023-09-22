@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Imports\ImportExamlevelGroup;
+use App\Imports\ImportExamlevelSubject;
 use App\Models\Examlevel;
 use App\Models\ExamlevelGroup;
 use App\Models\ExamlevelSubject;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ExamLevelGroupSubjectController extends Controller
 {
@@ -149,5 +152,16 @@ class ExamLevelGroupSubjectController extends Controller
             return redirect()->route('examlevelgroupsubjects.index')
                 ->with('error', 'Data not Deleted!! Please try later');
         }
+    }
+
+    public function importView(Request $request){
+
+        return view('admin.examlevel.group.subject.import');
+    }
+
+    public function import(Request $request){
+
+        Excel::import(new ImportExamlevelSubject(), $request->file('file')->store('files'));
+        return redirect()->back()->with('success', 'Imported successfully!!');;
     }
 }

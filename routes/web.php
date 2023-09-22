@@ -82,5 +82,8 @@ Route::group(['middleware' => ['auth'], "prefix" => "admin"], function() {
     Route::get('/file-import',[ExamLevelGroupController::class,'importView'])->name('import-view');
     Route::post('/importExamLevelGroup',[ExamLevelGroupController::class,'import'])->name('importExamLevelGroup');
 
+    Route::get('/import-subject',[ExamLevelGroupSubjectController::class,'importView'])->name('import-subject');
+    Route::post('/importsubject',[ExamLevelGroupSubjectController::class,'import'])->name('importsubject');
+
 
 });
