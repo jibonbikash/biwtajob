@@ -33,10 +33,10 @@ class JobsController extends Controller
        $jobs= Job::withCount(['applicants'])->with(['applicants'])
        ->when($status, function ($query) use ($status){
         $query->where('status', $status);
-    }) 
+    })
     ->when($q, function ($query) use ($q){
         $query->where('title', 'like', '%'.$q.'%');
-    }) 
+    })
        ->latest()->paginate(20);
      //  dd($jobs);
         return view('admin.jobs.index',['jobs'=>$jobs]);
@@ -260,14 +260,14 @@ class JobsController extends Controller
             return redirect()->route('jobs.index')
                 ->with('success', 'Data update successfully!!');
         }
-          
+
           } catch (\Exception $e) {
-          
+
               return $e->getMessage();
           }
 
-      
-       
+
+
     }
 
     /**
@@ -303,7 +303,7 @@ class JobsController extends Controller
 
     // 'apliyedJob'=>function($q) use($code ){
      //   return $q->where('token','like', '%'.$code.'%');
-   // } 
+   // }
     public function applicants(Request $request)
     {
         $job= Job::get()->pluck('title', 'id');
@@ -334,7 +334,7 @@ class JobsController extends Controller
         // })
             ->select('applicants.*', 'job_applies.token', 'jobs.title as job_title', 'job_applies.received as received', 'job_applies.txnid as txnid', 'job_applies.txndate as txndate', 'job_applies.roll as roll',
             'job_applies.exam_hall as exam_hall','job_applies.exam_date as exam_date','job_applies.exam_time as exam_time', 'job_applies.exam_time as apply_date',
-            'jobs.age_calculation as age_calculation', 'applicant_certificates.applicants_id',
+            'jobs.age_calculation as age_calculation', 'applicant_certificates.applicants_id'
             )
             ->whereNull('applicants.deleted_at')
             ->whereNull('job_applies.deleted_at')
@@ -348,22 +348,22 @@ class JobsController extends Controller
             })
             ->when($job_id, function ($query) use ($job_id){
                 $query->where('applicants.job_id', $job_id);
-            }) 
+            })
             ->when($gender, function ($query) use ($gender){
                 $query->where('applicants.gender', $gender);
-            }) 
+            })
             ->when($religion, function ($query) use ($religion){
                 $query->where('applicants.religious', $religion);
-            }) 
+            })
             ->when($quota, function ($query) use ($quota){
                 $query->where('applicants.quota', $quota);
-            }) 
+            })
             ->when($experience, function ($query) use ($experience){
                 $query->where('applicants.experienceyear', $quota);
-            }) 
+            })
             // ->when($certification, function ($query) use ($certification){
             //     $query->where('applicant_certificates.edu_level', $certification);
-            // }) 
+            // })
             ->when($minimum_age, function ($query) use ($minimum_age){
                 $query->where('applicants.age', '>=', $minimum_age);
             })
@@ -381,11 +381,11 @@ class JobsController extends Controller
                     $query->where('job_applies.token','like', '%'.$code.'%')
                         ->orWhere('job_applies.txnid', 'like', '%'.$code.'%')
                         ->orWhere('job_applies.roll', 'like', '%'.$code.'%');
-                        
+
             });
 
                 $query->where('token','like', '%'.$code.'%');
-            }) 
+            })
 
             ->whereIn('applicants.eligible',[1,2])
           //  ->groupBy('applicants.id','applicant_certificates.applicants_id')
@@ -488,7 +488,7 @@ public function adminCard(Request $request, $id){
      }
 }
 public function printCopy(Request $request, $id){
-   
+
 
         $applicationinfo= Applicant::with(['educations','job', 'birthplace','zila','upozilla','permanentzila','permanentupozilla','apliyedJob'])->find($id);
       // dd($applicationinfo);
@@ -531,24 +531,24 @@ try {
     }
 
     DB::commit();
-   
+
 } catch (\Exception $e) {
     DB::rollback();
 
 }
 
-        
-    
+
+
         return redirect()->route('rollSetting')
         ->with('success', 'Total '.$rollStart.' data updated');;
-      
+
       } catch (\Exception $e) {
-      
+
         return redirect()->route('rollSetting')
         ->with('error', $e->getMessage());
       }
 
-   
+
 
 
 
@@ -570,27 +570,27 @@ public function seatPlansetting(Request $request){
         DB::beginTransaction();
 
         try {
-        
+
             $applyApplicants=JobApply::where('job_id',$request->input('job_id'))->where('received',1)->whereBetween('roll', [$request->input('rollstart'), $request->input('rollend')])->get();
          //   dd($applyApplicants);
             foreach ( $applyApplicants as $applyApplicant) {
                 $applyApplicant->exam_hall=$request->input('institute');
                 $applyApplicant->save();
-            
+
             }
-        
+
             DB::commit();
 
             return redirect()->route('seatPlan')
             ->with('success', 'Total '.$request->input('rollstart'). ' to '.$request->input('rollend'). ' data updated');;
-           
+
         } catch (\Exception $e) {
             DB::rollback();
-        
-        }  
+
+        }
 
     } catch (\Exception $e) {
-      
+
         return redirect()->route('seatPlan')
         ->with('error', $e->getMessage());
       }

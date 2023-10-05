@@ -50,14 +50,14 @@
         <div class="col-md-4">
         {!! Form::select('religion',\App\Helpers\StaticValue::RELIGIONS,request()->get('religion'),['class'=>'form-control select2','placeholder'=>'Religion']) !!}
     </div>
-    <div class="col-md-4">
-        @php
-        $Examlevel = \App\Models\ExamlevelGroup::orderBy('examlevel_id')->pluck('name','id')
-      ->all();
-    @endphp
+{{--    <div class="col-md-4">--}}
+{{--        @php--}}
+{{--        $Examlevel = \App\Models\ExamlevelGroup::orderBy('examlevel_id')->pluck('name','id')--}}
+{{--      ->all();--}}
+{{--    @endphp--}}
 
-        {!! Form::select('education',$Examlevel,request()->get('education'),['class'=>'form-control','placeholder'=>'Education','id'=>'Education']) !!}
-    </div>
+{{--        {!! Form::select('education',$Examlevel,request()->get('education'),['class'=>'form-control','placeholder'=>'Education','id'=>'Education']) !!}--}}
+{{--    </div>--}}
 </div>
 <div class="row mt-1 mb-3">
 
@@ -78,7 +78,7 @@
       ->all();
     @endphp
  {!! Form::select('certification',$crtificates,request()->get('certification'),['class'=>'form-control','placeholder'=>'Certification','id'=>'Certification']) !!}
-       
+
     </div>
     <div class="col-md-4">
         {!! Form::select('quota',\App\Helpers\StaticValue::QTOTA,request()->get('quota'),['class'=>'form-control','placeholder'=>'Quota','id'=>'quota']) !!}
@@ -98,19 +98,29 @@
             <div class="card">
                 <div class="card-body">
                     @include('layouts.shared.message')
-                    <table class="table table-striped table-hover">
+                    <div class="table-responsive">
+                    <table class="table table-striped table-hover table-bordered">
                         <thead class="table-info">
                         <tr>
                             <th scope="col">#</th>
                             <th scope="col">Job Title</th>
-                            <th scope="col">Code</th>
-                            <th scope="col">Roll</th>
-                            <th scope="col">Applicant Name</th>
-                            <th scope="col">Father's Name</th>
+
+{{--                            <th scope="col">Roll</th>--}}
+                            <th scope="col">প্রার্থীর  নাম  ও পিতার নাম</th>
+                            <th scope="col">কোড</th>
+                            <th scope="col">জেন্ডার</th>
+                            <th scope="col">স্থায়ী  ঠিকানা</th>
                             <th scope="col">Mobile</th>
-                            <th scope="col">DOB</th>
+                            <th scope="col">জন্ম তারিখ  ও বয়স</th>
                             {{-- <th scope="col">District</th> --}}
-                            <th scope="col">Age</th>
+                            <th scope="col">পেমেন্ট আইডি</th>
+                            <th scope="col">নিজ জেলা</th>
+                            <th scope="col">শিক্ষাগত যোগ্যতা</th>
+                            <th scope="col">সংশ্লিষ্ট ক্ষেত্রে অভিজ্ঞতা</th>
+                            <th scope="col">অভিজ্ঞতার  বিবরণ</th>
+                            <th scope="col">অভিজ্ঞতার মেয়াদ</th>
+                            <th scope="col">কোটা</th>
+                            <th scope="col">বিভাগীয়</th>
                             {{-- <th scope="col">Quota</th> --}}
                             <th scope="col">Action</th>
 
@@ -120,28 +130,59 @@
                         @foreach($applicants as $applicant)
                         <tr>
                             <th scope="row">{{ $loop->iteration + $applicants->firstItem() - 1 }}</th>
-                            <td>{{ $applicant->job_title }}</td>
+                            <td>
+                               <span title="{{ $applicant->job_title }}">{!! Str::words($applicant->job_title, 5, ' ...') !!}</span>
+
+                              </td>
+
+{{--                            <td>{{ $applicant->roll }}</td>--}}
+                            <td>{{ $applicant->name_bn }}<br />{{ $applicant->father_name }}
+                            </td>
                             <td>{{ $applicant->token }}</td>
-                            <td>{{ $applicant->roll }}</td>
-                            <td>{{ $applicant->name_bn }}</td>
-                            <td>{{ $applicant->father_name }}</td>
-                            <td>{{ $applicant->mobile }}</td>
-                            <td>{{ Carbon\Carbon::parse($applicant->bday)->format('F j, Y') }}</td>
-                            {{-- <td> 
+                            <td>{{ $applicant->gender }}</td>
+                            <td>  {{ $applicant->pr_house }},
+                                {{ $applicant->pr_village }},
+                                {{ $applicant->pr_union }},
+                                {{ $applicant->pr_postoffice }},
+                                {{ $applicant->pr_postcode }},
+{{--                                উপজেলা: {{ $applicant->permanentupozilla ? $applicant->permanentupozilla->upozilla:'' }},--}}
+{{--                                জেলা: {{ $applicant->permanentzila ? $applicant->permanentzila->zilla_name:'' }},--}}
+                            </td>
+                            <td>{{ $applicant->mobile }} </td>
+                            {{-- <td>
                                 {{ $applicant->birthplace? $applicant->birthplace->zilla_name:'' }}
                             </td> --}}
                             <td>
+                                {{ Carbon\Carbon::parse($applicant->bday)->format('F j, Y') }} <br />
                                 <?php
                                 $fixedday = Carbon\Carbon::parse($applicant->age_calculation)->format('F j, Y');
                                 $fixeddaycal = date('d-m-Y', strtotime($fixedday));
                                 $datetime1 = new DateTime($fixeddaycal);
                                 $datetime2 = new DateTime($applicant->bday);
                                 $interval = $datetime1->diff($datetime2);
-                                echo $fixedday. ' তারিখে : - ';
+                              //  echo $fixedday. ' তারিখে : ';
                                 echo $interval->format('%y বছর %m মাস এবং %d দিন');
                                 ?>
                             </td>
-                            {{-- <td>{{ $applicant->quota }}</td> --}}
+                             <td>{{ $applicant->token }}</td>
+                             <td></td>
+                             <td></td>
+                             <td></td>
+                             <td>{{ $applicant->experiencemonth }}</td>
+                             <td>{{ $applicant->experienceyear }}</td>
+                             <td>
+                                     <?php
+                                     if($applicant->quota){
+                                         $dbValue = $applicant->quota;
+                                         $myArray = json_decode($dbValue, true);
+                                         foreach ($myArray as $key => $value) {
+                                             echo $value.'<br />';
+                                         }
+                                     }
+                                     ?>
+
+                                </td>
+                             <td>{{ $applicant->division_appli }}</td>
                             <td>
                                 <a href="{{ route('print',$applicant->id) }}" target="_blank" title="Print Details" class="btn btn-sm btn-primary"><i data-feather="printer"></i></a>
                                 <a href="{{ route('adminCard',$applicant->id) }}" target="_blank"  title="Admin Card" class="btn btn-sm btn-primary"><i data-feather="credit-card"></i></a>
@@ -151,6 +192,7 @@
                         @endforeach
                         </tbody>
                     </table>
+                    </div>
                     {{ $applicants->onEachSide(5)->appends(Request::all())->links('pagination::bootstrap-5') }}
                 </div>
             </div>

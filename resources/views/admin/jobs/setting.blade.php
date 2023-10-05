@@ -85,17 +85,22 @@ $sscList= collect($joninfo->examSubject);
                                                                         <?php
                                                                         $sscsubjects = \App\Models\ExamlevelSubject::where('examlevel_id', 2)->where('examlevel_group_id', $examssc->id)
                                                                             ->get();
-                                                                     //   in_array($value->id, $rolePermissions) ? true : false
+                                                                          //  $sscsubjectss = collect($sscsubjects)->pluck('name','id')])
+
+                                                                            $sscsubjectss = \App\Models\ExamlevelSubject::where('examlevel_id', 2)->where('examlevel_group_id', $examssc->id)->pluck('name','id');
                                                                         ?>
 
                                                                         @foreach($sscsubjects as $subjects)
-                                                                            {{ Form::checkbox('sscExamsubject[]', $subjects->id, in_array($subjects->id, $sscSubjectList) ? true : false, array( 'id'=>$name)) }}
+                                                                            {{ Form::checkbox('sscExamsubject[]', $subjects->id, in_array($subjects->id, $sscSubjectList) ? true : false, array( 'id'=>$name,'class'=>$name)) }}
                                                                             {!! Form::label('SSCSubject',  $subjects->name) !!}
                                                                         @endforeach
 
                                                                     </div>
                                                                     <div class="col-md-1 {{\App\Helpers\StaticValue::clean($examssc->name)}}" style="display: none">
 @if(count($sscsubjects) > 0)
+
+
+                                                                            <input type="checkbox" id="all_{{$name}}"  onclick="all_check('{{$name}}')" class="css-checkbox"  name="{{$name}}"/>Selectall<br>
                                                                         <button type="button" class="btn btn-success btn-lg mb-2" onclick="save('sscExamsubject','ssc', {{$examssc->id}})"><i data-feather="save"></i> Save</button>
                                                                         @endif
                                                                 </div>
@@ -149,13 +154,14 @@ $sscList= collect($joninfo->examSubject);
                                                                             ->get();
                                                                         ?>
                                                                         @foreach($hscsubjects as $subjects)
-                                                                            {{ Form::checkbox('HSCExamsubject[]', $subjects->id, in_array($subjects->id, $HSCSubjectList) ? true : false, array( 'id'=>'HSCExamsubject')) }}
+                                                                            {{ Form::checkbox('HSCExamsubject[]', $subjects->id, in_array($subjects->id, $HSCSubjectList) ? true : false, array( 'id'=>$name,'class'=>$name)) }}
                                                                             {!! Form::label('HSCSubject',  $subjects->name) !!}
                                                                         @endforeach
 
                                                                     </div>
                                                                     <div class="col-md-1 {{$name}}" style="display: none">
                                                                         @if(count($hscsubjects) > 0)
+                                                                            <input type="checkbox" id="all_{{$name}}"  onclick="all_check('{{$name}}')" class="css-checkbox"  name="{{$name}}"/>Selectall<br>
                                                                                 <button type="button" class="btn btn-success btn-lg mb-2" onclick="save('HSCExamsubject','hsc', {{$examHSC->id}})"><i data-feather="save"></i> Save</button>
                                                                         @endif
                                                                     </div>
@@ -211,13 +217,14 @@ $sscList= collect($joninfo->examSubject);
                                                                             ->get();
                                                                         ?>
                                                                         @foreach($Graduationsubjects as $subjects)
-                                                                            {{ Form::checkbox('GraduationExamsubject[]', $subjects->id, in_array($subjects->id, $GraduationSubjectList) ? true : false, array( 'id'=>'GraduationExamsubject')) }}
+                                                                            {{ Form::checkbox('GraduationExamsubject[]', $subjects->id, in_array($subjects->id, $GraduationSubjectList) ? true : false, array( 'id'=>$name,'class'=>$name)) }}
                                                                             {!! Form::label('GraduationSubject',  $subjects->name) !!}
                                                                         @endforeach
 
                                                                     </div>
                                                                     <div class="col-md-1 {{$name}}" style="display: none">
                                                                         @if(count($Graduationsubjects) > 0)
+                                                                            <input type="checkbox" id="all_{{$name}}"  onclick="all_check('{{$name}}')" class="css-checkbox"  name="{{$name}}"/>Selectall<br>
                                                                             <button type="button" class="btn btn-success btn-lg mb-2" onclick="save('GraduationExamsubject','graduation', {{$examGraduation->id}})"><i data-feather="save"></i> Save</button>
                                                                         @endif
                                                                     </div>
@@ -272,13 +279,14 @@ $sscList= collect($joninfo->examSubject);
                                                                             ->get();
                                                                         ?>
                                                                         @foreach($Mastersubjects as $subjects)
-                                                                            {{ Form::checkbox('MastersExamsubject[]', $subjects->id, in_array($subjects->id, $MastersSubjectList) ? true : false, array( 'id'=>$name)) }}
+                                                                            {{ Form::checkbox('MastersExamsubject[]', $subjects->id, in_array($subjects->id, $MastersSubjectList) ? true : false, array( 'id'=>$name,'class'=>$name)) }}
                                                                             {!! Form::label('MastersSubject',  $subjects->name) !!}
                                                                         @endforeach
 
                                                                     </div>
                                                                     <div class="col-md-1 {{$name}}" style="display: none">
                                                                         @if(count($Mastersubjects) > 0)
+                                                                            <input type="checkbox" id="all_{{$name}}"  onclick="all_check('{{$name}}')" class="css-checkbox"  name="{{$name}}"/>Selectall<br>
                                                                             <button type="button" class="btn btn-success btn-lg mb-2" onclick="save('MastersExamsubject','masters', {{$Master->id}})"><i data-feather="save"></i> Save</button>
                                                                         @endif
                                                                     </div>
@@ -324,11 +332,38 @@ $sscList= collect($joninfo->examSubject);
 
 @section('script-bottom')
 
+
     <script type="text/javascript">
 
         $( function() {
-
-        } );
+            $('.select2').select2({
+                placeholder: 'নির্বাচন করুন',
+            });
+            $('#select_all').on('click',function(){
+                if(this.checked){
+                    $('.SSC').each(function(){
+                        this.checked = true;
+                    });
+                }else{
+                    $('.SSC').each(function(){
+                        this.checked = false;
+                    });
+                }
+            });
+            });
+        function all_check(name){
+            $('#all_'+name).on('click',function(){
+                if(this.checked){
+                    $('.'+name).each(function(){
+                        this.checked = true;
+                    });
+                }else{
+                    $('.'+name).each(function(){
+                        this.checked = false;
+                    });
+                }
+            });
+        }
         function ExamLevel(name){
 
 
