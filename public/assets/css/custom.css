@@ -1,0 +1,4 @@
+form.applicationForm label.error, label.error {
+    color: red;
+    font-style: italic;
+}
