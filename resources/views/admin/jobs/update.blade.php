@@ -227,8 +227,8 @@
                                             {!! Form::label('Certificates',  "Certificates") !!}
                                         </div>
                                         <div class="col-md-6" id="Certificateslist">
-                                          
                                             {!! Form::text('certificate_text', $job->certificate_text, array('placeholder' => 'Certificate Text Heading','class' => 'form-control')) !!}
+                                        <div id="Certificateslistname"></div>
                                         </div>
                                         <div class="col-md-3" id="certificate_isrequired">
                                             {{ Form::checkbox('certificate_isrequired', '1', $job->certificate_isrequired, array( 'id'=>'certificatesre')) }}
@@ -236,7 +236,7 @@
                                         </div>
                                     </div>
 
-                                    
+
                                 </div>
                             </div>
                         </div>
@@ -251,7 +251,7 @@
                                     <div class="col-md-4">
                                         <strong>Experience in related field Text </strong>
                                         {!! Form::text('related_experience_text', $job->related_experience_text, array('placeholder' => '','class' => 'form-control')) !!}
-                                    </div>  
+                                    </div>
                                     <div class="col-md-4">
                                         <strong>Experience in related field selection </strong>
                                         <?php
@@ -268,29 +268,29 @@ $masters_result= json_decode($masters_result, true);
 ?>
 
                                         {!! Form::select('related_experience[]',\App\Helpers\StaticValue::RELATED_EXPERIENCE,$myArray,['class'=>'form-control select2','id'=>'related_experience', 'multiple'=>true, ]) !!}
-                                    </div>  
+                                    </div>
                                     <div class="col-md-4">
                                         <strong>Writ Petitioner  </strong>
                                         {!! Form::text('repetition', $job->repetition, array('placeholder' => '','class' => 'form-control')) !!}
-                                    </div>  
+                                    </div>
                                     <div class="col-md-4 mt-2">
                                         <strong>Minimum Duration of Experience (Years)</strong>
                                         {!! Form::number('minimum_job_experience', $job->minimum_job_experience, array('placeholder' => '','class' => 'form-control')) !!}
-                                    </div>  
+                                    </div>
                                     <div class="col-md-4 mt-2">
                                         <strong>Graduation/Equivalent grade/class </strong>
                                         {!! Form::select('Graduation_grade[]',\App\Helpers\StaticValue::RESULTSSC,$graduation_result,['class'=>'form-control select2','id'=>'Graduation_grade', 'multiple'=>true, ]) !!}
-                                    </div>  
+                                    </div>
                                     <div class="col-md-4 mt-2">
                                         <strong>Masters/Equivalent grade/class</strong>
                                         {!! Form::select('Masters_grade[]',\App\Helpers\StaticValue::RESULTSSC,$masters_result,['class'=>'form-control select2','id'=>'Masters_grade', 'multiple'=>true, ]) !!}
-                                    </div>  
-                                    
-                                </div>   
-                            </div>  
+                                    </div>
 
                                 </div>
-                                
+                            </div>
+
+                                </div>
+
                             </div>
 
                     </div>
@@ -298,7 +298,7 @@ $masters_result= json_decode($masters_result, true);
                         <div class="col-md-3">
                             <strong>Status</strong>
                             {!! Form::select('status',\App\Helpers\StaticValue::STATUS_ADMIN,$job->status,['class'=>'form-control','placeholder'=>'Select ']) !!}
-                        
+
                         </div>
                     </div>
 
@@ -328,7 +328,7 @@ $masters_result= json_decode($masters_result, true);
     .select2-container .select2-selection--multiple .select2-selection__choice{
         background-color: #5369f8 !important;
     }
-     </style>   
+     </style>
 @endsection
 
 @section('script-bottom')
@@ -367,6 +367,27 @@ $masters_result= json_decode($masters_result, true);
                 language: "bn",
                 minimumResultsForSearch: -1
             });
+
+            $('#certificates').on('change', function() {
+                if(this.checked) {
+                    var val = this.checked ? this.value : '';
+                    $.ajax({
+                        url:"{{ route('admin.certificateslist') }}",
+                        type:"GET",
+                        data: {
+                            type: val
+                        },
+                        success:function (data) {
+                            $("#Certificateslistname").empty();
+                            $("#Certificateslistname").html(data.data);
+                        }
+                    })
+                }
+                else{
+                    $("#Certificateslistname").empty();
+                }
+            });
+
         } );
     </script>
 

@@ -234,6 +234,7 @@
                                         <div class="col-md-6" id="Certificateslist">
                                             <strong>Text Heading</strong>
                                             {!! Form::text('Certificates_title_name', null, array('placeholder' => '','class' => 'form-control')) !!}
+                                            <div id="Certificateslistname"></div>
                                         </div>
                                         <div class="col-md-3 mt-3" id="certificate_isrequired">
                                             {{ Form::checkbox('certificate_isrequired', '1', false, array( 'id'=>'certificates')) }}
@@ -241,7 +242,7 @@
                                         </div>
                                     </div>
 
-                                    
+
 
                                 </div>
                             </div>
@@ -257,33 +258,33 @@
                                     <div class="col-md-4">
                                         <strong>Experience in related field Text </strong>
                                         {!! Form::text('related_experience_text', null, array('placeholder' => '','class' => 'form-control')) !!}
-                                    </div>  
+                                    </div>
                                     <div class="col-md-4">
                                         <strong>Experience in related field selection </strong>
                                         {!! Form::select('related_experience[]',\App\Helpers\StaticValue::RELATED_EXPERIENCE,null,['class'=>'form-control select2','id'=>'related_experience', 'multiple'=>true, ]) !!}
-                                    </div>  
+                                    </div>
                                     <div class="col-md-4">
                                         <strong>Writ Petitioner  </strong>
                                         {!! Form::text('repetition', null, array('placeholder' => '','class' => 'form-control')) !!}
-                                    </div>  
+                                    </div>
                                     <div class="col-md-4">
                                         <strong>Minimum Duration of Experience (Years)</strong>
                                         {!! Form::text('minimum_job_experience', null, array('placeholder' => '','class' => 'form-control')) !!}
-                                    </div>  
-                                </div>   
-                            </div>  
+                                    </div>
+                                </div>
+                            </div>
 
                                 </div>
-                                
+
                             </div>
                         </div>
 
                         <div class="col-md-12 mb-3">
-                           
+
                                 <strong>Status</strong>
                                 {!! Form::select('status',\App\Helpers\StaticValue::STATUS_ADMIN,null,['class'=>'form-control select2','placeholder'=>'Select ']) !!}
-                            
-                        
+
+
                         </div>
 
 
@@ -313,7 +314,7 @@
     .select2-container .select2-selection--multiple .select2-selection__choice{
         background-color: #5369f8 !important;
     }
-     </style>   
+     </style>
 
 @endsection
 
@@ -393,9 +394,9 @@
                         },
                         success:function (data) {
                             //  console.log(data.data);
-                              $("#Certificateslist").empty();
+                              $("#Certificateslistname").empty();
                             // console.log(val+'show');
-                            $("#Certificateslist").html(data.data);
+                            $("#Certificateslistname").html(data.data);
 
                             // $.each(data.data, function (i, ex) {
                             //     $('<div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" id="'+val+'--'+ex.id+'" value="'+ex.id+'" name="'+val+'[]"><label class="form-check-label" for="'+val+'--'+ex.id+'" >' + ex.name + '</label></div>').appendTo($("div#"+val+'show'));
@@ -403,7 +404,9 @@
                         }
                     })
                 }
-
+else{
+                    $("#Certificateslistname").empty();
+                }
             });
         } );
 
