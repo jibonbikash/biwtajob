@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\ApplicantExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\JobCreateRequest;
 use App\Http\Requests\JobUpdateRequest;
@@ -18,6 +19,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Database\Query\JoinClause;
+use Maatwebsite\Excel\Facades\Excel;
 
 class JobsController extends Controller
 {
@@ -257,6 +259,15 @@ class JobsController extends Controller
                     'status' => $request->input('status'),
             ]);
         if ($update) {
+            if (count((array)$request->input('certificateslist')) > 0) {
+                foreach ($request->input('certificateslist') as $key => $value) {
+                    JobCertificate::create([
+                        'job_id' => $id,
+                        'certificate_id' => $value,
+                    ]);
+                }
+            }
+
             return redirect()->route('jobs.index')
                 ->with('success', 'Data update successfully!!');
         }
@@ -306,7 +317,9 @@ class JobsController extends Controller
    // }
     public function applicants(Request $request)
     {
-        $job= Job::get()->pluck('title', 'id');
+
+       // dd($applicants);
+        $job= Job::get(['id','title','job_id'])->pluck('name', 'id');
         $q=$request->input('q') ?? null;
         $job_id=$request->input('job_id') ?? null;
         $code=$request->input('code') ?? null;
@@ -319,6 +332,62 @@ class JobsController extends Controller
         $certification=$request->input('certification') ?? null;
         $quota=$request->input('quota') ?? null;
         DB::enableQueryLog();
+        $applicants=Applicant::with(['educations','job', 'birthplace','zila','upozilla','permanentzila','permanentupozilla','apliyedJob'])
+            ->whereNull('deleted_at')
+           // ->whereNull('job_applies.deleted_at')
+            ->when($request->input('q'), function ($q) use ($request){
+                $q->where(function ($query) use ($request){
+                    $query->where('name_en','like', '%'.$request->input('q').'%')
+                        ->orWhere('name_bn', 'like', '%'.$request->input('q').'%')
+                        ->orWhere('nid', 'like', '%'.$request->input('q').'%')
+                        ->orWhere('mobile', 'like', '%'.$request->input('q').'%');
+                });
+            })
+            ->when($job_id, function ($query) use ($job_id){
+                $query->where('job_id', $job_id);
+            })
+            ->when($gender, function ($query) use ($gender){
+                $query->where('gender', $gender);
+            })
+            ->when($religion, function ($query) use ($religion){
+                $query->where('religious', $religion);
+            })
+            ->when($quota, function ($query) use ($quota){
+                $query->where('quota', $quota);
+            })
+            ->when($experience, function ($query) use ($experience){
+                $query->where('experienceyear', $experience);
+            })
+            // ->when($certification, function ($query) use ($certification){
+            //     $query->where('applicant_certificates.edu_level', $certification);
+            // })
+            ->when($minimum_age, function ($query) use ($minimum_age){
+                $query->where('applicants.age', '>=', $minimum_age);
+            })
+
+            ->when($maximum_age, function ($query) use ($maximum_age){
+                $query->where('applicants.age', '<=', $maximum_age);
+            })
+
+            // ->when($education, function ($query) use ($education){
+            //     $query->where('applicant_educations.edu_level', $education);
+            // })
+
+            ->when($code, function ($query) use ($code){
+                $query->where(function ($query) use ($code){
+                    $query->where('job_applies.token','like', '%'.$code.'%')
+                        ->orWhere('job_applies.txnid', 'like', '%'.$code.'%')
+                        ->orWhere('job_applies.roll', 'like', '%'.$code.'%');
+
+                });
+
+                $query->where('token','like', '%'.$code.'%');
+            })
+
+            ->whereIn('applicants.eligible',[1,2])
+            ->latest()->paginate(50);
+      //  dd($applicants);
+        /*
         $applicants = DB::table('applicants')
             ->join('job_applies', 'applicants.id', '=', 'job_applies.applicants_id')
             ->join('jobs', function (JoinClause $join) {
@@ -327,6 +396,19 @@ class JobsController extends Controller
         ->join('applicant_certificates', function (JoinClause $join) {
             $join->on('applicants.job_id', '=', 'applicant_certificates.job_id')->on('applicants.id', '=', 'applicant_certificates.applicants_id');
         })
+             ->leftJoin('district_upozilla', function (JoinClause $join) {
+                $join->on('applicants.pr_zilla', '=', 'district_upozilla.id');
+            })
+
+            ->leftJoin('district_upozilla as upozilla', function (JoinClause $join) {
+                $join->on('applicants.pr_upozilla', '=', 'upozilla.id');
+            })
+            ->leftJoin('district_upozilla as permanent', function (JoinClause $join) {
+                $join->on('applicants.bplace', '=', 'permanent.id');
+            })
+
+       //     ->leftJoin('district_upozilla', 'applicants.pr_zilla', '=', 'district_upozilla.id')
+        //    ->leftJoin('district_upozilla as upozilla', 'applicants.pr_upozilla', '=', 'upozilla.id')
       //  ->join('applicant_educations', 'applicants.id', '=', 'applicant_educations.applicants_id')
 
         // ->join('applicant_educations', function (JoinClause $join) {
@@ -334,7 +416,8 @@ class JobsController extends Controller
         // })
             ->select('applicants.*', 'job_applies.token', 'jobs.title as job_title', 'job_applies.received as received', 'job_applies.txnid as txnid', 'job_applies.txndate as txndate', 'job_applies.roll as roll',
             'job_applies.exam_hall as exam_hall','job_applies.exam_date as exam_date','job_applies.exam_time as exam_time', 'job_applies.exam_time as apply_date',
-            'jobs.age_calculation as age_calculation', 'applicant_certificates.applicants_id'
+            'jobs.age_calculation as age_calculation', 'applicant_certificates.applicants_id','district_upozilla.zilla_name as zilla_name',
+           'upozilla.upozilla as upozilla_name', 'permanent.zilla_name as permanentzilla_name'
             )
             ->whereNull('applicants.deleted_at')
             ->whereNull('job_applies.deleted_at')
@@ -390,8 +473,9 @@ class JobsController extends Controller
             ->whereIn('applicants.eligible',[1,2])
           //  ->groupBy('applicants.id','applicant_certificates.applicants_id')
             ->latest()->paginate(50);
+        */
           //  dd(DB::getQueryLog());
-
+//dd($applicants);
         return view('admin.jobs.applicants', ['applicants' => $applicants, 'jobs'=>$job]);
     }
     public function rollSetting(Request $request){
@@ -599,25 +683,30 @@ public function seatPlansetting(Request $request){
 
 }
 
-public function seatPlansettingRoll(Request $request){
+    public function seatPlansettingRoll(Request $request)
+    {
 
-    $data = DB::table('job_applies')
-   ->select(\DB::raw('MIN(roll) AS rollStart, MAX(roll) AS rollEnd'))
-   ->where('job_id',$request->input('job_id'))
-   ->whereNotNull('exam_date')
-   ->whereNotNull('exam_time')
-   ->whereNull('exam_hall')
-   ->first();
-   //dd($data);
-   if($data){
+        $data = DB::table('job_applies')
+            ->select(\DB::raw('MIN(roll) AS rollStart, MAX(roll) AS rollEnd'))
+            ->where('job_id', $request->input('job_id'))
+            ->whereNotNull('exam_date')
+            ->whereNotNull('exam_time')
+            ->whereNull('exam_hall')
+            ->first();
+        //dd($data);
+        if ($data) {
 
-    return response()->json(['success' => true, 'data' => $data]);
-   }
-   else
-   return response()->json(['success' => false, 'message' => 'SeatPlan already complete or no roll setting yet.']);
-  // dd($data);
+            return response()->json(['success' => true, 'data' => $data]);
+        } else
+            return response()->json(['success' => false, 'message' => 'SeatPlan already complete or no roll setting yet.']);
+        // dd($data);
 
-}
+    }
+
+    public function exportApplicants(Request $request)
+    {
+        return Excel::download(new ApplicantExport($request->all()), 'applicants.xlsx');
+    }
 
 
 

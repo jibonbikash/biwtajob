@@ -39,6 +39,26 @@
             <span>Exam Seat Plan </span>
         </a>
     </li>
+    <li>
+        <a href="{{route('ApplicantViva')}}">
+            <i data-feather="columns"></i>
+            <span>Viva Applicant </span>
+        </a>
+    </li>
+
+    <li>
+        <a href="{{route('Applicantpractical')}}">
+            <i data-feather="columns"></i>
+            <span>Practical Applicant </span>
+        </a>
+    </li>
+
+    <li>
+        <a href="{{route('Applicantmedical')}}">
+            <i data-feather="columns"></i>
+            <span>Medical Applicant </span>
+        </a>
+    </li>
     <li class="menu-title">Education Exam Setting</li>
 
     <li>

@@ -84,6 +84,18 @@ Route::group(['middleware' => ['auth'], "prefix" => "admin"], function() {
 
     Route::get('/import-subject',[ExamLevelGroupSubjectController::class,'importView'])->name('import-subject');
     Route::post('/importsubject',[ExamLevelGroupSubjectController::class,'import'])->name('importsubject');
+    Route::get('/applicants/export', [JobsController::class, 'exportApplicants'])->name('exportApplicants');
 
+    Route::get('/applicants/viva', [\App\Http\Controllers\Admin\VivaController::class, 'index'])->name('ApplicantViva');
+    Route::post('/applicants/viva/import', [\App\Http\Controllers\Admin\VivaController::class, 'import'])->name('ApplicantVivaimport');
+    Route::get('/applicants/viva/export', [\App\Http\Controllers\Admin\VivaController::class, 'exportApplicants'])->name('ApplicantVivaexport');
+
+    Route::get('/applicants/medical', [\App\Http\Controllers\Admin\MedicalsController::class, 'index'])->name('Applicantmedical');
+    Route::post('/applicants/medical/import', [\App\Http\Controllers\Admin\MedicalsController::class, 'import'])->name('Applicantmedicalimport');
+    Route::get('/applicants/medical/export', [\App\Http\Controllers\Admin\MedicalsController::class, 'export'])->name('Applicantmedicalexport');
+
+    Route::get('/applicants/practical', [\App\Http\Controllers\Admin\PracticalController::class, 'index'])->name('Applicantpractical');
+    Route::post('/applicants/practical/import', [\App\Http\Controllers\Admin\PracticalController::class, 'import'])->name('ApplicantpracticalImport');
+    Route::get('/applicants/practical/export', [\App\Http\Controllers\Admin\PracticalController::class, 'export'])->name('Applicantpracticalexport');
 
 });
