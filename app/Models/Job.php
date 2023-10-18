@@ -13,7 +13,7 @@ class Job extends Model
     protected $fillable = ['uuid','title','description','vacancies','job_id','age_calculation','apply_fee','job_experience','freedom_age','handicapped_age',
         'divisioncaplicant_age','max_age','min_age','freedom_fighter','petition_age','application_deadline','min_education', 'min_education_con','min_education_with',
         'jsc','ssc','hsc','graduation','masters','status','jobcurbday','certificate','certificate_isrequired','related_experience_text','certificate_text','related_experience','repetition','minimum_job_experience',
- 'graduation_result','masters_result'
+ 'graduation_result','masters_result','circular_no'
     ];
     protected $notFoundMessage = 'The Job could not be found';
     public function applicants()

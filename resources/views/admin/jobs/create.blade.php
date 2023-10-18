@@ -62,6 +62,12 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
+                                <strong>Job Circular</strong>
+                                {!! Form::text('circular_no', null, array('placeholder' => '','class' => 'form-control')) !!}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
                                 <strong>Application Fee</strong>
                                 {!! Form::text('apply_fee', null, array('placeholder' => '','class' => 'form-control')) !!}
                             </div>

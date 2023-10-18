@@ -28,6 +28,7 @@ class JobCreateRequest extends FormRequest
             'description' => 'required',
             'vacancies' => 'required',
             'job_id' => 'required',
+            'circular_no' => 'required',
             'age_calculation' => 'required',
             'apply_fee' => 'required',
             'application_deadline' => 'required',

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\JobsController;
+use App\Http\Controllers\Admin\EligibleController;
 use App\Http\Controllers\Admin\ExamLevelController;
 use App\Http\Controllers\Admin\ExamLevelGroupController;
 use App\Http\Controllers\Admin\ExamLevelGroupSubjectController;
@@ -60,6 +61,7 @@ Route::group(['middleware' => ['auth'], "prefix" => "admin"], function() {
     Route::post('/jobs/setting/{uuid}', [JobsController::class, 'settingSave'])->name('jobs.settingsave');
     Route::post('ckeditor/upload', [JobsController::class, 'imageupload'])->name('ckeditor.upload');
     Route::get('/applicants', [JobsController::class, 'applicants'])->name('applicants');
+    Route::get('/applicant/eligible', [EligibleController::class, 'index'])->name('applicant.eligible');
     Route::get('/roll-setting', [JobsController::class, 'rollSetting'])->name('rollSetting');
     Route::post('/roll-setting', [JobsController::class, 'rollSettingconfigure'])->name('rollSettingconfigure');
     Route::get('/seat-plan', [JobsController::class, 'seatPlan'])->name('seatPlan');
@@ -97,5 +99,6 @@ Route::group(['middleware' => ['auth'], "prefix" => "admin"], function() {
     Route::get('/applicants/practical', [\App\Http\Controllers\Admin\PracticalController::class, 'index'])->name('Applicantpractical');
     Route::post('/applicants/practical/import', [\App\Http\Controllers\Admin\PracticalController::class, 'import'])->name('ApplicantpracticalImport');
     Route::get('/applicants/practical/export', [\App\Http\Controllers\Admin\PracticalController::class, 'export'])->name('Applicantpracticalexport');
+    Route::post('/applicants/joblist', [\App\Http\Controllers\Admin\VivaController::class, 'joblist'])->name('Applicantjoblist');
 
 });

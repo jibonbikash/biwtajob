@@ -152,21 +152,7 @@
                 </div>
                 <div class="modal-body">
                     {!! Form::open(['route' => array('ApplicantpracticalImport'), 'files' => true, 'method'=>'POST']) !!}
-                    <div class="form-group">
-                        {!! Form::select('job_id',$jobs,request()->get('job_id'),['class'=>'form-control select2','placeholder'=>'Select Job','required'=>true]) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::select('type',array('New' => 'New', 'Merge' => 'Merge'),request()->get('job_id'),['class'=>'form-control select2','placeholder'=>'Select','required'=>true]) !!}
-                    </div>
-                    <div class="form-group">
-                        <div class="custom-file mb-3">
-                            <input name="fileimport" accept=".csv,.xlsx" type="file" class="custom-file-input" id="validatedCustomFile" required>
-                            <label class="custom-file-label" for="validatedCustomFile">Choose file...</label>
-                            <div class="invalid-feedback">Example invalid custom file feedback</div>
-                        </div>
-                    </div>
-
-
+                    @include('admin.jobs._commonForm',['jobs'=>$jobs])
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

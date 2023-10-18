@@ -78,6 +78,7 @@ class JobsController extends Controller
                     'description' => $request->input('description'),
                     'vacancies' => $request->input('vacancies'),
                     'job_id' => $request->input('job_id'),
+                    'circular_no' => $request->input('circular_no'),
                     'age_calculation' => $request->input('age_calculation'),
                     'jobcurbday' => $request->input('jobcurbday'),
                     'apply_fee' => $request->input('apply_fee'),
@@ -225,6 +226,7 @@ class JobsController extends Controller
                 'description' => $request->input('description'),
                 'vacancies' => $request->input('vacancies'),
                 'job_id' => $request->input('job_id'),
+                'circular_no' => $request->input('circular_no'),
                 'age_calculation' => $request->input('age_calculation'),
                 'jobcurbday' => $request->input('jobcurbday'),
                 'apply_fee' => $request->input('apply_fee'),
@@ -384,7 +386,7 @@ class JobsController extends Controller
                 $query->where('token','like', '%'.$code.'%');
             })
 
-            ->whereIn('applicants.eligible',[1,2])
+            ->whereIn('applicants.eligible',[0,1,2])
             ->latest()->paginate(50);
       //  dd($applicants);
         /*
@@ -589,57 +591,54 @@ public function printCopy(Request $request, $id){
 
 }
 
-public function rollSettingconfigure(Request $request){
+    public function rollSettingconfigure(Request $request)
+    {
 
-    $request->validate([
-        'job_id' => 'required|numeric|min:1',
-        'rollstart' => 'required|numeric|min:1',
-        'examdate' => 'required',
-        'examtime' => 'required',
-    ]);
+        $request->validate([
+            'job_id' => 'required|numeric|min:1',
+            'rollstart' => 'required|numeric|min:1',
+            'examdate' => 'required',
+            'examtime' => 'required',
+        ]);
 
-    try {
+        try {
 
 
-        DB::beginTransaction();
+            DB::beginTransaction();
 
-try {
-    $rollStart=$request->input('rollstart');
-    $applyApplicants=JobApply::where('job_id',$request->input('job_id'))->where('received',1)->get();
-    foreach ( $applyApplicants as $applyApplicant) {
-        $applyApplicant->roll=$rollStart;
-        $applyApplicant->exam_date=$request->input('examdate');
-        $applyApplicant->exam_time=$request->input('examtime');
-        $applyApplicant->save();
-        $rollStart++;
+            try {
+                $rollStart = $request->input('rollstart');
+                $applyApplicants = JobApply::where('job_id', $request->input('job_id'))->where('received', 1)->get();
+                foreach ($applyApplicants as $applyApplicant) {
+                    $applyApplicant->roll = $rollStart;
+                    $applyApplicant->exam_date = $request->input('examdate');
+                    $applyApplicant->exam_time = $request->input('examtime');
+                    $applyApplicant->save();
+                    $rollStart++;
+                }
+
+                DB::commit();
+
+            } catch (\Exception $e) {
+                DB::rollback();
+
+            }
+
+
+            return redirect()->route('rollSetting')
+                ->with('success', 'Total ' . $rollStart . ' data updated');;
+
+        } catch (\Exception $e) {
+
+            return redirect()->route('rollSetting')
+                ->with('error', $e->getMessage());
+        }
+
+
+        /*    JobApply::where('job_id',$request->input('job_id'))
+        ->increment('roll', 1, ['exam_date' => $request->input('examdate'), 'exam_time' => $request->input('examtime')]);
+        */
     }
-
-    DB::commit();
-
-} catch (\Exception $e) {
-    DB::rollback();
-
-}
-
-
-
-        return redirect()->route('rollSetting')
-        ->with('success', 'Total '.$rollStart.' data updated');;
-
-      } catch (\Exception $e) {
-
-        return redirect()->route('rollSetting')
-        ->with('error', $e->getMessage());
-      }
-
-
-
-
-
-/*    JobApply::where('job_id',$request->input('job_id'))
-->increment('roll', 1, ['exam_date' => $request->input('examdate'), 'exam_time' => $request->input('examtime')]);
-*/
-}
 
 public function seatPlansetting(Request $request){
 
