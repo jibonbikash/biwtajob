@@ -26,6 +26,12 @@
             <span> Applicant List</span>
         </a>
     </li>
+    <li>
+        <a href="{{route('applicant.eligible')}}">
+            <i data-feather="users"></i>
+            <span> Eligible List</span>
+        </a>
+    </li>
 
     <li>
         <a href="{{route('rollSetting')}}">

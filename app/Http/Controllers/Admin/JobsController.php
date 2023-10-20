@@ -560,19 +560,20 @@ class JobsController extends Controller
         $view = view('admin.jobs._certificateslist', ['certificates'=>$certificates])->render();
         return response()->json(['success' => true, 'data' => $view]);
     }
-public function adminCard(Request $request, $id){
-    $applicationinfo= Applicant::with(['educations','job', 'birthplace','zila','upozilla','permanentzila','permanentupozilla','apliyedJob'])->find($id);
-    // dd($applicationinfo);
-     if($applicationinfo->eligible==1){
-      return view('layouts.print',[
-          'appliedddata'=>$applicationinfo,
-        ]);
-     }
-     else{
-      return redirect()->route('home')
-      ->with('error', 'No data found!!!');;
-     }
-}
+
+    public function adminCard(Request $request, $id)
+    {
+        $applicationinfo = Applicant::with(['educations', 'job', 'birthplace', 'zila', 'upozilla', 'permanentzila', 'permanentupozilla', 'apliyedJob'])->find($id);
+        // dd($applicationinfo);
+        if ($applicationinfo->eligible == 2) {
+            return view('layouts.print', [
+                'appliedddata' => $applicationinfo,
+            ]);
+        } else {
+            return redirect()->route('home')
+                ->with('error', 'No data found!!!');;
+        }
+    }
 public function printCopy(Request $request, $id){
 
 
@@ -608,13 +609,15 @@ public function printCopy(Request $request, $id){
 
             try {
                 $rollStart = $request->input('rollstart');
-                $applyApplicants = JobApply::where('job_id', $request->input('job_id'))->where('received', 1)->get();
+                $total=0;
+                $applyApplicants = JobApply::where('job_id', $request->input('job_id'))->where('received', 2)->get();
                 foreach ($applyApplicants as $applyApplicant) {
                     $applyApplicant->roll = $rollStart;
                     $applyApplicant->exam_date = $request->input('examdate');
                     $applyApplicant->exam_time = $request->input('examtime');
                     $applyApplicant->save();
                     $rollStart++;
+                    $total++;
                 }
 
                 DB::commit();
@@ -626,7 +629,7 @@ public function printCopy(Request $request, $id){
 
 
             return redirect()->route('rollSetting')
-                ->with('success', 'Total ' . $rollStart . ' data updated');;
+                ->with('success', 'Total ' . $total . ' data updated');;
 
         } catch (\Exception $e) {
 
@@ -654,7 +657,7 @@ public function seatPlansetting(Request $request){
 
         try {
 
-            $applyApplicants=JobApply::where('job_id',$request->input('job_id'))->where('received',1)->whereBetween('roll', [$request->input('rollstart'), $request->input('rollend')])->get();
+            $applyApplicants=JobApply::where('job_id',$request->input('job_id'))->where('received',2)->whereBetween('roll', [$request->input('rollstart'), $request->input('rollend')])->get();
          //   dd($applyApplicants);
             foreach ( $applyApplicants as $applyApplicant) {
                 $applyApplicant->exam_hall=$request->input('institute');

@@ -100,5 +100,6 @@ Route::group(['middleware' => ['auth'], "prefix" => "admin"], function() {
     Route::post('/applicants/practical/import', [\App\Http\Controllers\Admin\PracticalController::class, 'import'])->name('ApplicantpracticalImport');
     Route::get('/applicants/practical/export', [\App\Http\Controllers\Admin\PracticalController::class, 'export'])->name('Applicantpracticalexport');
     Route::post('/applicants/joblist', [\App\Http\Controllers\Admin\VivaController::class, 'joblist'])->name('Applicantjoblist');
+    Route::post('/applicants/eligible/import', [\App\Http\Controllers\Admin\EligibleController::class, 'import'])->name('Applicantimport');
 
 });

@@ -38,7 +38,7 @@ class Job extends Model
     }
 
     public function getNameAttribute() {
-        return ucwords($this->title . ' (' . $this->job_id.')');
+        return ucwords($this->title . ' (' . $this->job_id.'-'.$this->circular_no.')');
     }
 
 }

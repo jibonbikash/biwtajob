@@ -113,6 +113,8 @@
                                 <th scope="col">অভিজ্ঞতার মেয়াদ</th>
                                 <th scope="col">কোটা</th>
                                 <th scope="col">বিভাগীয়</th>
+                                <th scope="col">পরীক্ষার সময়</th>
+                                <th scope="col">রোল</th>
                                 <th scope="col">Action</th>
 
                             </tr>
@@ -129,7 +131,7 @@
                                     <td>{{ $applicant->name_bn }}<br />
                                         {{ $applicant->father_name }}
                                     </td>
-                                    <td>{{ $applicant->token }}</td>
+                                    <td>{{ $applicant->code }}</td>
                                     <td>{{ $applicant->gender }}</td>
                                     <td>
                                         বাসা ও সড়ক (নাম/নম্বর): {{ $applicant->pr_house }},
@@ -189,6 +191,18 @@
                                     </td>
                                     <td>{{ $applicant->division_appli }}</td>
                                     <td>
+                                        @if($applicant->apliyedJob)
+                                            রোল:{{ $applicant->apliyedJob->roll }},
+                                            {{ $applicant->apliyedJob->exam_hall }},
+                                            {{ $applicant->apliyedJob->exam_date }}
+                                            {{ $applicant->apliyedJob->exam_time }}
+
+                                        @endif
+                                    </td>
+                                    <td>
+                                        {{ $applicant->apliyedJob->roll }}
+                                    </td>
+                                    <td>
                                         <a href="{{ route('print',$applicant->id) }}" target="_blank" title="Print Details" class="btn btn-sm btn-primary"><i data-feather="printer"></i></a>
                                         <a href="{{ route('adminCard',$applicant->id) }}" target="_blank"  title="Admin Card" class="btn btn-sm btn-primary"><i data-feather="credit-card"></i></a>
                                     </td>
@@ -215,7 +229,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    {!! Form::open(['route' => array('ApplicantVivaimport'), 'files' => true, 'method'=>'POST']) !!}
+                    {!! Form::open(['route' => array('Applicantimport'), 'files' => true, 'method'=>'POST']) !!}
                     @include('admin.jobs._commonForm',['jobs'=>$jobs])
                 </div>
                 <div class="modal-footer">

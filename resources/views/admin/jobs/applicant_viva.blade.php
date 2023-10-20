@@ -20,6 +20,7 @@
                 <a class="btn btn-primary" href="{{ route('dashboard') }}"> <i data-feather="arrow-left-circle" class="icon-dual text-white"></i> Dashboard</a>
                 <a class="btn btn-info" href="{{ route('ApplicantVivaexport') }}??job_id={{ app('request')->input('job_id') }}"> <i data-feather="download" class="icon-dual text-white"></i> Export</a>
                 <a class="btn btn-warning" href="javascript:void(0)" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo"> <i data-feather="upload" class="icon-dual text-white"></i> Import</a>
+                <a class="btn btn-success" href="javascript:void(0)" data-toggle="modal" data-target="#vivasetting" data-whatever="@mdo"> <i data-feather="sliders" class="icon-dual text-white"></i> Viva Setting </a>
 
 
             </div>
@@ -59,6 +60,8 @@
                             <th scope="col">পদের নাম</th>
                             <th scope="col">প্রার্থীর  নাম  ও পিতার নাম</th>
                             <th scope="col">জেন্ডার</th>
+                            <th scope="col">রোল</th>
+                            <th scope="col">পরীক্ষার সময় ও স্থান </th>
                             <th scope="col">স্থায়ী  ঠিকানা</th>
                             <th scope="col">মোবাইল</th>
                             <th scope="col">নিজ জেলা</th>
@@ -86,7 +89,23 @@
         <td>
             {{ $applicant->applicant ? $applicant->applicant->gender:'' }}
         </td>
-        <td>স্থায়ী  ঠিকানা</td>
+        <td>
+            {{ $applicant->roll }}
+        </td>
+        <td>
+            {{ $applicant->place }}<br/>
+            {{ $applicant->date }}
+        </td>
+        <td>
+            বাসা ও সড়ক (নাম/নম্বর): {{ $applicant->pr_house }}<br />
+            গ্রাম/পাড়া/মহল্লা: {{ $applicant->pr_village }}<br />
+            ইউনিয়ন/ওয়ার্ড: {{ $applicant->pr_union }}<br />
+            ডাকঘর: {{ $applicant->pr_postoffice }}<br />
+            পোস্টকোড: {{ $applicant->pr_postcode }}<br />
+            উপজেলা /থানা:{{ $applicant->permanentupozilla ? $applicant->permanentupozilla->upozilla:'' }}<br />
+            জেলা: {{ $applicant->permanentzila ? $applicant->permanentzila->zilla_name:'' }}
+
+        </td>
         <td>
             {{ $applicant->applicant ? $applicant->applicant->mobile:'' }}
         </td>
@@ -140,8 +159,6 @@
         </div>
     </div>
     </div>
-
-
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -163,6 +180,29 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="vivasetting" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Viva Time & Place Setting</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {!! Form::open(['route' => array('ApplicantVivaimport'), 'files' => true, 'method'=>'POST']) !!}
+                    @include('admin.jobs._commonFormExam',['jobs'=>$jobs])
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Import</button>
+                </div>
+                {!! Form::close() !!}
+            </div>
+        </div>
+    </div>
+
 @endsection
 @section('script')
 

@@ -23,7 +23,7 @@
         <div class="invalid-feedback">Example invalid custom file feedback</div>
     </div>
 </div>
-@section('script')
+@section('modal')
 <script type="text/javascript">
     $.ajaxSetup({
         headers: {
