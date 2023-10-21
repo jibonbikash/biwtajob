@@ -1224,8 +1224,10 @@ Log::info($e->getMessage());
                 'applicationinfo'=>$applicationinfo,
             ]);
         } catch (\Exception $e) {
+            Log::info($e->getMessage());
+            return redirect()->route('home')
+                ->with('error', 'No data found!!!');;
 
-            return $e->getMessage();
         }
 
 

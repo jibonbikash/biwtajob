@@ -440,7 +440,7 @@ echo \App\Models\Board::find($education->board_university)->name;
             </tbody>
     </table>
     <p align="left">তারিখ : <?=date('F j, Y',strtotime($applicationinfo->created_at))?> </p>
-    <p align="left">Applied ID : {{ $applicationinfo->apliyedJob ? $applicationinfo->apliyedJob->token:'' }} </p>
+    <p align="left"><strong>Applied ID : {{ $applicationinfo->apliyedJob ? $applicationinfo->apliyedJob->token:'' }} </strong></p>
 
     <img  class="img-responsive img-rounded" src="{{URL::to('/assets/applicants')}}/{{ $applicationinfo->signature }}" height="80" style="float: right; height: 80px;">
     <br />
