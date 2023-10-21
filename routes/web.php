@@ -29,6 +29,7 @@ Route::get('applicant/edit/{uuid}', [HomeController::class, 'applicantPreviewEdi
 Route::post('applicant/edit/{uuid}', [HomeController::class, 'applicantPreviewConfirm'])->name('applicantPreviewConfirm');
 Route::post('applicantion/confirm/{uuid}', [HomeController::class, 'applicantConfirm'])->name('applicantConfirm');
 Route::get('applicantion/{uuid}', [HomeController::class, 'applicationPrint'])->name('applicationPrint');
+Route::get('success/{uuid}', [HomeController::class, 'applicationSuccess'])->name('applicationSuccess');
 Route::get('/university', [HomeController::class, 'university'])->name('university');
 Route::get('/printCopy', [HomeController::class, 'PrintCopy'])->name('PrintCopy');
 Route::get('/writtenCopy', [HomeController::class, 'writtenCopy'])->name('writtenCopy');

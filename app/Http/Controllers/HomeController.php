@@ -1208,7 +1208,7 @@ Log::info($e->getMessage());
             // update code in application table
             Applicant::where('id',$applicationinfo->id)->where('eligible', 1)->update(['code'=>$code]);
             DB::commit();
-            return redirect()->route('applicationPrint', ['uuid' => $applicationinfo->uuid]);
+            return redirect()->route('applicationSuccess', ['uuid' => $applicationinfo->uuid]);
         } catch (\Exception $e) {
             Log::info($e->getMessage());
            // return $e->getMessage();
@@ -1216,7 +1216,20 @@ Log::info($e->getMessage());
                 ->with('error', 'No data found!!!');;
         }
     }
+    public function applicationSuccess(Request $request, $uuid){
 
+        try {
+            $applicationinfo= Applicant::with(['educations','job', 'birthplace','zila','upozilla','permanentzila','permanentupozilla','apliyedJob','applicantCertificate'])->where('uuid', $uuid)->first();
+            return view('jobs.success',[
+                'applicationinfo'=>$applicationinfo,
+            ]);
+        } catch (\Exception $e) {
+
+            return $e->getMessage();
+        }
+
+
+    }
     public function applicationPrint(Request $request, $uuid){
 
         $applicationinfo= Applicant::with(['educations','job', 'birthplace','zila','upozilla','permanentzila','permanentupozilla','apliyedJob','applicantCertificate'])->where('uuid', $uuid)->first();

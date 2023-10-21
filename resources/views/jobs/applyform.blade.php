@@ -8,7 +8,6 @@
  */
 ?>
 @extends('layouts.app')
-
 @section('content')
     <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
@@ -62,8 +61,8 @@
 
 
                     </div>
-                    
-                  
+
+
 
                     {!! Form::open(['route' => array('jobApply'), 'files' => true,'id' => 'applicationForm', 'class' => 'applicationForm']) !!}
                     {!! Form::hidden('uuid', $uuid) !!}
@@ -109,7 +108,7 @@
                                                 @endif
                                             </td>
                                         </tr>
-                                    
+
                                         <tr>
                                             <td>পিতার নাম <span class="text-danger">*</span></td>
                                             <td>{!! Form::text('father_name', null, array('placeholder' => '','class' => 'form-control banglainput')) !!}
@@ -136,7 +135,7 @@
                                                 @endif
                                                   @if ($errors->has('date_of_birth_cal'))
                                                     <span class="text-danger">বয়স এর কারণে আপনি এই পদে আবেদন করতে পারবেন না!</span>
-                                                @endif 
+                                                @endif
                                                 <span class="text-danger date_of_birth"></span>
                                             </td>
                                         </tr>
@@ -150,15 +149,15 @@
                                         </tr>
                                         <tr>
                                             <td>জাতীয় পরিচয় নম্বর/জন্ম নিবন্ধন নম্বর<span class="text-danger">*</span></td>
-                                            <td> 
+                                            <td>
                                                 {!! Form::select('nidorbrn',\App\Helpers\StaticValue::NIDORBRN,null,['class'=>'form-control select2 nidorbrn','placeholder'=>'' ,'id'=>'nidorbrn']) !!}
                                                 @if (request()->get('nidorbrn'))
                                                 {!! Form::text('nidorbrnnumber', request()->get('nidorbrnnumber'), array('placeholder' => '','class' => 'form-control banglainput nidorbrnnumber', 'required'=>true)) !!}
                                                 @else
                                                 {!! Form::text('nidorbrnnumber', null, array('placeholder' => '','class' => 'form-control banglainput nidorbrnnumber', 'required'=>true, 'style'=>'display:none')) !!}
                                                 @endif
-                                                
-                                                
+
+
                                                 @if ($errors->has('nidorbrnnumber'))
                                                     <span class="text-danger">{{ $errors->first('nidorbrnnumber') }}</span>
                                                 @endif
@@ -704,9 +703,9 @@
                                                                             $graduation = $job->graduation_result;
                                                                             $graduation_result= json_decode($graduation, true);
                                                                             $array_graduation= array_combine($graduation_result, $graduation_result);
-                                
+
                                                                             ?>
-                                                                           
+
 
                                                                             {!! Form::select('graduationresult',$array_graduation,null,['class'=>' select2 form-control','placeholder'=>'','id'=>'graduationresult']) !!}
                                                                             @if ($errors->has('graduationresult'))
@@ -998,13 +997,13 @@
                                         </div>
                                         <div class="col-md-3">
                                             <label for="extrq" class="form-label">অভিজ্ঞতার মেয়াদ (বৎসর )</label>
-                                            <?php 
+                                            <?php
 
                                         $experience=[];
                                         for ($x = $job->minimum_job_experience; $x <= 12; $x++) {
-                                        $experience[]=\App\Helpers\StaticValue::englishToBengaliNumberConverter($x); 
+                                        $experience[]=\App\Helpers\StaticValue::englishToBengaliNumberConverter($x);
 
-                                        } 
+                                        }
                                         $experience= array_combine($experience, $experience);
 
                                             ?>
@@ -1027,7 +1026,7 @@
                                             {{ Form::checkbox('repetition', '1', false, array( 'id'=>'repetition')) }}
                                             <label for="extrq" class="form-label">{{ $job->repetition}}</label>
                                         </div>
-                                       @endif     
+                                       @endif
                                     </div>
 
                                     <div class="row" style="margin-top: 5px">
@@ -1052,7 +1051,7 @@
                                                 <input class="checkbox" id="agree" name="agree" aria-required="true" type="checkbox">
                                               <span class="checkbox-container"> আমি এই মর্মে অঙ্গীকার করছি  যে, ওপরে বর্ণিত তথ্যাদি সম্পূর্ণ সত্য।  মৌখিক পরীক্ষার সময় উল্লেখিত তথ্য প্রমানের জন্য সকল মূল সার্টিফিকেট ও রেকর্ডপত্র উপস্থাপন করব।  কোন তথ্য অসত্য প্রমানিত হলে আইনানুগ শাস্তি ভোগ করতে বাধ্য থাকিব।</span>
                                             </label>
-                                        </div>   
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -1083,7 +1082,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
-   
+
     <script type="text/javascript">
         $.ajaxSetup({
             headers: {
@@ -1119,7 +1118,7 @@
        $('.quota').select2({
                 placeholder: 'নির্বাচন করুন',
                 language: "bn",
-            
+
             });
            var selectElem = $("#present_zilla");
            var date_of_place = $("#date_of_place");
@@ -1194,7 +1193,7 @@
             });
 
 $(".nidorbrn").change(function() {
-    var nidorbrn = $('#nidorbrn').val(); 
+    var nidorbrn = $('#nidorbrn').val();
     console.log(nidorbrn);
     $('.nidorbrnnumber').css("display","block")
     if(nidorbrn==='NID'){
@@ -1203,10 +1202,10 @@ $(".nidorbrn").change(function() {
     else{
         $(".nidorbrnnumber").attr("placeholder", "জন্ম নিবন্ধন নম্বর লিখুন").val("").focus().blur();
     }
-  
+
 
 });
-            
+
             $(".ispresent").change(function() {
                 if(this.checked) {
                     //Do stuff
@@ -1272,7 +1271,7 @@ $(".nidorbrn").change(function() {
             else{
             $('#sscSubject_other').css("display","none")
             }
-                
+
             });
 
 
@@ -1285,7 +1284,7 @@ $(".nidorbrn").change(function() {
             else{
                 $('#hscubject_other').css("display","none")
             }
-                
+
             });
             $('#graduationsubject').on('change', function (e) {
                 var optionSelected = $("option:selected", this);
@@ -1296,7 +1295,7 @@ $(".nidorbrn").change(function() {
             else{
                 $('#graduationsubject_other').css("display","none")
             }
-                
+
             });
             $('#mastersSubject').on('change', function (e) {
                 var optionSelected = $("option:selected", this);
@@ -1307,7 +1306,7 @@ $(".nidorbrn").change(function() {
             else{
                 $('#mastersSubject_other').css("display","none")
             }
-                
+
             });
 
 
@@ -1352,8 +1351,8 @@ $(".nidorbrn").change(function() {
                 var optionSelected = $("option:selected", this);
                 var valueSelected = this.value;
                 var selectElem = $("#sscsubject");
-                
-                // 
+
+                //
                 $.ajax({
                     url:"{{ route('examSubject') }}",
                     type:"GET",
@@ -1365,7 +1364,7 @@ $(".nidorbrn").change(function() {
                     success:function (data) {
                        // console.log(data);
                         $( ".sscsubject" ).empty();
-                       
+
                         $.each(data.data, function(index, value){
                             $("<option/>", {
                                 value: value.id,
@@ -1538,7 +1537,7 @@ $(".nidorbrn").change(function() {
                var divisioncaplicant= $('#divisioncaplicant').val();
                console.log(quota);
 
-            
+
 
                $.ajax({
                     url:"{{ route('ageCalculation') }}",
@@ -1596,14 +1595,14 @@ $(".nidorbrn").change(function() {
 
 
             function applicationAgeCalculation(date_of_birth, quota=[], divisioncaplicant=''){
-               
+
                 if ($('input#repetition').is(':checked')) {
                     var repetition = true;
                 }
                 else{
                     var repetition = false;
                 }
-        
+
                 $.ajax({
                     url:"{{ route('applyAgeCalculation') }}",
                     type:"POST",
@@ -1632,19 +1631,19 @@ $(".nidorbrn").change(function() {
             Swal.fire({
                 icon: 'error',
                 text: 'বয়স এর কারণে আপনি এই পদে আবেদন করতে পারবেন না । কোটা  বা বিভাগীয় প্রাথী হলে OK ক্লিক করুন এবং ফর্মের নিচের দিকে  কোটা বা বিভাগীয় অপশন সিলেক্ট করলে আবেদন করতে পারবেন।',
-            
+
                 });
 
-			
+
 			}
 
-                      
+
                     }
                 });
             }
     function getWordCount(wordString) {
   var words = wordString.split(" ");
-  words = words.filter(function(words) { 
+  words = words.filter(function(words) {
     return words.length > 0
   }).length;
   return words;
@@ -1654,7 +1653,7 @@ $(".nidorbrn").change(function() {
 $.validator.addMethod("wordCount",
    function(value, element, params) {
       var count = getWordCount(value);
-     
+
       if(count < params[0]) {
          return true;
       }
@@ -1687,19 +1686,19 @@ $.validator.addMethod("wordCount",
                 mobile_no: {
                     required: true,
                     maxlength:11
-					
+
                 },
                 image: {
                     required: true,
                     extension: "jpeg|jpg|png",
 				//	filesize : 102400
-					
+
                 },
                 signature: {
                     required: true,
                     extension: "jpeg|jpg|png",
 				//	 filesize : 102400
-					
+
                 },
                 experiencemonth:
             {
@@ -1796,7 +1795,7 @@ $.validator.addMethod("wordCount",
                 mobile_no: {
 					required: "মোবাইল/টেলিফোন নম্বর লিখুন",
                     maxlength: "অনুগ্রহ করে 11 নম্বরের বেশি লিখবেন না। যেমন ০১৭১১xxxxxx",
-			
+
 				},
 
                 nidorbrn: "জাতীয় পরিচয় নম্বর/জন্ম নিবন্ধন নম্বর নির্বাচন করুন",
@@ -1894,7 +1893,7 @@ $.validator.addMethod("wordCount",
             <?php
             }
             ?>
-				
+
 			},
             errorPlacement: function(label, element) {
     if (element.hasClass('select2')) {
@@ -1904,7 +1903,7 @@ $.validator.addMethod("wordCount",
       label.addClass('mt-2 text-danger');
       label.insertAfter(element);
     }
-   
+
   },
             });
         });
