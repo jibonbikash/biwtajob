@@ -14,7 +14,7 @@ class Applicant extends Model
     {
         return $this->hasMany(ApplicantEducation::class,'applicants_id','id');
     }
-    
+
     public function job()
     {
         return $this->belongsTo(Job::class);
@@ -31,6 +31,10 @@ class Applicant extends Model
     public function apliyedJob()
     {
         return $this->hasOne(JobApply::class,'applicants_id','id');
+    }
+    public function viva()
+    {
+        return $this->hasOne(ApplicantViva::class,'applicant_id','id');
     }
     public function apliyedJobPayment()
     {

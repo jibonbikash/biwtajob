@@ -17,10 +17,26 @@
                     মৌখিক পরীক্ষার প্রবেশ পত্র
                 </div>
                 <div class="card-body">
+                    {!! Form::open(['route' => array('vivaCopy'), 'files' => false, 'method' => 'get']) !!}
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="Applied Code" aria-label="Applied Code" aria-describedby="button-addon2">
+                        {!! Form::text('applied_code', request()->get('applied_code'), array('placeholder' => 'Applied Code','class' => 'form-control')) !!}
                         <button class="btn btn-primary" type="submit" id="button-addon2"><i data-feather="search"></i></button>
                     </div>
+                    {!! Form::close() !!}
+
+                    @if($applicationinfo)
+                        <a class="btn btn-success" role="button" href="{{route('vivaadminCard', ['uuid' => $applicationinfo->uuid])}}" target="_blank">
+                            <strong> Print Admit Card <i data-feather="external-link"></i></strong>
+                        </a>
+                    @else
+                        @if( request()->get('applied_code') )
+                            <div class="text-wrap text-center fs-2 text-danger" style="width: 100%;">
+                                No Result Found.
+                            </div>
+                        @endif
+
+                    @endif
+
                 </div>
             </div>
         </div>

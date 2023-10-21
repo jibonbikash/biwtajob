@@ -25,7 +25,7 @@
                     {!! Form::close() !!}
 
                     @if($applicationinfo)
-                    <a class="btn btn-success" role="button" href="{{route('applicationPrint', ['uuid' => $applicationinfo->applicant?$applicationinfo->applicant->uuid:'#'])}}" target="_blank">
+                    <a class="btn btn-success" role="button" href="{{route('applicationPrint', ['uuid' => $applicationinfo->uuid])}}" target="_blank">
                   <strong> Print CV <i data-feather="external-link"></i></strong>
                     </a>
                     @else
@@ -34,8 +34,8 @@
                         No Result Found.
                       </div>
                 @endif
-                    
-                    @endif           
+
+                    @endif
 
                 </div>
             </div>

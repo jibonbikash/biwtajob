@@ -321,7 +321,8 @@ class JobsController extends Controller
     {
 
        // dd($applicants);
-        $job= Job::get(['id','title','job_id'])->pluck('name', 'id');
+        $job= Job::groupBy('job_id')->get()->pluck('job_id', 'job_id');
+        $jobAll= Job::get()->pluck('title', 'id');
         $q=$request->input('q') ?? null;
         $job_id=$request->input('job_id') ?? null;
         $code=$request->input('code') ?? null;
@@ -478,7 +479,7 @@ class JobsController extends Controller
         */
           //  dd(DB::getQueryLog());
 //dd($applicants);
-        return view('admin.jobs.applicants', ['applicants' => $applicants, 'jobs'=>$job]);
+        return view('admin.jobs.applicants', ['applicants' => $applicants, 'jobs'=>$job,'jobAll'=>$jobAll]);
     }
     public function rollSetting(Request $request){
         $job= Job::get()->pluck('title', 'id');
@@ -578,8 +579,8 @@ public function printCopy(Request $request, $id){
 
 
         $applicationinfo= Applicant::with(['educations','job', 'birthplace','zila','upozilla','permanentzila','permanentupozilla','apliyedJob'])->find($id);
-      // dd($applicationinfo);
-       if($applicationinfo->eligible==1){
+
+       if($applicationinfo->eligible==1 || $applicationinfo->eligible==2){
         return view('jobs.applicantionPrint',[
             'applicationinfo'=>$applicationinfo,
           ]);

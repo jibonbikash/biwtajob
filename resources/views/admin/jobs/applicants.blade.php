@@ -34,67 +34,65 @@
                 Search
                 </div>
      {!! Form::open(['route' => array('applicants'), 'files' => false, 'method'=>'get']) !!}
-<div class="row mt-1 mb-3">
-    <div class="col-md-4">
-        {!! Form::select('job_id',$jobs,request()->get('job_id'),['class'=>'form-control select2','placeholder'=>'Select Job']) !!}
-    </div>
-    <div class="col-md-4">
-        {!! Form::text('q', request()->get('q'), array('placeholder' => 'Applicant Name, Mobile, email','class' => 'form-control')) !!}
-    </div>
-    <div class="col-md-4">
-        {!! Form::text('code', request()->get('code'), array('placeholder' => 'code, roll, transaction id','class' => 'form-control')) !!}
-    </div>
-</div>
-<div class="row mt-1 mb-3">
-    <div class="col-md-4">
-        {!! Form::select('gender',\App\Helpers\StaticValue::GENDER,request()->get('gender'),['class'=>'form-control select2','placeholder'=>'Gender']) !!}
-    </div>
-
-        <div class="col-md-4">
-        {!! Form::select('religion',\App\Helpers\StaticValue::RELIGIONS,request()->get('religion'),['class'=>'form-control select2','placeholder'=>'Religion']) !!}
-    </div>
-{{--    <div class="col-md-4">--}}
-{{--        @php--}}
-{{--        $Examlevel = \App\Models\ExamlevelGroup::orderBy('examlevel_id')->pluck('name','id')--}}
-{{--      ->all();--}}
-{{--    @endphp--}}
-
-{{--        {!! Form::select('education',$Examlevel,request()->get('education'),['class'=>'form-control','placeholder'=>'Education','id'=>'Education']) !!}--}}
-{{--    </div>--}}
-</div>
-<div class="row mt-1 mb-3">
-
-    <div class="col-md-4">
-        {!! Form::text('minimum_age', request()->get('minimum_age'), array('placeholder' => 'Minimum Age','class' => 'form-control')) !!}
-    </div>
-    <div class="col-md-4">
-        {!! Form::text('maximum_age', request()->get('maximum_age'), array('placeholder' => 'Maximum Age','class' => 'form-control')) !!}
-    </div>
-    <div class="col-md-4">
-        {!! Form::text('experience', request()->get('experience'), array('placeholder' => 'Experience','class' => 'form-control')) !!}
-    </div>
-</div>
-<div class="row mt-1 mb-3">
-    <div class="col-md-4">
-        @php
-        $crtificates = \App\Models\Crtificate::pluck('name','id')
-      ->all();
-    @endphp
- {!! Form::select('certification',$crtificates,request()->get('certification'),['class'=>'form-control','placeholder'=>'Certification','id'=>'Certification']) !!}
-
-    </div>
-    <div class="col-md-4">
-        {!! Form::select('quota',\App\Helpers\StaticValue::QTOTA,request()->get('quota'),['class'=>'form-control','placeholder'=>'Quota','id'=>'quota']) !!}
-    </div>
+                <div class="row mt-1 mb-3 ml-1">
+                    <div class="col-md-4">
+                        {!! Form::select('job_cercularID',$jobs,request()->get('job_cercularID'),['class'=>'form-control select2','placeholder'=>'Select Job','id'=>'job_cercular']) !!}
+                    </div>
+                    <div class="col-md-4">
+                        {!! Form::select('job_id',$jobAll,request()->get('job_id'),['class'=>'form-control select2','placeholder'=>'Select Job','id'=>'job_id_cercular']) !!}
+                    </div>
+                    <div class="col-md-4">
+                        {!! Form::text('q', request()->get('q'), array('placeholder' => 'Applicant Name, Mobile, email','class' => 'form-control')) !!}
+                    </div>
+                </div>
+                <div class="row mt-1 mb-3 ml-1">
+                    <div class="col-md-4">
+                        {!! Form::text('code', request()->get('code'), array('placeholder' => 'code, roll, transaction id','class' => 'form-control')) !!}
+                    </div>
 
 
-    <div class="col-md-4">
-        <button type="submit" name="search" value="q" class="btn btn-success btn-lg float-end" title="Search"><i data-feather="search"></i></button>
-        @if (request()->input('search')=='q')
-         <a href="{{ route('applicants') }}" class="btn btn-warning btn-lg" title="Reset"><i data-feather="refresh-cw" class="text-white"></i></a>
-        @endif
-    </div>
-</div>
+                    <div class="col-md-4">
+                        {!! Form::select('gender',\App\Helpers\StaticValue::GENDER,request()->get('gender'),['class'=>'form-control select2','placeholder'=>'Gender']) !!}
+                    </div>
+
+                    <div class="col-md-4">
+                        {!! Form::select('religion',\App\Helpers\StaticValue::RELIGIONS,request()->get('religion'),['class'=>'form-control select2','placeholder'=>'Religion']) !!}
+                    </div>
+
+                </div>
+                <div class="row mt-1 mb-3 ml-1">
+
+                    <div class="col-md-4">
+                        {!! Form::text('minimum_age', request()->get('minimum_age'), array('placeholder' => 'Minimum Age','class' => 'form-control')) !!}
+                    </div>
+                    <div class="col-md-4">
+                        {!! Form::text('maximum_age', request()->get('maximum_age'), array('placeholder' => 'Maximum Age','class' => 'form-control')) !!}
+                    </div>
+                    <div class="col-md-4">
+                        {!! Form::text('experience', request()->get('experience'), array('placeholder' => 'Experience','class' => 'form-control')) !!}
+                    </div>
+                </div>
+                <div class="row mt-1 mb-3 ml-1">
+                    <div class="col-md-4">
+                        @php
+                            $crtificates = \App\Models\Crtificate::pluck('name','id')
+                          ->all();
+                        @endphp
+                        {!! Form::select('certification',$crtificates,request()->get('certification'),['class'=>'form-control','placeholder'=>'Certification','id'=>'Certification']) !!}
+
+                    </div>
+                    <div class="col-md-4">
+                        {!! Form::select('quota',\App\Helpers\StaticValue::QTOTA,request()->get('quota'),['class'=>'form-control','placeholder'=>'Quota','id'=>'quota']) !!}
+                    </div>
+
+
+                    <div class="col-md-4">
+                        <button type="submit" name="search" value="q" class="btn btn-success btn-lg float-end" title="Search"><i data-feather="search"></i></button>
+                        @if (request()->input('search')=='q')
+                            <a href="{{ route('applicant.eligible') }}" class="btn btn-warning btn-lg" title="Reset"><i data-feather="refresh-cw" class="text-white"></i></a>
+                        @endif
+                    </div>
+                </div>
                {!! Form::close() !!}
             </div>
 
@@ -216,8 +214,24 @@
 
 
 @endsection
-@section('script')
+@section('script-bottom')
+    <style>
+        .select2-container .select2-selection--multiple .select2-selection__choice{
+            background-color: #5369f8 !important;
+        }
+        .select2-container .select2-selection--single{
+            height: 43px !important;
+            padding-top: 5px !important;
+        }
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            top: 7px !important;
 
+    </style>
+
+    <link href="{{ URL::asset('assets/libs/select2/select2.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ URL::asset('assets/libs/multiselect/multi-select.css') }}" rel="stylesheet" type="text/css" />
+    <script src="{{ URL::asset('assets/libs/select2/select2.min.js') }}"></script>
+    <script src="{{ URL::asset('assets/libs/multiselect/multiselect.min.js') }}"></script>
     <script type="text/javascript">
         $.ajaxSetup({
             headers: {
@@ -226,10 +240,34 @@
         });
 
         $(document).ready(function () {
+            $('.select2').select2({
+                placeholder: 'নির্বাচন করুন',
+                allowClear: true
+            });
+            $(document).on('change', '#job_cercular',function(){
+                var cercularID = $(this).val();
+                var token = "{{ csrf_token()}}";
+                $.ajax({
+                    type:'POST',
+                    url:"{{ route('Applicantjoblist') }}",
+                    data:{'cercularID':cercularID, _token:token},
+                    success:function(data){
+                        $("#job_id_cercular").empty();
+                        console.log(data);
+                        $.each(data,function(index,value){
+                            $("<option/>", {
+                                value: value.id,
+                                text: value.title
+                            }).appendTo('#job_id_cercular');
+                        });
 
-
+                        console.log(data);
+                    }
+                });
+            });
 
         });
     </script>
 
 @endsection
+

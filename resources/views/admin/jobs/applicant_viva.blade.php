@@ -36,9 +36,12 @@
      {!! Form::open(['route' => array('ApplicantViva'), 'files' => false, 'method'=>'get']) !!}
 <div class="row mt-1 mb-3">
     <div class="col-md-4">
-        {!! Form::select('job_id',$jobs,request()->get('job_id'),['class'=>'form-control select2','placeholder'=>'Select Job']) !!}
+        {!! Form::select('job_cercularID',$jobs,request()->get('job_id'),['class'=>'form-control select2','placeholder'=>'Select Job','id'=>'job_cercular']) !!}
     </div>
-    <div class="col-md-8">
+    <div class="col-md-4">
+        {!! Form::select('job_id',[],request()->get('job_id'),['class'=>'form-control select2','placeholder'=>'Select Job','id'=>'job_id_cercular']) !!}
+    </div>
+    <div class="col-md-4">
         <button type="submit" name="search" value="q" class="btn btn-success btn-lg float-end" title="Search"><i data-feather="search"></i></button>
         @if (request()->input('search')=='q')
             <a href="{{ route('ApplicantViva') }}" class="btn btn-warning btn-lg" title="Reset"><i data-feather="refresh-cw" class="text-white"></i></a>
@@ -93,8 +96,9 @@
             {{ $applicant->roll }}
         </td>
         <td>
-            {{ $applicant->place }}<br/>
-            {{ $applicant->date }}
+            স্থান: {{ $applicant->place }}<br/>
+            পরীক্ষার সময়: {{ $applicant->date }} -
+            {{ $applicant->time }}<br/>
         </td>
         <td>
             বাসা ও সড়ক (নাম/নম্বর): {{ $applicant->pr_house }}<br />
@@ -140,8 +144,8 @@
         </td>
         <td>{{ $applicant->applicant->division_appli }}</td>
         <td>
-            <a href="{{ route('print',$applicant->id) }}" target="_blank" title="Print Details" class="btn btn-sm btn-primary"><i data-feather="printer"></i></a>
-            <a href="{{ route('adminCard',$applicant->id) }}" target="_blank"  title="Admin Card" class="btn btn-sm btn-primary"><i data-feather="credit-card"></i></a>
+            <a href="{{ route('print',$applicant->applicant ?  $applicant->applicant->id:'#') }}" target="_blank" title="Print Details" class="btn btn-sm btn-primary"><i data-feather="printer"></i></a>
+            <a href="{{route('vivaadminCard', ['uuid' => $applicant->applicant ?  $applicant->applicant->uuid:'#'])}}" target="_blank"  title="Admit Card" class="btn btn-sm btn-primary"><i data-feather="credit-card"></i></a>
 
 
         </td>
@@ -191,12 +195,12 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    {!! Form::open(['route' => array('ApplicantVivaimport'), 'files' => true, 'method'=>'POST']) !!}
+                    {!! Form::open(['route' => array('vivasetting'), 'files' => false, 'method'=>'POST']) !!}
                     @include('admin.jobs._commonFormExam',['jobs'=>$jobs])
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Import</button>
+                    <button type="submit" class="btn btn-primary"><i data-feather="save" class="text-white"></i> Save</button>
                 </div>
                 {!! Form::close() !!}
             </div>
@@ -204,8 +208,24 @@
     </div>
 
 @endsection
-@section('script')
+@section('script-bottom')
+    <style>
+        .select2-container .select2-selection--multiple .select2-selection__choice{
+            background-color: #5369f8 !important;
+        }
+        .select2-container .select2-selection--single{
+            height: 43px !important;
+            padding-top: 5px !important;
+        }
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            top: 7px !important;
 
+    </style>
+
+    <link href="{{ URL::asset('assets/libs/select2/select2.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ URL::asset('assets/libs/multiselect/multi-select.css') }}" rel="stylesheet" type="text/css" />
+    <script src="{{ URL::asset('assets/libs/select2/select2.min.js') }}"></script>
+    <script src="{{ URL::asset('assets/libs/multiselect/multiselect.min.js') }}"></script>
     <script type="text/javascript">
         $.ajaxSetup({
             headers: {
@@ -214,8 +234,31 @@
         });
 
         $(document).ready(function () {
+            $('.select2').select2({
+                placeholder: 'নির্বাচন করুন',
+                allowClear: true
+            });
+            $(document).on('change', '#job_cercular',function(){
+                var cercularID = $(this).val();
+                var token = "{{ csrf_token()}}";
+                $.ajax({
+                    type:'POST',
+                    url:"{{ route('Applicantjoblist') }}",
+                    data:{'cercularID':cercularID, _token:token},
+                    success:function(data){
+                        $("#job_id").empty();
+                        console.log(data);
+                        $.each(data,function(index,value){
+                            $("<option/>", {
+                                value: value.id,
+                                text: value.title
+                            }).appendTo('#job_id_cercular');
+                        });
 
-
+                        console.log(data);
+                    }
+                });
+            });
 
         });
     </script>

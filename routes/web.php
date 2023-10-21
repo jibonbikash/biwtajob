@@ -32,7 +32,9 @@ Route::get('applicantion/{uuid}', [HomeController::class, 'applicationPrint'])->
 Route::get('/university', [HomeController::class, 'university'])->name('university');
 Route::get('/printCopy', [HomeController::class, 'PrintCopy'])->name('PrintCopy');
 Route::get('/writtenCopy', [HomeController::class, 'writtenCopy'])->name('writtenCopy');
+Route::get('/written/admitcard/{uuid}', [HomeController::class, 'writtenadminCard'])->name('writtenadmitCard');
 Route::get('/vivaCopy', [HomeController::class, 'vivaCopy'])->name('vivaCopy');
+Route::get('/viva/admitcard/{uuid}', [HomeController::class, 'vivaadminCard'])->name('vivaadminCard');
 Route::get('/practicalCopy', [HomeController::class, 'practicalCopy'])->name('practicalCopy');
 Route::get('/medicalCopy', [HomeController::class, 'medicalCopy'])->name('medicalCopy');
 Route::post('/ageCalculation', [HomeController::class, 'ageCalculation'])->name('ageCalculation');
@@ -77,7 +79,7 @@ Route::group(['middleware' => ['auth'], "prefix" => "admin"], function() {
     Route::get('examgroup', [ExamLevelGroupController::class,'examgroup'])->name('examgroup');
     Route::post('examsubject', [JobsController::class, 'examsubject'])->name('examlevels.examsubject');
     Route::get('print/{id}', [JobsController::class,'printCopy'])->name('print');
-    Route::get('adminCard/{id}', [JobsController::class,'adminCard'])->name('adminCard');
+    Route::get('admitCard/{id}', [JobsController::class,'adminCard'])->name('adminCard');
     Route::get('certificateslist', [JobsController::class,'certificateslist'])->name('admin.certificateslist');
 
 
@@ -91,7 +93,7 @@ Route::group(['middleware' => ['auth'], "prefix" => "admin"], function() {
     Route::get('/applicants/viva', [\App\Http\Controllers\Admin\VivaController::class, 'index'])->name('ApplicantViva');
     Route::post('/applicants/viva/import', [\App\Http\Controllers\Admin\VivaController::class, 'import'])->name('ApplicantVivaimport');
     Route::get('/applicants/viva/export', [\App\Http\Controllers\Admin\VivaController::class, 'exportApplicants'])->name('ApplicantVivaexport');
-
+    Route::post('/applicants/viva/setting', [\App\Http\Controllers\Admin\VivaController::class, 'vivasetting'])->name('vivasetting');
     Route::get('/applicants/medical', [\App\Http\Controllers\Admin\MedicalsController::class, 'index'])->name('Applicantmedical');
     Route::post('/applicants/medical/import', [\App\Http\Controllers\Admin\MedicalsController::class, 'import'])->name('Applicantmedicalimport');
     Route::get('/applicants/medical/export', [\App\Http\Controllers\Admin\MedicalsController::class, 'export'])->name('Applicantmedicalexport');

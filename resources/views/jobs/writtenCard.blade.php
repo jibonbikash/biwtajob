@@ -17,7 +17,7 @@
                     লিখিত পরীক্ষার প্রবেশ পত্র
                 </div>
                 <div class="card-body">
-                    {!! Form::open(['route' => array('PrintCopy'), 'files' => true, 'method' => 'get']) !!}
+                    {!! Form::open(['route' => array('writtenCopy'), 'files' => false, 'method' => 'get']) !!}
                     <div class="input-group mb-3">
                         {!! Form::text('applied_code', request()->get('applied_code'), array('placeholder' => 'Applied Code','class' => 'form-control')) !!}
                         <button class="btn btn-primary" type="submit" id="button-addon2"><i data-feather="search"></i></button>
@@ -25,8 +25,8 @@
                     {!! Form::close() !!}
 
                     @if($applicationinfo)
-                    <a class="btn btn-success" role="button" href="{{route('applicationPrint', ['uuid' => $applicationinfo->applicant?$applicationinfo->applicant->uuid:'#'])}}" target="_blank">
-                  <strong> Print CV <i data-feather="external-link"></i></strong>
+                    <a class="btn btn-success" role="button" href="{{route('writtenadmitCard', ['uuid' => $applicationinfo->uuid])}}" target="_blank">
+                  <strong> Print Admit Card <i data-feather="external-link"></i></strong>
                     </a>
                     @else
                     @if( request()->get('applied_code') )
@@ -34,8 +34,8 @@
                         No Result Found.
                       </div>
                 @endif
-                    
-                    @endif           
+
+                    @endif
 
                 </div>
             </div>

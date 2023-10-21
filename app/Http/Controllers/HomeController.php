@@ -1204,6 +1204,9 @@ Log::info($e->getMessage());
                 'bd_tk'=> $job->apply_fee,
                 'apply_date'=> date('Y-m-d H:i:s'),
             ]);
+            // TODO
+            // update code in application table
+            Applicant::where('id',$applicationinfo->id)->where('eligible', 1)->update(['code'=>$code]);
             DB::commit();
             return redirect()->route('applicationPrint', ['uuid' => $applicationinfo->uuid]);
         } catch (\Exception $e) {
@@ -1218,7 +1221,7 @@ Log::info($e->getMessage());
 
         $applicationinfo= Applicant::with(['educations','job', 'birthplace','zila','upozilla','permanentzila','permanentupozilla','apliyedJob','applicantCertificate'])->where('uuid', $uuid)->first();
       // dd($applicationinfo);
-       if($applicationinfo->eligible==1){
+       if($applicationinfo->eligible==1 || $applicationinfo->eligible==2){
         return view('jobs.applicantionPrint',[
             'applicationinfo'=>$applicationinfo,
           ]);
@@ -1240,9 +1243,13 @@ Log::info($e->getMessage());
     public function PrintCopy(Request $request){
 
         if ($request->has('applied_code')) {
-            $applicant= JobApply::with('applicant')->where([
-                'token'=> $request->input('applied_code')
+            $applicant= Applicant::whereHas('apliyedJob')->with('apliyedJob')->where([
+                'code'=> $request->input('applied_code')
             ])->first();
+
+//            $applicant= JobApply::with('applicant')->where([
+//                'token'=> $request->input('applied_code')
+//            ])->first();
             return view('jobs.printCopy',[
                 'applicationinfo'=>$applicant,
             ]);
@@ -1256,14 +1263,77 @@ Log::info($e->getMessage());
         ]);
     }
     public function writtenCopy(Request $request){
+
+        if ($request->has('applied_code')) {
+            $applicant= Applicant::whereHas('apliyedJob')->with('apliyedJob')->where([
+                'code'=> $request->input('applied_code'),
+                'eligible'=> 2,
+            ])->first();
+
+            return view('jobs.writtenCard',[
+                'applicationinfo'=>$applicant,
+            ]);
+        }
         return view('jobs.writtenCard',[
             'applicationinfo'=>[],
         ]);
     }
+    public function writtenadminCard(Request $request, $uuid){
+       try {
+           $applicationinfo= Applicant::with(['educations','job', 'birthplace','zila','upozilla','permanentzila','permanentupozilla','apliyedJob','applicantCertificate'])->where('uuid', $uuid)->first();
+
+           if ($applicationinfo->eligible == 2) {
+               return view('layouts.print', [
+                   'appliedddata' => $applicationinfo,
+               ]);
+           } else {
+               return redirect()->route('home')
+                   ->with('error', 'No data found!!!');;
+           }
+       } catch (\Exception $e) {
+
+            return $e->getMessage();
+        }
+
+
+    }
     public function vivaCopy(Request $request){
+        if ($request->has('applied_code')) {
+            $applicant= Applicant::whereHas('apliyedJob')->with('apliyedJob','viva')->where([
+                'code'=> $request->input('applied_code'),
+                'eligible'=> 2,
+            ])->whereHas('viva')->first();
+
+            return view('jobs.vivaCard',[
+                'applicationinfo'=>$applicant,
+            ]);
+        }
+
         return view('jobs.vivaCard',[
             'applicationinfo'=>[],
         ]);
+    }
+
+    public function vivaadminCard(Request $request, $uuid){
+
+        try {
+            $applicationinfo= Applicant::whereHas('apliyedJob')->with('apliyedJob','viva')->where([
+                'uuid'=> $uuid,
+                'eligible'=> 2,
+            ])->whereHas('viva')->first();
+            if ($applicationinfo->eligible == 2) {
+                return view('layouts.viva_admit', [
+                    'appliedddata' => $applicationinfo,
+                ]);
+            } else {
+                return redirect()->route('home')
+                    ->with('error', 'No data found!!!');;
+            }
+        } catch (\Exception $e) {
+
+            return $e->getMessage();
+        }
+
     }
     public function practicalCopy(Request $request){
         return view('jobs.practicalCopy',[

@@ -33,11 +33,11 @@
         <tr>
             <td width="33%">
                 <div class="col-md-4">
-           
+
                     @if($applicationinfo->apliyedJob ? $applicationinfo->apliyedJob->roll:'')
-                    <b style="font-size:30px;"> Roll:  {{ $applicationinfo->apliyedJob ? $applicationinfo->apliyedJob->roll:'' }} </b><br />
+                        <b style="font-size:30px;"> Roll:  {{ $applicationinfo->apliyedJob ? $applicationinfo->apliyedJob->roll:'' }} </b><br />
                     @endif
-                   
+
 
                     বরাবর <br />
                     পরিচালক  <br />
@@ -109,16 +109,16 @@
             <td colspan="3">
 
                 <?php
-              //  $fixedday = $applicationinfo->job ? $applicationinfo->job->age_calculation : '';
+                //  $fixedday = $applicationinfo->job ? $applicationinfo->job->age_calculation : '';
                 $fixedday = Carbon\Carbon::parse($applicationinfo->job ? $applicationinfo->job->age_calculation : '')->format('F j, Y');
-               $fixeddaycal = date('d-m-Y', strtotime($fixedday));
-               $datetime1 = new DateTime($fixeddaycal);
+                $fixeddaycal = date('d-m-Y', strtotime($fixedday));
+                $datetime1 = new DateTime($fixeddaycal);
                 $datetime2 = new DateTime($applicationinfo->bday);
-               $interval = $datetime1->diff($datetime2);
-               echo $fixedday. ' তারিখে :  ';
-               echo $interval->format('%y বছর %m মাস এবং %d দিন');
+                $interval = $datetime1->diff($datetime2);
+                echo $fixedday. ' তারিখে :  ';
+                echo $interval->format('%y বছর %m মাস এবং %d দিন');
                 ?>
-                </td>
+            </td>
         </tr>
         <tr>
 
@@ -268,13 +268,13 @@
             <tr>
                 <td>{{ $education->examLevelGroups ? $education->examLevelGroups->name :'---' }}</td>
                 <td>
-                
+
                     @if ($education->other)
-                    {{ $education->other }}   
-                    @else 
-                    {{ $education->ExamlevelSubject ? $education->ExamlevelSubject->name :'' }}
+                        {{ $education->other }}
+                    @else
+                        {{ $education->ExamlevelSubject ? $education->ExamlevelSubject->name :'' }}
                     @endif
-                        {{-- {{ $education->ExamlevelSubject ? $education->ExamlevelSubject->name :'' }} --}}
+                    {{-- {{ $education->ExamlevelSubject ? $education->ExamlevelSubject->name :'' }} --}}
                 </td>
                 <td>{{ $education->institute_name }} </td>
                 <td>{{ $education->passing_year }} </td>
@@ -291,65 +291,70 @@ echo \App\Models\Board::find($education->board_university)->name;
 }
 
                     @endphp
-                   {{-- {{ $education->board_university }} --}}
+                    {{-- {{ $education->board_university }} --}}
                 </td>
                 <td>
-                   
-                    @php 
-if(in_array($education->result, ['প্রথম বিভাগ','দ্বিতীয় বিভাগ','তৃতীয় বিভাগ'])) {
-//echo \App\Helpers\StaticValue::RESULTSSC[$education->result];
-echo $education->result;
-}
-else{
-    if($education->edu_level==1){
-      if(in_array($education->result, ['প্রথম বিভাগ','দ্বিতীয় বিভাগ','তৃতীয় বিভাগ'])) {
-            echo $education->result;
-            }
-            else{
-                echo $education->cgpa.' - '; echo $education->result;
-            }
 
-    }
-    else{
-        echo $education->cgpa.' - '; echo \App\Helpers\StaticValue::RESULTSSC[$education->result];
-    }
-}
+                    @php
+                        if(in_array($education->result, ['প্রথম বিভাগ','দ্বিতীয় বিভাগ','তৃতীয় বিভাগ'])) {
+                        //echo \App\Helpers\StaticValue::RESULTSSC[$education->result];
+                        echo $education->result;
+                        }
+                        else{
+                        //	echo $education->result;
+
+                            if($education->edu_level==1){
+                              if(in_array($education->result, ['প্রথম বিভাগ','দ্বিতীয় বিভাগ','তৃতীয় বিভাগ'])) {
+                                    echo $education->result;
+                                    }
+                                    else{
+                                        echo $education->cgpa.' - '; echo $education->result;
+                                    }
+
+                            }
+                            else{
+                                echo $education->cgpa.' - ';
+                                echo  $education->result;
+                                echo \App\Helpers\StaticValue::RESULTSSC[$education->result];
+                            }
+
+                        }
                     @endphp
                     {{-- {{ $education->result }} --}}
-                
+
                 </td>
             </tr>
         @endforeach
-      
+
         </tbody>
     </table>
     @if($applicationinfo->job->certificate_text)
-                                            <table class="table table-bordered">
-                                                <thead>
-                                                    <tr>
-                                                        <th colspan='4'>  {{ $applicationinfo->job->certificate_text}}</th>
-                                                    
-                                                        
-                                                    </tr>
-                                                <tr>
-                                                    <th>সার্টিফিকেশন নাম</th>
-                                                    <th>প্রতিষ্ঠান নাম </th>
-                                                    <th>সার্টিফিকেট/লাইসেন্স নম্বর</th>
-                                                    <th>সার্টিফিকেট/লাইসেন্সের মেয়াদ শেষ হওয়ার তারিখ</th>
-                                                    
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>{{ App\Models\Crtificate::find($applicationinfo->applicantCertificate ? $applicationinfo->applicantCertificate->edu_level:'')->name}} </td>
-                                                        <td>{{ $applicationinfo->applicantCertificate ? $applicationinfo->applicantCertificate->institute_name :'---' }} </td>
-                                                        <td>{{ $applicationinfo->applicantCertificate ? $applicationinfo->applicantCertificate->certificate_no :'---' }}</td>
-                                                        <td>{{ $applicationinfo->applicantCertificate ? $applicationinfo->applicantCertificate->certificate_expire :'---' }}</td>
-                                                        
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                            @endif
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th colspan='4'>  {{ $applicationinfo->job->certificate_text}}</th>
+
+
+            </tr>
+            <tr>
+                <th>সার্টিফিকেশন নাম</th>
+                <th>প্রতিষ্ঠান নাম </th>
+                <th>সার্টিফিকেট/লাইসেন্স নম্বর</th>
+                <th>সার্টিফিকেট/লাইসেন্সের মেয়াদ শেষ হওয়ার তারিখ</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>{{ App\Models\Crtificate::find($applicationinfo->applicantCertificate ? $applicationinfo->applicantCertificate->edu_level:'')->name}} </td>
+                <td>{{ $applicationinfo->applicantCertificate ? $applicationinfo->applicantCertificate->institute_name :'---' }} </td>
+                <td>{{ $applicationinfo->applicantCertificate ? $applicationinfo->applicantCertificate->certificate_no :'---' }}</td>
+                <td>{{ $applicationinfo->applicantCertificate ? $applicationinfo->applicantCertificate->certificate_expire :'---' }}</td>
+
+            </tr>
+            </tbody>
+        </table>
+    @endif
 
     <table class="table table-bordered">
         <thead>
@@ -385,20 +390,20 @@ else{
             <td valign="top"> ২০. কোটা </td>
             <td colspan="3">
                 <?php
-                                            if($applicationinfo->quota){
-                                                $dbValue = $applicationinfo->quota;
-                                             $myArray = json_decode($dbValue, true); 
-                                            //  echo "<pre>";
-                                            //  print_r($myArray);
-                                            //  echo "</pre>";
-                                             foreach ($myArray as $key => $value) {
-                                                echo $value.'<br />';
-                                             }
-                                            }
+                if($applicationinfo->quota){
+                    $dbValue = $applicationinfo->quota;
+                    $myArray = json_decode($dbValue, true);
+                    //  echo "<pre>";
+                    //  print_r($myArray);
+                    //  echo "</pre>";
+                    foreach ($myArray as $key => $value) {
+                        echo $value.'<br />';
+                    }
+                }
 
-                                            ?>
+                ?>
 
-               
+
 
             </td>
 
@@ -410,10 +415,10 @@ else{
             </td>
             <td>তারিখ </td>
             <td>
-            
+
                 {{ $applicationinfo->apliyedJobPayment ? Carbon\Carbon::parse($applicationinfo->apliyedJobPayment->apply_date)->format('F j, Y'):""}}
-               
-                </td>
+
+            </td>
         </tr>
         <tr>
             <td>ব্যাংক ও শাখার নাম</td>
@@ -424,15 +429,15 @@ else{
             </td>
         </tr>
         @if($applicationinfo->repetition==1)
-        <tr>
-            <td>২৩.{{$applicationinfo->job ? $applicationinfo->job->repetition:''}}</td>
-            
-            <td colspan="3">
-                 হ্যাঁ
-            </td>
-        </tr>
-        @endif
-        </tbody>
+            <tr>
+                <td>২৩.{{$applicationinfo->job ? $applicationinfo->job->repetition:''}}</td>
+
+                <td colspan="3">
+                    হ্যাঁ
+                </td>
+            </tr>
+            @endif
+            </tbody>
     </table>
     <p align="left">তারিখ : <?=date('F j, Y',strtotime($applicationinfo->created_at))?> </p>
     <p align="left">Applied ID : {{ $applicationinfo->apliyedJob ? $applicationinfo->apliyedJob->token:'' }} </p>
