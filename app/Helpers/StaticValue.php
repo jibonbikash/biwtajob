@@ -46,6 +46,11 @@ class StaticValue
         '2' => "Inactive",
     ];
 
+    const STATUS_ELIGIBLE = [
+        '1' => "Submited",
+        '2' => "Eligible",
+    ];
+
     const STATUS_ADMIN = [
         '1' => "Publish",
         '0' => "Draft",
@@ -54,7 +59,7 @@ class StaticValue
     const NIDORBRN = [
         'BRN' => "জন্ম নিবন্ধন",
         'NID' => "জাতীয় পরিচয়",
-    
+
     ];
 
 
@@ -62,7 +67,7 @@ class StaticValue
         'আছে' => "আছে",
         'নাই' => "নাই",
         'প্রযোজ্য নয়' => "প্রযোজ্য নয়",
-    
+
     ];
 
     const RESULTJSC = [
@@ -338,7 +343,7 @@ class StaticValue
         'মুক্তিযোদ্ধা / শহীদ মুক্তিযোদ্ধার পুত্র -কন্যার পুত্র -কন্যা' => 'মুক্তিযোদ্ধা / শহীদ মুক্তিযোদ্ধার পুত্র -কন্যার পুত্র -কন্যা',
         'ক্ষুদ্র নৃ -গোষ্ঠী' => 'ক্ষুদ্র নৃ -গোষ্ঠী',
         'শারীরিক প্রতিবন্দী' => 'শারীরিক প্রতিবন্দী ',
-        'এতিম' => 'এতিম', 
+        'এতিম' => 'এতিম',
         'আনসার ও গ্রাম প্রতিরক্ষা সদস্য' => 'আনসার ও গ্রাম প্রতিরক্ষা সদস্য'
     ];
     const DIVISIONAPPLIANT=['হ্যাঁ'=>'হ্যাঁ',
@@ -359,7 +364,7 @@ class StaticValue
         $englishNumbers = array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
         $bengaliNumbers = array('০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯');
         $bengaliNumber = str_replace($englishNumbers, $bengaliNumbers, $number);
-        
+
         return $bengaliNumber;
     }
 

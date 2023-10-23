@@ -78,28 +78,35 @@
                             $crtificates = \App\Models\Crtificate::pluck('name','id')
                           ->all();
                         @endphp
-                        {!! Form::select('certification',$crtificates,request()->get('certification'),['class'=>'form-control','placeholder'=>'Certification','id'=>'Certification']) !!}
+                        {!! Form::select('certification',$crtificates,request()->get('certification'),['class'=>'form-control select2','placeholder'=>'Certification','id'=>'Certification']) !!}
 
                     </div>
-                    <div class="col-md-4">
-                        {!! Form::select('quota',\App\Helpers\StaticValue::QTOTA,request()->get('quota'),['class'=>'form-control','placeholder'=>'Quota','id'=>'quota']) !!}
+                    <div class="col-md-2">
+                        {!! Form::select('quota',\App\Helpers\StaticValue::QTOTA,request()->get('quota'),['class'=>'form-control select2','placeholder'=>'Quota','id'=>'quota']) !!}
                     </div>
-
+                    <div class="col-md-2">
+                        {!! Form::select('eligible',\App\Helpers\StaticValue::STATUS_ELIGIBLE,request()->get('eligible'),['class'=>'form-control select2','placeholder'=>'Status','id'=>'quota']) !!}
+                    </div>
 
                     <div class="col-md-4">
                         <button type="submit" name="search" value="q" class="btn btn-success btn-lg float-end" title="Search"><i data-feather="search"></i></button>
                         @if (request()->input('search')=='q')
-                            <a href="{{ route('applicant.eligible') }}" class="btn btn-warning btn-lg" title="Reset"><i data-feather="refresh-cw" class="text-white"></i></a>
+                            <a href="{{ route('applicants') }}" class="btn btn-warning btn-lg" title="Reset"><i data-feather="refresh-cw" class="text-white"></i></a>
                         @endif
                     </div>
                 </div>
                {!! Form::close() !!}
             </div>
 
+
             <div class="card">
                 <div class="card-body">
                     @include('layouts.shared.message')
                     <div class="table-responsive">
+                        <button type="button" class="btn btn-primary mb-1">
+                            Total <span class="badge badge-light">{{ $applicants->total() }}</span>
+                        </button>
+
                     <table class="table table-striped table-hover table-bordered">
                         <thead class="table-info">
                         <tr>

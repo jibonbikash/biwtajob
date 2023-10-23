@@ -334,6 +334,7 @@ class JobsController extends Controller
         $experience=$request->input('experience') ?? null;
         $certification=$request->input('certification') ?? null;
         $quota=$request->input('quota') ?? null;
+        $eligible=$request->input('eligible') ?? null;
         DB::enableQueryLog();
         $applicants=Applicant::with(['educations','job', 'birthplace','zila','upozilla','permanentzila','permanentupozilla','apliyedJob'])
             ->whereNull('deleted_at')
@@ -348,6 +349,9 @@ class JobsController extends Controller
             })
             ->when($job_id, function ($query) use ($job_id){
                 $query->where('job_id', $job_id);
+            })
+            ->when($eligible, function ($query) use ($eligible){
+                $query->where('eligible', $eligible);
             })
             ->when($gender, function ($query) use ($gender){
                 $query->where('gender', $gender);
@@ -491,15 +495,15 @@ class JobsController extends Controller
         $job= Job::get()->pluck('title', 'id');
         $jobIDs = Job::groupBy('job_id')->get()->pluck('job_id', 'job_id');
         $job_id=$request->input('job_id') ?? null;
-        $applicationinfo = Applicant::with(['job','apliyedJob'])->
-                whereHas('apliyedJob', function ($query) {
+        $applicationinfo = Applicant::with(['job','apliyedJob'])
+            ->whereHas('apliyedJob', function ($query) {
                     $query->whereNotNull('roll')->whereNotNull('exam_hall')
                         ->whereNotNull('exam_date')->whereNotNull('exam_time');
                 })
             ->when($job_id, function ($query) use ($job_id){
                 $query->where('job_id', $job_id);
             })
-                ->orderBy('id','desc')->paginate(50);
+                ->latest()->paginate(50);
         return view('admin.jobs.seatPlan', ['jobs'=>$job, 'jobID'=>$jobIDs,'applicationinfos'=>$applicationinfo]);
     }
 
@@ -587,23 +591,24 @@ class JobsController extends Controller
                 ->with('error', 'No data found!!!');;
         }
     }
-public function printCopy(Request $request, $id){
+
+    public function printCopy(Request $request, $id)
+    {
 
 
-        $applicationinfo= Applicant::with(['educations','job', 'birthplace','zila','upozilla','permanentzila','permanentupozilla','apliyedJob'])->find($id);
+        $applicationinfo = Applicant::with(['educations', 'job', 'birthplace', 'zila', 'upozilla', 'permanentzila', 'permanentupozilla', 'apliyedJob'])->find($id);
 
-       if($applicationinfo->eligible==1 || $applicationinfo->eligible==2){
-        return view('jobs.applicantionPrint',[
-            'applicationinfo'=>$applicationinfo,
-          ]);
-       }
-       else{
-        return redirect()->route('home')
-        ->with('error', 'No data found!!!');;
-       }
+        if ($applicationinfo->eligible == 1 || $applicationinfo->eligible == 2) {
+            return view('jobs.applicantionPrint', [
+                'applicationinfo' => $applicationinfo,
+            ]);
+        } else {
+            return redirect()->route('home')
+                ->with('error', 'No data found!!!');;
+        }
 
 
-}
+    }
 
     public function rollSettingconfigure(Request $request)
     {
