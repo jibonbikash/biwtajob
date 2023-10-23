@@ -487,8 +487,20 @@ class JobsController extends Controller
         return view('admin.jobs.rollSetting', ['jobs'=>$job]);
     }
     public function seatPlan(Request $request){
+
         $job= Job::get()->pluck('title', 'id');
-        return view('admin.jobs.seatPlan', ['jobs'=>$job]);
+        $jobIDs = Job::groupBy('job_id')->get()->pluck('job_id', 'job_id');
+        $job_id=$request->input('job_id') ?? null;
+        $applicationinfo = Applicant::with(['job','apliyedJob'])->
+                whereHas('apliyedJob', function ($query) {
+                    $query->whereNotNull('roll')->whereNotNull('exam_hall')
+                        ->whereNotNull('exam_date')->whereNotNull('exam_time');
+                })
+            ->when($job_id, function ($query) use ($job_id){
+                $query->where('job_id', $job_id);
+            })
+                ->orderBy('id','desc')->paginate(50);
+        return view('admin.jobs.seatPlan', ['jobs'=>$job, 'jobID'=>$jobIDs,'applicationinfos'=>$applicationinfo]);
     }
 
     public function educationtype(Request $request)
