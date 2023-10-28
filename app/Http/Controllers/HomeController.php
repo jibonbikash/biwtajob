@@ -3,6 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\StaticValue;
+use App\Imports\BoardImport;
+use App\Imports\ExamlevelGroupImport;
+use App\Imports\ExamlevelImport;
+use App\Imports\ExamlevelSubjectImport;
+use App\Imports\UnivercityImport;
 use App\Models\Applicant;
 use App\Models\ApplicantCertificate;
 use App\Models\ApplicantEducation;
@@ -18,7 +23,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
-
+use Excel;
 class HomeController extends Controller
 {
     /**
@@ -1670,6 +1675,44 @@ Log::info($e->getMessage());
 
     }
 
+public function importBoard(Request $request){
+//    Excel::import(new BoardImport, '/assets/boards.xlsx');
+//    return redirect()->route('applicant.eligible')->with('success', 'Imported Successfully');
+    return view('importBoard');
+}
+
+    public function importdata(Request $request)
+    {
+
+        $request->validate([
+            'type' => 'required',
+            'fileimport' => 'required',
+
+        ]);
+
+        if ($request->input('type') == "Board") {
+            Excel::import(new BoardImport($request->all()), $request->fileimport);
+            return redirect()->route('importBoard')->with('success', 'Imported Successfully');
+        }
+        if ($request->input('type') == "University") {
+            Excel::import(new UnivercityImport($request->all()), $request->fileimport);
+            return redirect()->route('importBoard')->with('success', 'Imported Successfully');
+        }
+        if ($request->input('type') == "ExamLevel") {
+            Excel::import(new ExamlevelImport($request->all()), $request->fileimport);
+            return redirect()->route('importBoard')->with('success', 'Imported Successfully');
+        }
+        if ($request->input('type') == "ExamLevelGroup") {
+            Excel::import(new ExamlevelGroupImport($request->all()), $request->fileimport);
+            return redirect()->route('importBoard')->with('success', 'Imported Successfully');
+        }
+        if ($request->input('type') == "ExamLevelGroupSubject") {
+            Excel::import(new ExamlevelSubjectImport($request->all()), $request->fileimport);
+            return redirect()->route('importBoard')->with('success', 'Imported Successfully');
+        }
+
+
+    }
 
 }
 

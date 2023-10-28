@@ -11,6 +11,13 @@
 @section('title', 'Exam Seat Plan')
 
 @section('content')
+{{--    <style type="text/css">--}}
+{{--        body {--}}
+{{--            margin: 0;--}}
+{{--            font-size: 85%;--}}
+{{--            font-family: DejaVu Sans, Times Roman;--}}
+{{--        }--}}
+{{--    </style>--}}
     <div class="row page-title align-items-center">
         <div class="col-md-3 col-xl-6">
             <h4 class="mb-1 mt-0">Exam Seat Plan(Written Test)</h4>
@@ -86,8 +93,12 @@
                                         <div class="col-md-2">
                                             {!! Form::select('job_id',$jobs,request()->get('job_id'),['class'=>'form-control select2','placeholder'=>'Select Job', 'id'=>'job_idsearch']) !!}
                                         </div>
-                                        <div class="col-md-2">
+                                        <div class="col-md-4">
                                             <button type="submit" name="search" value="q" class="btn btn-primary btn-lg float-end" title="Search">Search</button>
+                                            <button type="submit" name="export" value="export" class="btn btn-warning btn-lg float-end" title="Export"><i data-feather="download" class="text-white"></i>Excel</button>
+
+{{--                                            <button type="submit" name="exportpdf" value="exportpdf" class="btn btn-danger btn-lg float-end" title="Export"><i data-feather="download" class="text-white"></i>PDF</button>--}}
+
                                         </div>
                                     </div>
 
@@ -98,16 +109,19 @@
                                 <table class="table table-striped table-hover table-bordered">
                                     <thead class="table-info">
                                     <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">পদের নাম</th>
-                                        <th scope="col">প্রার্থীর  নাম  ও পিতার নাম</th>
-                                        <th scope="col">কোড</th>
-                                        <th scope="col">রোল</th>
-                                        <th scope="col">পরীক্ষার স্থান</th>
-                                        <th scope="col">তারিখ</th>
-                                        <th scope="col">সময়</th>
-                                        <th scope="col">Action</th>
-
+                                        <th>নং</th>
+                                        <th>পদের নাম</th>
+                                        <th>রোল </th>
+                                        <th>ছবি </th>
+                                        <th>কোড </th>
+                                        <th>সার্কুলার নং</th>
+                                        <th>প্রার্থীর  নাম  ও  পিতার নাম  </th>
+                                        <th>মোবাইল</th>
+                                        <th>নিজ জেলা </th>
+                                        <th>কোটা </th>
+                                        <th>পরীক্ষার স্থান </th>
+                                        <th>পরীক্ষার তারিখ ও সময় </th>
+                                        <th>Action</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -117,15 +131,33 @@
                                         <td>
                                             <span title="{{ $applicant->job ? $applicant->job->title:'' }}">{!! Str::words($applicant->job ? $applicant->job->title:'', 5, ' ...') !!}</span>
                                         </td>
+                                        <td>{{ $applicant->apliyedJob ? $applicant->apliyedJob->roll:'' }}</td>
+
+                                        <td>
+                                            <img style="width: 60px" class="img-responsive img-rounded" src="{{URL::to('/assets/applicants')}}/{{ $applicant->picture }}" width="60">
+                                        </td>
+                                        <td>{{ $applicant->code }}</td>
+                                        <td>{{ $applicant->job ? $applicant->job->job_id:'' }}</td>
                                         <td>
                                             {{ $applicant->name_bn }}<br />
                                             {{ $applicant->father_name }}
                                         </td>
-                                        <td>{{ $applicant->code }}</td>
-                                        <td>{{ $applicant->apliyedJob ? $applicant->apliyedJob->roll:'' }}</td>
+                                        <td>{{ $applicant->mobile }}</td>
+                                        <td>  {{ $applicant->birthplace ? $applicant->birthplace->zilla_name:'' }}</td>
+                                        <td>
+                                                <?php
+                                                if($applicant->quota){
+                                                    $dbValue = $applicant->quota;
+                                                    $myArray = json_decode($dbValue, true);
+                                                    foreach ($myArray as $key => $value) {
+                                                        echo $value.'<br />';
+                                                    }
+                                                }
+                                                ?>
+
                                         <td>{{ $applicant->apliyedJob ? $applicant->apliyedJob->exam_hall:'' }}</td>
-                                        <td>{{ $applicant->apliyedJob ? $applicant->apliyedJob->exam_date:'' }}</td>
-                                        <td>{{ $applicant->apliyedJob ? $applicant->apliyedJob->exam_time:'' }}</td>
+                                        <td>{{ $applicant->apliyedJob ? $applicant->apliyedJob->exam_date	:'' }},
+                                            {{ $applicant->apliyedJob ? $applicant->apliyedJob->exam_time:'' }}</td>
                                         <td> <a href="{{ route('print',$applicant->id) }}" target="_blank" title="Print Details" class="btn btn-sm btn-primary"><i data-feather="printer"></i></a>
                                             <a href="{{ route('adminCard',$applicant->id) }}" target="_blank"  title="Admin Card" class="btn btn-sm btn-primary"><i data-feather="credit-card"></i></a>
                                         </td>

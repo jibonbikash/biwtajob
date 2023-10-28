@@ -353,9 +353,11 @@ class StaticValue
     const EXPERIENCE=['১'=>'১','২'=>'২', '৩'=>'৩', '৪'=>'৪', '৫'=>'৫', '৬'=>'৬', '৭'=>'৭', '৮'=>'৮','৯'=>'৯','১০'=>'১০','১১'=>'১১','১২'=>'১২','১২+'=>'১২+',];
 
   public static function  clean($string) {
-        $string = str_replace(' ', '-', $string); // Replaces all spaces with hyphens.
+        $string = str_replace(' ', '-', htmlentities($string));
+      return str_replace("/","-",$string);
+       // Replaces all spaces with hyphens.
 
-        return preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
+       // return preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
     }
 
 

@@ -1713,7 +1713,7 @@ $.validator.addMethod("wordCount",
 
 
                 <?php
-                if((($job->min_education=='JSC' OR $job->min_education=='SSC' OR  $job->min_education=='HSC' OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  ($job->jsc==1))){
+                if((($job->min_education=='জে এস সি' OR $job->min_education=='এস এস সি' OR  $job->min_education=='এইচ এস সি' OR  $job->min_education=='স্নাতক ডিগ্রী' OR  $job->min_education=='মাস্টার্স / স্নাতকোত্তর') AND  ($job->jsc==1))){
                 ?>
             jscexamlevel: "required",
             jscinstitute_name: "required",
@@ -1725,7 +1725,7 @@ $.validator.addMethod("wordCount",
             ?>
 
             <?php
-              if((( $job->min_education=='SSC' OR  $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->ssc==1)){
+              if((( $job->min_education=='এস এস সি' OR  $job->min_education=='এইচ এস সি'  OR  $job->min_education=='স্নাতক ডিগ্রী' OR  $job->min_education=='মাস্টার্স / স্নাতকোত্তর') AND  $job->ssc==1)){
                 ?>
             sscexamlevel: "required",
             sscinstitute_name: "required",
@@ -1738,7 +1738,7 @@ $.validator.addMethod("wordCount",
             ?>
 
             <?php
-              if(( $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->hsc==1){
+              if(( $job->min_education=='HSC'  OR  $job->min_education=='স্নাতক ডিগ্রী' OR  $job->min_education=='মাস্টার্স / স্নাতকোত্তর') AND  $job->hsc==1){
                 ?>
             hscexamlevel: "required",
             hscinstitute_name: "required",
@@ -1750,7 +1750,7 @@ $.validator.addMethod("wordCount",
             }
             ?>
             <?php
-              if(( $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->graduation==1){
+              if(( $job->min_education=='স্নাতক ডিগ্রী' OR  $job->min_education=='মাস্টার্স / স্নাতকোত্তর') AND  $job->graduation==1){
                 ?>
            graduationexamlevel: "required",
            graduationinstitute_name: "required",
@@ -1762,7 +1762,7 @@ $.validator.addMethod("wordCount",
             }
             ?>
             <?php
-            if(( $job->min_education=='Masters') AND  $job->masters==1){
+            if(( $job->min_education=='মাস্টার্স / স্নাতকোত্তর') AND  $job->masters==1){
                 ?>
            mastersexamlevel: "required",
            mastersinstitute_name: "required",

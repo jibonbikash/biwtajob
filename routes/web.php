@@ -105,4 +105,8 @@ Route::group(['middleware' => ['auth'], "prefix" => "admin"], function() {
     Route::post('/applicants/joblist', [\App\Http\Controllers\Admin\VivaController::class, 'joblist'])->name('Applicantjoblist');
     Route::post('/applicants/eligible/import', [\App\Http\Controllers\Admin\EligibleController::class, 'import'])->name('Applicantimport');
 
+    // ************************************** //
+    Route::get('/import/board', [HomeController::class, 'importBoard'])->name('importBoard');
+    Route::post('/import/board', [HomeController::class, 'importdata'])->name('importdata');
+
 });

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Exports\ApplicantExport;
+use App\Exports\ApplicantPracticalExport;
+use App\Exports\ApplicantSeatPlanExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\JobCreateRequest;
 use App\Http\Requests\JobUpdateRequest;
@@ -20,6 +22,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Database\Query\JoinClause;
 use Maatwebsite\Excel\Facades\Excel;
+use PDF;
 
 class JobsController extends Controller
 {
@@ -490,21 +493,42 @@ class JobsController extends Controller
 
         return view('admin.jobs.rollSetting', ['jobs'=>$job]);
     }
-    public function seatPlan(Request $request){
 
-        $job= Job::get()->pluck('title', 'id');
+    public function seatPlan(Request $request)
+    {
+
+        $job = Job::get()->pluck('title', 'id');
         $jobIDs = Job::groupBy('job_id')->get()->pluck('job_id', 'job_id');
-        $job_id=$request->input('job_id') ?? null;
-        $applicationinfo = Applicant::with(['job','apliyedJob'])
-            ->whereHas('apliyedJob', function ($query) {
+        $job_id = $request->input('job_id') ?? null;
+        $job_Name = Job::find($job_id);
+        if ($request->input('export') == 'export') {
+            return Excel::download(new ApplicantSeatPlanExport($request->all()), 'applicants_SeatPlan.' . date("Y-m-d") . '.xlsx', 'Html');
+
+        } elseif ($request->input('exportpdf') == 'exportpdf') {
+            $applicationinfo = Applicant::with(['job', 'apliyedJob', 'birthplace'])
+                ->whereHas('apliyedJob', function ($query) {
                     $query->whereNotNull('roll')->whereNotNull('exam_hall')
                         ->whereNotNull('exam_date')->whereNotNull('exam_time');
                 })
-            ->when($job_id, function ($query) use ($job_id){
-                $query->where('job_id', $job_id);
-            })
+                ->when($job_id, function ($query) use ($job_id) {
+                    $query->where('job_id', $job_id);
+                })
+                ->latest()->get();
+            $pdf = PDF::loadView('exports.seatPlan', ['applicants' => $applicationinfo, 'job' => $job_Name, 'photo' => 'yes']);
+            return $pdf->download($job_Name ? $job_Name->title : 'seat_plan' . '.pdf');
+
+        } else {
+            $applicationinfo = Applicant::with(['job', 'apliyedJob', 'birthplace'])
+                ->whereHas('apliyedJob', function ($query) {
+                    $query->whereNotNull('roll')->whereNotNull('exam_hall')
+                        ->whereNotNull('exam_date')->whereNotNull('exam_time');
+                })
+                ->when($job_id, function ($query) use ($job_id) {
+                    $query->where('job_id', $job_id);
+                })
                 ->latest()->paginate(50);
-        return view('admin.jobs.seatPlan', ['jobs'=>$job, 'jobID'=>$jobIDs,'applicationinfos'=>$applicationinfo]);
+        }
+        return view('admin.jobs.seatPlan', ['jobs' => $job, 'jobID' => $jobIDs, 'applicationinfos' => $applicationinfo]);
     }
 
     public function educationtype(Request $request)

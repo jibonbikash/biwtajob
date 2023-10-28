@@ -159,6 +159,7 @@
                                 <div class="row">
                                     <div class="col-md-4">
                                         <strong>Education</strong>
+
                                         {!! Form::select('min_education',$examLevels,$job->min_education,['class'=>'form-control min_education','placeholder'=>'Select ','id'=>'min_education']) !!}
                                     </div>
                                     <div class="col-md-4">
@@ -184,7 +185,7 @@
                                         <div class="col-md-3">
 
                                             {{ Form::checkbox('JSCExam', 'JSC', $job->jsc, array('id'=>'jsc')) }}
-                                            {!! Form::label('JSC',  "JSC") !!}
+                                            {!! Form::label('JSC',  "জে এস সি") !!}
                                         </div>
                                         <div class="col-md-6" id="JSCshow">
 
@@ -195,7 +196,7 @@
                                     <div class="row">
                                         <div class="col-md-3">
                                             {{ Form::checkbox('SSCExam', 'SSC', $job->ssc, array('id'=>'SSC')) }}
-                                            {!! Form::label('SSC',  "SSC") !!}
+                                            {!! Form::label('SSC',  "এস এস সি") !!}
                                         </div>
                                         <div class="col-md-6" id="SSCshow">
                                         </div>
@@ -203,7 +204,7 @@
                                     <div class="row">
                                         <div class="col-md-3">
                                             {{ Form::checkbox('HSCExam', 'HSC', $job->hsc, array( 'id'=>'HSC')) }}
-                                            {!! Form::label('HSC',  "HSC") !!}
+                                            {!! Form::label('HSC',  "এইচ এস সি") !!}
                                         </div>
                                         <div class="col-md-3" id="HSCshow">
 
@@ -212,7 +213,7 @@
                                     <div class="row">
                                         <div class="col-md-3">
                                             {{ Form::checkbox('GradExam', 'graduation', $job->graduation, array( 'id'=>'Grad')) }}
-                                            {!! Form::label('Graduation/Equivalent Level',  "Graduation/Equivalent Level") !!}
+                                            {!! Form::label('Graduation/Equivalent Level',  "স্নাতক ডিগ্রী") !!}
                                         </div>
                                         <div class="col-md-3" id="Grad">
 
@@ -221,7 +222,7 @@
                                     <div class="row">
                                         <div class="col-md-3">
                                             {{ Form::checkbox('MastersExam', 'Masters', $job->masters, array( 'id'=>'Masters')) }}
-                                            {!! Form::label('Masters/Equivalent Level',  "Masters/Equivalent Level") !!}
+                                            {!! Form::label('Masters/Equivalent Level',  "মাস্টার্স / স্নাতকোত্তর") !!}
                                         </div>
                                         <div class="col-md-3" id="Masters">
 

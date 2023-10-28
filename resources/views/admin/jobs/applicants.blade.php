@@ -142,7 +142,7 @@
                             <td>{{ $applicant->name_bn }}<br />
                                 {{ $applicant->father_name }}
                             </td>
-                            <td>{{ $applicant->token }}</td>
+                            <td>{{ $applicant->code }}</td>
                             <td>{{ $applicant->gender }}</td>
                             <td>
                                 বাসা ও সড়ক (নাম/নম্বর): {{ $applicant->pr_house }},
@@ -169,7 +169,16 @@
                                 echo $interval->format('%y বছর %m মাস এবং %d দিন');
                                 ?>
                             </td>
-                             <td>{{ $applicant->apliyedJob ? $applicant->apliyedJob->token:'' }}</td>
+                             <td>
+                                 @if($applicant->apliyedJob)
+                                     @if($applicant->apliyedJob->received==1)
+                                         {{ $applicant->apliyedJob ? $applicant->apliyedJob->token:'' }},
+                                         {{ $applicant->apliyedJob ? $applicant->apliyedJob->txnid:'' }},
+                                         {{ $applicant->apliyedJob ? $applicant->apliyedJob->txndate:'' }}
+                                     @endif
+                                 @endif
+
+                             </td>
                              <td>
                                  {{ $applicant->birthplace ? $applicant->birthplace->zilla_name:'' }}
 {{--                                 {{ $applicant->permanentzilla_name }}--}}
