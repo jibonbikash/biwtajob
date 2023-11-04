@@ -20,6 +20,8 @@ use App\Http\Controllers\HomeController;
 |
 */
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/migration', [\App\Http\Controllers\Admin\MigrationController::class, 'index'])->name('migration');
+
 Route::get('jobs/{uuid}', [HomeController::class, 'details'])->name('details');
 Route::get('jobs/apply/{uuid}', [HomeController::class, 'applyform'])->name('applyform');
 Route::get('exam/subject', [HomeController::class, 'examSubject'])->name('examSubject');
