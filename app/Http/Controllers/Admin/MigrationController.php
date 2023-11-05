@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Applicant;
 use App\Models\Job;
+use App\Models\JobApply;
 use App\Models\Wppost;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class MigrationController extends Controller
@@ -15,7 +17,7 @@ class MigrationController extends Controller
     public function index(Request $request)
     {
         $jobs = Wppost::with(['JobMeta', 'applyJobs', 'Applicants', 'whoPost', 'ApplicantEducation'])->where(['post_type' => 'job', 'post_status' => 'publish'])->limit(2)->orderBy('ID', 'desc')->get();
-        dd($jobs[0]);
+     //   dd($jobs[0]);
 
         DB::beginTransaction();
         try {
@@ -36,6 +38,7 @@ class MigrationController extends Controller
                 $salary_range = collect($job->JobMeta)->firstWhere('meta_key', 'jb_salary_range');
                 $application_dead = collect($job->JobMeta)->firstWhere('meta_key', 'jb_application_dead');
 //dd($freedom_age->meta_value);
+
                 $jobinfo = Job::create([
                     'uuid' => (string)Str::orderedUuid(),
                     'title' => $job->post_title,
@@ -74,31 +77,34 @@ class MigrationController extends Controller
                     'minimum_job_experience' => $experience ? $experience->meta_value : null,
                     'status' => 1,
                 ]);
+
                 foreach ($job->applyJobs as $applyJobs) {
+
+                //    dd($applyJobs->applicantInfo);
 
                     $applicant= Applicant::create([
                         'job_id' => $jobinfo->id,
                         'uuid' => (string)Str::orderedUuid(),
-                        'name_bn' => $request->input('name_bn'),
-                        'name_en' => $request->input('name_en'),
-                        'nid' => $request->input('nidorbrn')=="NID" ?  $request->input('nidorbrnnumber') :'',
-                        'brn' => $request->input('nidorbrn')=="BRN" ?  $request->input('nidorbrnnumber') :'',
-                        'bday' => $request->input('date_of_birth'),
-                        'bplace' => $request->input('date_of_place'),
-                        'father_name' => $request->input('father_name'),
-                        'mother_name' => $request->input('mother_name'),
+                        'name_bn' => $applyJobs->applicantInfo ? $applyJobs->applicantInfo->name_bn :'',
+                        'name_en' => $applyJobs->applicantInfo ? $applyJobs->applicantInfo->name_en:'',
+                        'nid' => $applyJobs->applicantInfo ? $applyJobs->applicantInfo->nid:'',
+                        'brn' => $applyJobs->applicantInfo ? $applyJobs->applicantInfo->brn:'',
+                        'bday' => $applyJobs->applicantInfo ? date('Y-m-d', strtotime($applyJobs->applicantInfo->bday)):'',
+                        'bplace' =>$applyJobs->applicantInfo ? $applyJobs->applicantInfo->bplace:'',
+                        'father_name' => $applyJobs->applicantInfo ? $applyJobs->applicantInfo->father_name:'',
+                        'mother_name' => $applyJobs->applicantInfo ? $applyJobs->applicantInfo->mother_name:'',
                         'present_addrress' => null,
                         'parmanent_address' => null,
-                        'mobile' => $request->input('mobile_no'),
-                        'nationality' => $request->input('nationality'),
-                        'gender' => $request->input('gender'),
-                        'religious' => $request->input('religion'),
-                        'extra_qualification' => $request->input('extQualification'),
-                        'experience' => $request->input('Experience'),
+                        'mobile' => $applyJobs->applicantInfo ? $applyJobs->applicantInfo->mobile:'',
+                        'nationality' => $applyJobs->applicantInfo ? $applyJobs->applicantInfo->nationality:'',
+                        'gender' => $applyJobs->applicantInfo ? $applyJobs->applicantInfo->gender:'',
+                        'religious' => $applyJobs->applicantInfo ? $applyJobs->applicantInfo->religious:'',
+                        'extra_qualification' => $applyJobs->applicantInfo ? $applyJobs->applicantInfo->extra_qualification:'',
+                        'experience' => $applyJobs->applicantInfo ? $applyJobs->applicantInfo->experience:'',
                         'bank_draft' => '',
                         'bank_draft_date' => '',
                         'bank_details' => '',
-                        'division_appli' =>$request->input('divisioncaplicant'),
+                        'division_appli' =>$applyJobs->applicantInfo ? $applyJobs->applicantInfo->division_appli:'',
                         'quota_freedom' => 0,
                         'quota_tribal' => 0,
                         'quota_Handicapped' => 0,
@@ -106,31 +112,46 @@ class MigrationController extends Controller
                         'village_police' => 0,
                         'others_quota' => 0,
                         'quota' => $request->input('quota') ? json_encode($request->input('quota')):NULL,
-                        'pa_house' => $request->input('present_house_no'),
-                        'pa_village' => $request->input('present_village'),
-                        'pa_union' => $request->input('present_union'),
-                        'pa_postoffice' => $request->input('present_postoffice'),
-                        'pa_postcode' => $request->input('present_postcode'),
-                        'pa_upozilla' => $request->input('present_upozilla'),
-                        'pa_zilla' => $request->input('present_zilla'),
-                        'pr_house' => $request->input('permanent_house_no'),
-                        'pr_village' => $request->input('permanent_village'),
-                        'pr_union' => $request->input('permanent_union'),
-                        'pr_postoffice' => $request->input('permanent_postoffice'),
-                        'pr_postcode' => $request->input('permanent_postcode'),
-                        'pr_upozilla' => $request->input('permanent_upozilla'),
-                        'pr_zilla' => $request->input('permanent_zilla'),
-                        'occupation' => $request->input('occupation'),
-                        'picture' => $nameimage,
-                        'signature' => $namesignature,
-                        'job_circular' => '',
-                        'experienceyear' => $request->input('experienceyear'),
-                        'experiencemonth' => $request->input('experiencemonth'),
-                        'age' => $age,
-                        'code' => '',
-                        'eligible' => 0,
-                        'repetition' => $request->input('repetition'),
-                        'jobcurday' => $request->input('jobcurday'),
+                        'pa_house' => $applyJobs->applicantInfo ? $applyJobs->applicantInfo->pa_house:'',
+                        'pa_village' => $applyJobs->applicantInfo ? $applyJobs->applicantInfo->pa_village:'',
+                        'pa_union' => $applyJobs->applicantInfo ? $applyJobs->applicantInfo->pa_union:'',
+                        'pa_postoffice' => $applyJobs->applicantInfo ? $applyJobs->applicantInfo->pa_postoffice:'',
+                        'pa_postcode' => $applyJobs->applicantInfo ? $applyJobs->applicantInfo->pa_postcode:'',
+                        'pa_upozilla' => $applyJobs->applicantInfo ? $applyJobs->applicantInfo->pa_upozilla:'',
+                        'pa_zilla' => $applyJobs->applicantInfo ? $applyJobs->applicantInfo->pa_zilla:'',
+                        'pr_house' => $applyJobs->applicantInfo ? $applyJobs->applicantInfo->pr_house:'',
+                        'pr_village' => $applyJobs->applicantInfo ? $applyJobs->applicantInfo->pr_village:'',
+                        'pr_union' => $applyJobs->applicantInfo ? $applyJobs->applicantInfo->pr_union:'',
+                        'pr_postoffice' => $applyJobs->applicantInfo ? $applyJobs->applicantInfo->pr_postoffice:'',
+                        'pr_postcode' => $applyJobs->applicantInfo ? $applyJobs->applicantInfo->pr_postcode:'',
+                        'pr_upozilla' => $applyJobs->applicantInfo ? $applyJobs->applicantInfo->pr_upozilla:'',
+                        'pr_zilla' => $applyJobs->applicantInfo ? $applyJobs->applicantInfo->pr_zilla:'',
+                        'occupation' => $applyJobs->applicantInfo ? $applyJobs->applicantInfo->occupation:'',
+                        'picture' => $applyJobs->applicantInfo ? $applyJobs->applicantInfo->picture:'',
+                        'signature' => $applyJobs->applicantInfo ? $applyJobs->applicantInfo->signature:'',
+                        'job_circular' => $applyJobs->applicantInfo ? $applyJobs->applicantInfo->job_circular:'',
+                        'experienceyear' => $applyJobs->applicantInfo ? $applyJobs->applicantInfo->job_circular:'',
+                        'experiencemonth' => $applyJobs->applicantInfo ? $applyJobs->applicantInfo->job_circular:'',
+                        'age' => $applyJobs->applicantInfo ? $applyJobs->applicantInfo->age:'',
+                        'code' => $applyJobs->applicantInfo ? $applyJobs->applicantInfo->code:'',
+                        'eligible' => 2,
+                        'repetition' => null,
+                        'jobcurday' => $applyJobs->applicantInfo ? date('Y-m-d', strtotime($applyJobs->applicantInfo->jobcurday)):'',
+                    ]);
+                    JobApply::create([
+                        'applicants_id'=> $applicant->id,
+                        'job_id'=> $jobinfo->id,
+                        'received'=> 1,
+                        'token'=> $applyJobs->token,
+                        'bd_tk'=> $applyJobs->bd_tk,
+                        'txnid'=> $applyJobs->txnid,
+                        'txndate'=> $applyJobs->txndate,
+                        'roll'=> $applyJobs->roll==0 ? null:$applyJobs->roll,
+                        'exam_hall'=> $applyJobs->exam_hall,
+                        'exam_date'=> $applyJobs->exam_date,
+                        'exam_time'=> $applyJobs->exam_time,
+                        'apply_date'=> $applyJobs->apply_date,
+
                     ]);
                 }
 
