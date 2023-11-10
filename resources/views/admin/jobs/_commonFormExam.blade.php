@@ -21,10 +21,10 @@
     {!! Form::text('rollend', request()->get('rollend'), array('placeholder' => 'End Roll','class' => 'form-control rollend', 'required'=>true, 'id'=>'rollend')) !!}
 </div>
 <div class="form-group">
-    {!! Form::text('date', request()->get('date'), array('placeholder' => 'Date','class' => 'form-control date','required'=>true, 'id'=>'date')) !!}
+    {!! Form::text('date', request()->get('date'), array('placeholder' => 'Date','class' => 'form-control','required'=>true)) !!}
 </div>
 <div class="form-group">
-    {!! Form::text('time', request()->get('date'), array('placeholder' => 'Time','class' => 'form-control date','required'=>true, 'id'=>'time')) !!}
+    {!! Form::text('time', request()->get('date'), array('placeholder' => 'Time','class' => 'form-control','required'=>true)) !!}
 </div>
 <div class="form-group">
     {!! Form::text('place', request()->get('institute'), array('placeholder' => 'Place','class' => 'form-control','required'=>true,)) !!}

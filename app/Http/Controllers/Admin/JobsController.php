@@ -652,7 +652,10 @@ class JobsController extends Controller
             try {
                 $rollStart = $request->input('rollstart');
                 $total=0;
-                $applyApplicants = JobApply::where('job_id', $request->input('job_id'))->where('received', 2)->get();
+                $applyApplicants = JobApply::whereHas('applicant', function ($query) {
+                    $query->where('eligible', 2);
+                })
+                ->where('job_id', $request->input('job_id'))->where('received', 2)->get();
                 foreach ($applyApplicants as $applyApplicant) {
                     $applyApplicant->roll = $rollStart;
                     $applyApplicant->exam_date = $request->input('examdate');

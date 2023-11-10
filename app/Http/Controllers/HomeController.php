@@ -107,7 +107,16 @@ $jobID=$request->JobID;
         return response()->json(['success' => true, 'data' => $subject]);
 
     }
-
+    protected function hasFilledGraduationFields()
+    {
+        return (
+            $this->filled('graduationinstitute_name') ||
+            $this->filled('graduationresult') ||
+            $this->filled('graduationsubject') ||
+            $this->filled('graduationuniversity') ||
+            $this->filled('graduationpassyear')
+        );
+    }
     public function jobApply(Request $request){
 
        // dd($request->all());
@@ -137,6 +146,246 @@ $jobID=$request->JobID;
                 'permanent_upozilla' => 'required|max:255',
                 'image' => 'required|mimes:jpeg,png,jpg,gif|max:1024',
                 'signature' => 'required|mimes:jpeg,png,jpg,gif|max:1024',
+//                'graduationexamlevel' => 'required_without_all: graduationinstitute_name, graduationresult, graduationsubject, graduationuniversity, graduationpassyear',
+//                'graduationinstitute_name' => 'required_without_all: graduationexamlevel, graduationresult, graduationsubject, graduationuniversity, graduationpassyear',
+//                'graduationresult' => 'required_without_all: graduationexamlevel, graduationinstitute_name, graduationsubject, graduationuniversity, graduationpassyear',
+//                'graduationsubject' => 'required_without_all: graduationexamlevel, graduationinstitute_name, graduationresult, graduationuniversity, graduationpassyear',
+//                'graduationuniversity' => 'required_without_all: graduationexamlevel, graduationinstitute_name, graduationresult, graduationsubject, graduationpassyear',
+//                'graduationpassyear' => 'required_without_all: graduationexamlevel, graduationinstitute_name, graduationresult,graduationsubject, graduationuniversity',
+
+                'jscexamlevel' => [
+                    'required_with: jscinstitute_name, jscresult, jscboard, jscpassyear',
+                    Rule::requiredIf(function () use ($job) {
+                        return (
+                            in_array($job->min_education, ['JSC', 'SSC', 'HSC', 'Graduation', 'Masters']) &&
+                            $job->jsc == 1
+                        );
+                    }),
+                ],
+                'jscinstitute_name' => [
+                    'required_with: jscexamlevel, jscresult, jscboard, jscpassyear',
+                    Rule::requiredIf(function () use ($job) {
+                        return (
+                            in_array($job->min_education, ['JSC', 'SSC', 'HSC', 'Graduation', 'Masters']) &&
+                            $job->jsc == 1
+                        );
+                    }),
+                ],
+                'jscresult' => [
+                    'required_with: jscexamlevel, jscinstitute_name, jscboard, jscpassyear',
+                    Rule::requiredIf(function () use ($job) {
+                        return (
+                            in_array($job->min_education, ['JSC', 'SSC', 'HSC', 'Graduation', 'Masters']) &&
+                            $job->jsc == 1
+                        );
+                    }),
+                ],
+                'jscboard' => [
+                   'required_with: jscexamlevel, jscinstitute_name, jscresult, jscpassyear',
+                    Rule::requiredIf(function () use ($job) {
+                        return (
+                            in_array($job->min_education, ['JSC', 'SSC', 'HSC', 'Graduation', 'Masters']) &&
+                            $job->jsc == 1
+                        );
+                    }),
+                ],
+                'jscpassyear' => [
+                    'required_with: jscexamlevel, jscinstitute_name, jscresult, jscboard',
+                    Rule::requiredIf(function () use ($job) {
+                        return (
+                            in_array($job->min_education, ['JSC', 'SSC', 'HSC', 'Graduation', 'Masters']) &&
+                            $job->jsc == 1
+                        );
+                    }),
+                ],
+
+
+                'sscexamlevel' => [
+                    'required_with: sscinstitute_name, sscresult, sscSubject, sscboard, sscpassyear',
+                    Rule::requiredIf(function () use ($job) {
+                        return (
+                            in_array($job->min_education, ['SSC', 'HSC', 'Graduation', 'Masters']) &&
+                            $job->ssc == 1
+                        );
+                    }),
+                ],
+                'sscinstitute_name' => [
+                    'required_with: sscexamlevel, sscresult, sscSubject, sscboard, sscpassyear',
+                    Rule::requiredIf(function () use ($job) {
+                        return (
+                            in_array($job->min_education, ['SSC', 'HSC', 'Graduation', 'Masters']) &&
+                            $job->ssc == 1
+                        );
+                    }),
+                ],
+                'sscresult' => [
+                    'required_with: sscexamlevel, sscinstitute_name, sscSubject, sscboard, sscpassyear',
+                    Rule::requiredIf(function () use ($job) {
+                        return (
+                            in_array($job->min_education, ['SSC', 'HSC', 'Graduation', 'Masters']) &&
+                            $job->ssc == 1
+                        );
+                    }),
+                ],
+                'sscSubject' => [
+                    'required_with: sscexamlevel, sscinstitute_name, sscresult, sscboard, sscpassyear',
+                    Rule::requiredIf(function () use ($job) {
+                        return (
+                            in_array($job->min_education, ['SSC', 'HSC', 'Graduation', 'Masters']) &&
+                            $job->ssc == 1
+                        );
+                    }),
+                ],
+                'sscboard' => [
+                    'required_with: sscexamlevel, sscinstitute_name, sscresult, sscSubject, sscpassyear',
+                    Rule::requiredIf(function () use ($job) {
+                        return (
+                            in_array($job->min_education, ['SSC', 'HSC', 'Graduation', 'Masters']) &&
+                            $job->ssc == 1
+                        );
+                    }),
+                ],
+                'sscpassyear' => [
+                    'required_with: sscexamlevel, sscinstitute_name, sscresult, sscSubject, sscboard',
+                    Rule::requiredIf(function () use ($job) {
+                        return (
+                            in_array($job->min_education, ['SSC', 'HSC', 'Graduation', 'Masters']) &&
+                            $job->ssc == 1
+                        );
+                    }),
+                ],
+
+                'hscexamlevel' => [
+                    'required_with: hscinstitute_name, hscresult, hscubject, hscboard, hscpassyear',
+                    Rule::requiredIf(function () use ($job) {
+                        return (
+                            in_array($job->min_education, ['HSC', 'Graduation', 'Masters']) &&
+                            $job->hsc == 1
+                        );
+                    }),
+                ],
+                'hscinstitute_name' => [
+                    'required_with: hscexamlevel, hscresult, hscubject, hscboard, hscpassyear',
+                    Rule::requiredIf(function () use ($job) {
+                        return (
+                            in_array($job->min_education, ['HSC', 'Graduation', 'Masters']) &&
+                            $job->hsc == 1
+                        );
+                    }),
+                ],
+                'hscresult' => [
+                    'required_with: hscexamlevel, hscinstitute_name, hscubject, hscboard, hscpassyear',
+                    Rule::requiredIf(function () use ($job) {
+                        return (
+                            in_array($job->min_education, ['HSC', 'Graduation', 'Masters']) &&
+                            $job->hsc == 1
+                        );
+                    }),
+                ],
+                'hscubject' => [
+                    'required_with: hscexamlevel, hscinstitute_name, hscresult, hscboard, hscpassyear',
+                    Rule::requiredIf(function () use ($job) {
+                        return (
+                            in_array($job->min_education, ['HSC', 'Graduation', 'Masters']) &&
+                            $job->hsc == 1
+                        );
+                    }),
+                ],
+                'hscboard' => [
+                    'required_with: hscexamlevel, hscinstitute_name, hscresult, hscubject, hscpassyear',
+                    Rule::requiredIf(function () use ($job) {
+                        return (
+                            in_array($job->min_education, ['HSC', 'Graduation', 'Masters']) &&
+                            $job->hsc == 1
+                        );
+                    }),
+                ],
+                'hscpassyear' => [
+                    'required_with: hscexamlevel, hscinstitute_name, hscresult, hscubject, hscboard',
+                    Rule::requiredIf(function () use ($job) {
+                        return (
+                            in_array($job->min_education, ['HSC', 'Graduation', 'Masters']) &&
+                            $job->hsc == 1
+                        );
+                    }),
+                ],
+
+                'graduationexamlevel' => [
+                   'required_with:graduationinstitute_name,graduationresult,graduationsubject,graduationuniversity,graduationpassyear',
+                    Rule::requiredIf(function () use ($job) {
+                        return (($job->min_education == 'Graduation' || $job->min_education == 'Masters') && $job->graduation == 1);
+                    }),
+                ],
+                'graduationinstitute_name' => [
+                    'required_with:graduationexamlevel,graduationresult,graduationsubject,graduationuniversity,graduationpassyear',
+                    Rule::requiredIf(function () use ($job) {
+                        return (($job->min_education == 'Graduation' || $job->min_education == 'Masters') && $job->graduation == 1);
+                    }),
+                ],
+                'graduationresult' => [
+                    'required_with:graduationexamlevel,graduationinstitute_name,graduationsubject,graduationuniversity,graduationpassyear',
+                    Rule::requiredIf(function () use ($job) {
+                        return (($job->min_education == 'Graduation' || $job->min_education == 'Masters') && $job->graduation == 1);
+                    }),
+                ],
+                'graduationsubject' => [
+                    'required_with:graduationexamlevel,graduationinstitute_name,graduationresult,graduationuniversity,graduationpassyear',
+                    Rule::requiredIf(function () use ($job) {
+                        return (($job->min_education == 'Graduation' || $job->min_education == 'Masters') && $job->graduation == 1);
+                    }),
+                ],
+                'graduationuniversity' => [
+                    'required_with:graduationexamlevel,graduationinstitute_name,graduationresult,graduationsubject,graduationpassyear',
+                    Rule::requiredIf(function () use ($job) {
+                        return (($job->min_education == 'Graduation' || $job->min_education == 'Masters') && $job->graduation == 1);
+                    }),
+                ],
+                'graduationpassyear' => [
+                    'required_with:graduationexamlevel,graduationinstitute_name,graduationresult,graduationsubject,graduationuniversity',
+                    Rule::requiredIf(function () use ($job) {
+                        return (($job->min_education == 'Graduation' || $job->min_education == 'Masters') && $job->graduation == 1);
+                    }),
+                ],
+
+                'mastersexamlevel' => [
+                    'required_with:mastersinstitute_name,mastersresult,mastersSubject,mastersuniversity,masterspassyear',
+                    Rule::requiredIf(function () use ($job) {
+                        return (( $job->min_education=='Masters') AND  $job->masters==1);
+                    }),
+                ],
+                'mastersinstitute_name' => [
+                    'required_with:mastersexamlevel,mastersresult,mastersSubject,mastersuniversity,masterspassyear',
+                    Rule::requiredIf(function () use ($job) {
+                        return (( $job->min_education=='Masters') AND  $job->masters==1);
+                    }),
+                ],
+                'mastersresult' => [
+                    'required_with:mastersexamlevel,mastersinstitute_name,mastersSubject,mastersuniversity,masterspassyear',
+                    Rule::requiredIf(function () use ($job) {
+                        return (( $job->min_education=='Masters') AND  $job->masters==1);;
+                    }),
+                ],
+                'mastersSubject' => [
+                    'required_with:mastersexamlevel,mastersinstitute_name,mastersresult,mastersuniversity,masterspassyear',
+                    Rule::requiredIf(function () use ($job) {
+                        return (( $job->min_education=='Masters') AND  $job->masters==1);
+                    }),
+                ],
+                'mastersuniversity' => [
+                    'required_with:mastersexamlevel,mastersinstitute_name,mastersresult,mastersSubject,masterspassyear',
+                    Rule::requiredIf(function () use ($job) {
+                        return (( $job->min_education=='Masters') AND  $job->masters==1);
+                    }),
+                ],
+                'masterspassyear' => [
+                    'required_with:mastersexamlevel,mastersinstitute_name,mastersresult,mastersSubject,mastersuniversity',
+                    Rule::requiredIf(function () use ($job) {
+                        return (( $job->min_education=='Masters') AND  $job->masters==1);
+                    }),
+                ],
+
+
+              /*
 
                 'jscexamlevel' => [Rule::requiredIf(function () use($job) {
                     return (($job->min_education=='JSC' OR $job->min_education=='SSC' OR  $job->min_education=='HSC' OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->jsc==1);
@@ -153,8 +402,6 @@ $jobID=$request->JobID;
                 'jscpassyear' => [Rule::requiredIf(function () use($job) {
                     return (($job->min_education=='JSC' OR $job->min_education=='SSC' OR  $job->min_education=='HSC' OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->jsc==1);
                 })],
-
-
                 'sscexamlevel' => [Rule::requiredIf(function () use($job) {
                     return (( $job->min_education=='SSC' OR  $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->ssc==1);
                 })],
@@ -173,8 +420,6 @@ $jobID=$request->JobID;
                 'sscpassyear' => [Rule::requiredIf(function () use($job) {
                     return (( $job->min_education=='SSC' OR  $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->ssc==1);
                 })],
-
-
                 'hscexamlevel' => [Rule::requiredIf(function () use($job) {
                     return (( $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->hsc==1);
                 })],
@@ -198,11 +443,9 @@ $jobID=$request->JobID;
 
                     return (( $job->min_education=='HSC'  OR  $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->hsc==1);
                 })],
-
-
                 'graduationexamlevel' => [Rule::requiredIf(function () use($job) {
 
-                    return (( $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->graduation==1);
+                    return (( $job->min_education=='Graduation' OR  $job->min_education=='Masters') AND  $job->graduation==1 );
                 })],
                 'graduationinstitute_name' => [Rule::requiredIf(function () use($job) {
 
@@ -230,7 +473,7 @@ $jobID=$request->JobID;
 
                     return (( $job->min_education=='Masters') AND  $job->masters==1);
                 })],
-
+*/
                 'certificate' => [Rule::requiredIf(function () use($job) {
                     return $job->certificate_isrequired==1;
                 })],
@@ -276,12 +519,25 @@ $jobID=$request->JobID;
                 'jscboard.required' => 'বোর্ড নির্বাচন করুন',
                 'jscpassyear.required' => 'পাসের সন লিখুন',
 
+                'jscexamlevel.required_with' => 'জে.এস.সি/ সমমান পরীক্ষার নাম নির্বাচন করুন',
+                'jscinstitute_name.required_with' => 'শিক্ষা প্রতিষ্ঠানের নাম লিখুন',
+                'jscresult.required_with' => 'গ্রেড/শ্রেণি/বিভাগ নির্বাচন করুন',
+                'jscboard.required_with' => 'বোর্ড নির্বাচন করুন',
+                'jscpassyear.required_with' => 'পাসের সন লিখুন',
+
                 'sscexamlevel.required' => 'এস.এস.সি/ সমমান পরীক্ষার নাম নির্বাচন করুন',
                 'sscinstitute_name.required' => 'এস.এস.সি/ সমমান শিক্ষা প্রতিষ্ঠানের নাম লিখুন',
                 'sscresult.required' => 'এস.এস.সি/ সমমান গ্রেড/শ্রেণি/বিভাগ নির্বাচন করুন',
                 'sscSubject.required' => 'এস.এস.সি/ সমমান বিষয় নির্বাচন করুন',
                 'sscboard.required' => 'এস.এস.সি/ সমমান বোর্ড নির্বাচন করুন ',
                 'sscpassyear.required' => 'এস.এস.সি/ সমমান পাসের সন লিখুন',
+
+                'sscexamlevel.required_with' => 'এস.এস.সি/ সমমান পরীক্ষার নাম নির্বাচন করুন',
+                'sscinstitute_name.required_with' => 'এস.এস.সি/ সমমান শিক্ষা প্রতিষ্ঠানের নাম লিখুন',
+                'sscresult.required_with' => 'এস.এস.সি/ সমমান গ্রেড/শ্রেণি/বিভাগ নির্বাচন করুন',
+                'sscSubject.required_with' => 'এস.এস.সি/ সমমান বিষয় নির্বাচন করুন',
+                'sscboard.required_with' => 'এস.এস.সি/ সমমান বোর্ড নির্বাচন করুন ',
+                'sscpassyear.required_with' => 'এস.এস.সি/ সমমান পাসের সন লিখুন',
 
                 'hscexamlevel.required' => 'এইচএসসি /সমমূল্য পরীক্ষার নাম নির্বাচন করুন',
                 'hscinstitute_name.required' => 'এইচএসসি /সমমূল্য শিক্ষা প্রতিষ্ঠানের নাম লিখুন',
@@ -290,12 +546,27 @@ $jobID=$request->JobID;
                 'hscboard.required' => 'এইচএসসি /সমমূল্য বোর্ড নির্বাচন করুন ',
                 'hscpassyear.required' => 'এইচএসসি /সমমূল্য পাসের সন লিখুন',
 
+                'hscexamlevel.required_with' => 'এইচএসসি /সমমূল্য পরীক্ষার নাম নির্বাচন করুন',
+                'hscinstitute_name.required_with' => 'এইচএসসি /সমমূল্য শিক্ষা প্রতিষ্ঠানের নাম লিখুন',
+                'hscresult.required_with' => 'এইচএসসি /সমমূল্য গ্রেড/শ্রেণি/বিভাগ নির্বাচন করুন',
+                'hscubject.required_with' => 'এইচএসসি /সমমূল্য বিষয় নির্বাচন করুন',
+                'hscboard.required_with' => 'এইচএসসি /সমমূল্য বোর্ড নির্বাচন করুন ',
+                'hscpassyear.required_with' => 'এইচএসসি /সমমূল্য পাসের সন লিখুন',
+
+
                 'graduationexamlevel.required' => 'স্নাতক ডিগ্রী পরীক্ষার নাম নির্বাচন করুন',
                 'graduationinstitute_name.required' => 'স্নাতক ডিগ্রী শিক্ষা প্রতিষ্ঠানের নাম লিখুন',
                 'graduationresult.required' => 'স্নাতক ডিগ্রী গ্রেড/শ্রেণি/বিভাগ নির্বাচন করুন',
                 'graduationsubject.required' => 'স্নাতক ডিগ্রী বিষয় নির্বাচন করুন',
                 'graduationuniversity.required' => 'স্নাতক ডিগ্রী বিশ্ববিদ্যালয়/ইনস্টিটিউট নির্বাচন করুন ',
                 'graduationpassyear.required' => 'স্নাতক ডিগ্রী পাসের সন লিখুন',
+
+                'graduationexamlevel.required_with' => 'স্নাতক ডিগ্রী পরীক্ষার নাম নির্বাচন করুন',
+                'graduationinstitute_name.required_with' => 'স্নাতক ডিগ্রী শিক্ষা প্রতিষ্ঠানের নাম লিখুন',
+                'graduationresult.required_with' => 'স্নাতক ডিগ্রী গ্রেড/শ্রেণি/বিভাগ নির্বাচন করুন',
+                'graduationsubject.required_with' => 'স্নাতক ডিগ্রী বিষয় নির্বাচন করুন',
+                'graduationuniversity.required_with' => 'স্নাতক ডিগ্রী বিশ্ববিদ্যালয়/ইনস্টিটিউট নির্বাচন করুন ',
+                'graduationpassyear.required_with' => 'স্নাতক ডিগ্রী পাসের সন লিখুন',
 
                 'mastersexamlevel.required' => 'স্নাতকোত্তর পরীক্ষার নাম নির্বাচন করুন',
                 'mastersinstitute_name.required' => 'স্নাতকোত্তর শিক্ষা প্রতিষ্ঠানের নাম লিখুন',
@@ -304,13 +575,17 @@ $jobID=$request->JobID;
                 'mastersuniversity.required' => 'স্নাতকোত্তর বিশ্ববিদ্যালয়/ইনস্টিটিউট নির্বাচন করুন ',
                 'masterspassyear.required' => 'স্নাতকোত্তর পাসের সন লিখুন',
 
+                'mastersexamlevel.required_with' => 'স্নাতকোত্তর পরীক্ষার নাম নির্বাচন করুন',
+                'mastersinstitute_name.required_with' => 'স্নাতকোত্তর শিক্ষা প্রতিষ্ঠানের নাম লিখুন',
+                'mastersresult.required_with' => 'স্নাতকোত্তর গ্রেড/শ্রেণি/বিভাগ নির্বাচন করুন',
+                'mastersSubject.required_with' => 'স্নাতকোত্তর বিষয় নির্বাচন করুন',
+                'mastersuniversity.required_with' => 'স্নাতকোত্তর বিশ্ববিদ্যালয়/ইনস্টিটিউট নির্বাচন করুন ',
+                'masterspassyear.required_with' => 'স্নাতকোত্তর পাসের সন লিখুন',
+
                  'certificate.required' => 'সার্টিফিকেশন নাম নির্বাচন করুন',
                  'certificateinstitute_name.required' => 'সার্টিফিকেশন প্রতিষ্ঠান নাম লিখুন',
                  'certificate_no.required' => 'সার্টিফিকেশন গ্রেড/শ্রেণি/বিভাগ লিখুন',
                 'certificate_expire.required' => 'সার্টিফিকেশন গ্রেড/শ্রেণি/বিভাগ লিখুন',
-
-
-
               ]
             );
             $flag=false;
@@ -325,7 +600,6 @@ $jobID=$request->JobID;
 
           });
         }
-
 
 
 
@@ -382,7 +656,7 @@ $validator->after(function ($validator) {
 */
 
             if ($validator->fails()) {
-               // dd($validator);
+          //      dd($validator);
                 return redirect()->back()
                     ->withErrors($validator)
                     ->withInput();
@@ -573,7 +847,7 @@ $validator->after(function ($validator) {
                 return redirect()->route('applicantPreview', ['uuid' => $applicant->uuid]);
             } catch (\Exception $e) {
                 DB::rollback();
-//dd($e->getMessage());
+dd($e->getMessage());
 Log::info($e->getMessage());
             }
 
@@ -1680,6 +1954,8 @@ public function importBoard(Request $request){
 //    return redirect()->route('applicant.eligible')->with('success', 'Imported Successfully');
     return view('importBoard');
 }
+
+
 
     public function importdata(Request $request)
     {

@@ -16,7 +16,7 @@ class MigrationController extends Controller
     //
     public function index(Request $request)
     {
-        $jobs = Wppost::with(['JobMeta', 'applyJobs', 'Applicants', 'whoPost', 'ApplicantEducation'])->where(['post_type' => 'job', 'post_status' => 'publish'])->limit(2)->orderBy('ID', 'desc')->get();
+        $jobs = Wppost::with(['JobMeta', 'applyJobs', 'Applicants', 'whoPost', 'ApplicantEducation'])->where(['post_type' => 'job', 'post_status' => 'publish'])->limit(10)->orderBy('ID', 'desc')->get();
      //   dd($jobs[0]);
 
         DB::beginTransaction();
