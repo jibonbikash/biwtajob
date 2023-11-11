@@ -44,7 +44,7 @@ $sscList= collect($joninfo->examSubject);
                                       Education Setting
                                     </div>
                                     <div class="card-body">
-                                        @if($joninfo->ssc)
+{{--                                        @if($joninfo->ssc)--}}
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <div class="card border mt-4 rounded">
@@ -110,8 +110,8 @@ $sscList= collect($joninfo->examSubject);
                                                     </div>
                                                 </div>
                                             </div>
-                                        @endif
-                                        @if($joninfo->hsc)
+{{--                                        @endif--}}
+{{--                                        @if($joninfo->hsc)--}}
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <div class="card border mt-4 rounded">
@@ -171,8 +171,8 @@ $sscList= collect($joninfo->examSubject);
                                                     </div>
                                                 </div>
                                             </div>
-                                        @endif
-                                        @if($joninfo->graduation)
+{{--                                        @endif--}}
+{{--                                        @if($joninfo->graduation)--}}
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <div class="card mt-4 border rounded">
@@ -234,8 +234,8 @@ $sscList= collect($joninfo->examSubject);
                                                     </div>
                                                 </div>
                                             </div>
-                                        @endif
-                                        @if($joninfo->masters)
+{{--                                        @endif--}}
+{{--                                        @if($joninfo->masters)--}}
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <div class="card mt-4 border rounded rounded">
@@ -296,7 +296,7 @@ $sscList= collect($joninfo->examSubject);
                                                     </div>
                                                 </div>
                                             </div>
-                                        @endif
+{{--                                        @endif--}}
                                     </div>
 
 {{--                                    <div class="row">--}}

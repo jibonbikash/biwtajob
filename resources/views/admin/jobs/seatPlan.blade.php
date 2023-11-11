@@ -167,6 +167,8 @@
                                     </tbody>
 
                                 </table>
+
+                                {{ $applicationinfos->onEachSide(5)->appends(Request::all())->links('pagination::bootstrap-5') }}
                         </div>
 
                     </div>
