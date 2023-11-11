@@ -29,7 +29,6 @@ class VivaController extends Controller
     }
 
     public function import(Request $request){
-       // dd($request->all());
         if($request->type=='New'){
             @ApplicantViva::where('job_id',$request->input('job_id'))->delete();
         }
