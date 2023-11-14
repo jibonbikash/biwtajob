@@ -440,7 +440,7 @@
                                                 </div>
                                             @endif
 
-                                                @if($job->ssc==1)
+{{--                                                @if($job->ssc==1)--}}
                                                     <div class="card mt-4">
                                                         <div class="card-header bg-secondary text-white">
                                                             এস.এস.সি/ সমমান
@@ -582,9 +582,9 @@
 
                                                         </div>
                                                     </div>
-                                                @endif
+{{--                                                @endif--}}
 
-                                                @if($job->hsc==1)
+{{--                                                @if($job->hsc==1)--}}
                                                     <div class="card mt-4">
                                                         <div class="card-header bg-secondary text-white">
                                                             এইচএসসি /সমমূল্য
@@ -709,8 +709,8 @@
 
                                                         </div>
                                                     </div>
-                                                @endif
-                                                @if($job->graduation==1)
+{{--                                                @endif--}}
+{{--                                                @if($job->graduation==1)--}}
                                                     <div class="card mt-4">
                                                         <div class="card-header bg-secondary text-white">
                                                             স্নাতক ডিগ্রী
@@ -852,9 +852,9 @@
 
                                                         </div>
                                                     </div>
-                                                @endif
+{{--                                                @endif--}}
 
-                                                @if($job->masters==1)
+{{--                                                @if($job->masters==1)--}}
                                                     <div class="card mt-4">
                                                         <div class="card-header bg-secondary text-white">
                                                             স্নাতকোত্তর
@@ -1007,7 +1007,7 @@
 
                                                         </div>
                                                     </div>
-                                                @endif
+{{--                                                @endif--}}
 
                                                 @if($job->certificate=="YES")
                                                 @php
