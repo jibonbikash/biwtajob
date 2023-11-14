@@ -138,10 +138,10 @@
                                         </tr>
                                         <tr>
                                             <td>জাতীয় পরিচয় নম্বর/জন্ম নিবন্ধন নম্বর<span class="text-danger">*</span></td>
-                                            <td> 
-                                                
+                                            <td>
+
                                                 {!! Form::select('nidorbrn',\App\Helpers\StaticValue::NIDORBRN,$applicationinfo->nid ? 'NID':'BRN',['class'=>'form-control select2 nidorbrn','placeholder'=>'' ,'id'=>'nidorbrn']) !!}
-                                                
+
                                                 {!! Form::text('nidorbrnnumber', $applicationinfo->nid ? $applicationinfo->nid:$applicationinfo->brn, array('class' => 'form-control banglainput nidorbrnnumber', 'required'=>true, )) !!}
                                                 @if ($errors->has('nidorbrnnumber'))
                                                     <span class="text-danger">{{ $errors->first('nidorbrnnumber') }}</span>
@@ -149,7 +149,7 @@
                                             </td>
                                         </tr>
 
-                                        
+
                                         <tr>
                                             <td>জাতীয়তা <span class="text-danger">*</span></td>
                                             <td> {!! Form::select('nationality',\App\Helpers\StaticValue::NATIONALITY,$applicationinfo->nationality,['class'=>'form-control select2','placeholder'=>'']) !!}
@@ -358,7 +358,7 @@
                                   }
 
                                   }
-                            
+
                                   else{
                                     $jscresult=[];
                                   }
@@ -479,20 +479,20 @@
                                     $SSresult=$SSresult[3];
                                   }
                                   elseif ($SSresult[4]) {
-                                     
+
                                     $SSresult=$SSresult[4];
                                   }
 
                                   }
-                            
+
                                   else{
                                     $SSresult=[];
                                   }
                               //    dd($SSresult);
-                                
-                                
+
+
                                                                             @endphp
-                                                                           
+
                                                                             {!! Form::select('sscexamlevel',$ssc,$SSresult->edu_level,['class'=>'select2 form-control','placeholder'=>'','id'=>'sscexamlevel']) !!}
                                                                             @if ($errors->has('sscexamlevel'))
                                                                                 <span class="text-danger">{{ $errors->first('sscexamlevel') }}</span>
@@ -537,7 +537,7 @@
                                                                         <label for="inputPassword"
                                                                                class="col-sm-4 col-form-label">বিষয় <span class="text-danger">*</span></label>
                                                                         <div class="col-sm-8">
-                                                                        
+
                                                                             {!! Form::select('sscSubject',[],$SSresult->group_subject,['class'=>'form-control sscsubject select2','placeholder'=>'','id'=>'sscsubject']) !!}
                                                                             @if ($errors->has('sscSubject'))
                                                                                 <span class="text-danger">{{ $errors->first('sscSubject') }}</span>
@@ -619,7 +619,7 @@
                                                                                     else{
                                                                                         $HSCresult=$HSCresult[3];
                                                                                     }
-                                                                                    
+
                                                                                                                                 @endphp
                                                                             {!! Form::select('hscexamlevel',$hsc,$HSCresult->edu_level,['class'=>'form-control select2','placeholder'=>'', 'id'=>'hscexamlevel']) !!}
                                                                             @if ($errors->has('hscexamlevel'))
@@ -731,39 +731,39 @@
                             $GRADresult= collect($applicationinfo->educations)->whereIn('edu_level', \App\Models\ExamlevelGroup::where('examlevel_id', 4)->pluck('id'));
                      //  dd($GRADresult);
                        if(count((array)$GRADresult)> 0){
-                        
+
                         if(isset($GRADresult[0])){
-                          
+
                                                                                         $GRADresult=$GRADresult[0];
-                                                                                        
+
 
                                                                                     }
                                                                                     elseif (isset($GRADresult[1])) {
                                                                                         $GRADresult=$GRADresult[1];
-                                                                                       
+
                                                                                     }
                                                                                     elseif (isset($GRADresult[2])) {
                                                                                         $GRADresult=$GRADresult[2];
-                                                                                       
+
                                                                                     }
                                                                                     elseif (isset($GRADresult[3])) {
                                                                                         $GRADresult=$GRADresult[3];
-                                                                                       
+
                                                                                     }
 
                                                                                     else{
                                                                                         $GRADresult=$GRADresult[4];
-                                                                                        
+
                                                                                     }
-                                                                                    
+
                        }
                        else{
-                           
+
                         $GRADresult=[];
                      //  dd('dddddddddddddddddddddd');
                        }
                     //   dd($GRADresult);
-                       
+
                                                                             @endphp
                                                                             {!! Form::select('graduationexamlevel',$graduation,$GRADresult->edu_level??'',['class'=>'select2 form-control','placeholder'=>'','id'=>'graduationexamlevel']) !!}
                                                                             @if ($errors->has('graduationexamlevel'))
@@ -798,7 +798,7 @@
                                                                                 <span class="text-danger">{{ $errors->first('graduationresult') }}</span>
                                                                             @endif
                                                                             {!! Form::text('graduationresult_score',  $GRADresult ? $GRADresult->cgpa:"", array('placeholder' => '','class' => 'form-control graduationresult_score banglainput','style'=>$GRADresult ? ($GRADresult->result=='জিপিএ/সিজিপিএ(আউট অফ ৪)' || $GRADresult->result=='জিপিএ/সিজিপিএ(আউট অফ ৫)' ? '':'display:none'):"",)) !!}
-                                                                        
+
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -875,43 +875,43 @@
  $Mastresult= collect($applicationinfo->educations)->whereIn('edu_level', \App\Models\ExamlevelGroup::where('examlevel_id', 5)->pluck('id'));
 // dd($Mastresult);
  if(count($Mastresult)> 0){
-                        
+
                         if(isset($Mastresult[0])){
-                          
+
                                                                                         $Mastresult=$Mastresult[0];
-                                                                                        
+
 
                                                                                     }
                                                                                     elseif (isset($Mastresult[1])) {
                                                                                         $Mastresult=$Mastresult[1];
-                                                                                       
+
                                                                                     }
                                                                                     elseif (isset($Mastresult[2])) {
                                                                                         $Mastresult=$Mastresult[2];
-                                                                                       
+
                                                                                     }
                                                                                     elseif (isset($Mastresult[3])) {
                                                                                         $Mastresult=$Mastresult[3];
-                                                                                       
+
                                                                                     }
 
                                                                                     elseif (isset($Mastresult[4])) {
                                                                                         $Mastresult=$Mastresult[4];
-                                                                                       
+
                                                                                     }
                                                                                     elseif (isset($Mastresult[5])) {
                                                                                         $Mastresult=$Mastresult[5];
-                                                                                       
+
                                                                                     }
 
                                                                                     else{
                                                                                         $Mastresult=$Mastresult[6];
-                                                                                        
+
                                                                                     }
-                                                                                    
+
                        }
                        else{
-                           
+
                         $Mastresult=[];
                      //  dd('dddddddddddddddddddddd');
                        }
@@ -1011,7 +1011,7 @@
 
                                                 @if($job->certificate=="YES")
                                                 @php
-                                              //  dd($applicationinfo->applicantCertificate);    
+                                              //  dd($applicationinfo->applicantCertificate);
 
                                                 @endphp
                                                 <div class="card mt-4">
@@ -1124,12 +1124,12 @@
                                         </div>
                                         <div class="col-md-3">
                                             <label for="extrq" class="form-label">অভিজ্ঞতার মেয়াদ (বৎসর )</label>
-                                            <?php 
+                                            <?php
                                         $experience=[];
                                         for ($x = $job->minimum_job_experience; $x <= 12; $x++) {
-                                        $experience[]=\App\Helpers\StaticValue::englishToBengaliNumberConverter($x); 
+                                        $experience[]=\App\Helpers\StaticValue::englishToBengaliNumberConverter($x);
 
-                                        } 
+                                        }
 
 $experience= array_combine($experience, $experience);
                                             ?>
@@ -1142,7 +1142,7 @@ $experience= array_combine($experience, $experience);
                                             <label for="extrq" class="form-label"> কোটা</label>
                                             <?php
                                             $dbValue = $applicationinfo->quota;
-                                             $myArray = json_decode($dbValue, true);                                       
+                                             $myArray = json_decode($dbValue, true);
                                             ?>
                                             {!! Form::select('quota[]',\App\Helpers\StaticValue::QTOTA,$myArray,['class'=>'form-control quota','id'=>'quota', 'multiple'=>true]) !!}
                                         </div>
@@ -1155,7 +1155,7 @@ $experience= array_combine($experience, $experience);
                                             {{ Form::checkbox('repetition', '1', $applicationinfo->repetition==1 ? true: false, array( 'id'=>'repetition')) }}
                                             <label for="extrq" class="form-label">{{ $job->repetition}}</label>
                                         </div>
-                                       @endif   
+                                       @endif
                                     </div>
 
                                     <div class="row" style="margin-top: 5px">
@@ -1199,7 +1199,7 @@ $experience= array_combine($experience, $experience);
     </div>
     <?php
            // dd($HSCresult, count($HSCresult));
-           
+
             ?>
 
 @endsection
@@ -1247,7 +1247,7 @@ $experience= array_combine($experience, $experience);
        $('.quota').select2({
                 placeholder: 'নির্বাচন করুন',
                 language: "bn",
-            
+
             });
 
            var selectElem = $("#present_zilla");
@@ -1433,7 +1433,7 @@ $experience= array_combine($experience, $experience);
                 }
                 else{
                     $('.mastersresult_score').css("display","none")
-                    
+
                 }
             });
 <?php
@@ -1461,7 +1461,7 @@ $.ajax({
 
     }
 })
-  
+
 <?php
 }
 ?>
@@ -1497,7 +1497,7 @@ $.ajax({
 
             });
             <?php
-           
+
             if(count((array)$HSCresult)> 0){
             ?>
             var selectElemHSC = $("#hscubject");
@@ -1523,9 +1523,9 @@ $.ajax({
                     $(".hscubject").val("{{ $HSCresult ? $HSCresult->group_subject:''}}").change();
                 }
             })
-           
 
-        
+
+
 
             <?php
             }
@@ -1570,7 +1570,7 @@ $.ajax({
                     JobID:RndID,
                 },
                 success:function (data) {
-                    
+
                       console.log(data);
                     $(".graduationsubjecttt").empty();
                     $.each(data.data, function(index, value){
@@ -1580,12 +1580,12 @@ $.ajax({
                         }).appendTo(selectElemGra);
                     });
                     $(".graduationsubjecttt").val("{{ $GRADresult ? $GRADresult->group_subject:''}}").change();
-             
+
             }
                 })
 
                // $("#graduationsubject option[value='14']").prop('selected',true);
-           
+
            // $("#graduationsubject").val("14").change();
             <?php
             }
@@ -1641,7 +1641,7 @@ $.ajax({
                     $(".mastersSubject").val("{{ $Mastresult ? $Mastresult->group_subject:''}}").change();
                 }
             })
-            
+
 
             <?php
             }
@@ -1678,48 +1678,48 @@ $.ajax({
             $('#sscsubject').on('change', function (e) {
                 var optionSelected = $("option:selected", this);
             console.log(optionSelected.text());
-            if(optionSelected.text()==='Other'){
+            if(optionSelected.text()==='অন্যান্য'){
                 $('#sscSubject_other').css("display","block")
             }
             else{
             $('#sscSubject_other').css("display","none")
             }
-                
+
             });
 
 
            $('#hscubject').on('change', function (e) {
                 var optionSelected = $("option:selected", this);
             console.log(optionSelected.text());
-            if(optionSelected.text()==='Other'){
+            if(optionSelected.text()==='অন্যান্য'){
                 $('#hscubject_other').css("display","block")
             }
             else{
                 $('#hscubject_other').css("display","none")
             }
-                
+
             });
             $('#graduationsubject').on('change', function (e) {
                 var optionSelected = $("option:selected", this);
             console.log(optionSelected.text());
-            if(optionSelected.text()==='Other'){
+            if(optionSelected.text()==='অন্যান্য'){
                 $('#graduationsubject_other').css("display","block")
             }
             else{
                 $('#graduationsubject_other').css("display","none")
             }
-                
+
             });
             $('#mastersSubject').on('change', function (e) {
                 var optionSelected = $("option:selected", this);
             console.log(optionSelected.text());
-            if(optionSelected.text()==='Other'){
+            if(optionSelected.text()==='অন্যান্য'){
                 $('#mastersSubject_other').css("display","block")
             }
             else{
                 $('#mastersSubject_other').css("display","none")
             }
-                
+
             });
 
             $(document).on('change', '.file-input', function() {
@@ -1821,7 +1821,7 @@ $.ajax({
 
 function getWordCount(wordString) {
   var words = wordString.split(" ");
-  words = words.filter(function(words) { 
+  words = words.filter(function(words) {
     return words.length > 0
   }).length;
   return words;
@@ -1831,7 +1831,7 @@ function getWordCount(wordString) {
 $.validator.addMethod("wordCount",
    function(value, element, params) {
       var count = getWordCount(value);
-     
+
       if(count < params[0]) {
          return true;
       }
@@ -1865,13 +1865,13 @@ $("#applicationForm").validate({
                     required: false,
                 //    extension: "jpeg|jpg|png",
 				//	filesize : 102400
-					
+
                 },
                 signature: {
                     required: false,
                  //   extension: "jpeg|jpg|png",
 				//	 filesize : 102400
-					
+
                 },
                 experiencemonth:
             {
@@ -2058,7 +2058,7 @@ $("#applicationForm").validate({
             <?php
             }
             ?>
-				
+
 			},
             errorPlacement: function(label, element) {
     if (element.hasClass('select2')) {
@@ -2068,7 +2068,7 @@ $("#applicationForm").validate({
       label.addClass('mt-2 text-danger');
       label.insertAfter(element);
     }
-   
+
   },
             });
 
@@ -2134,7 +2134,7 @@ text: 'বয়স এর কারণে আপনি এই পদে আবে�
 
 }
 
-      
+
     }
 });
 }

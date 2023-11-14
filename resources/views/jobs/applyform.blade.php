@@ -1267,7 +1267,7 @@ $(".nidorbrn").change(function() {
            $('#sscsubject').on('change', function (e) {
                 var optionSelected = $("option:selected", this);
             console.log(optionSelected.text());
-            if(optionSelected.text()==='Other'){
+            if(optionSelected.text()==='অন্যান্য'){
                 $('#sscSubject_other').css("display","block")
             }
             else{
@@ -1280,7 +1280,7 @@ $(".nidorbrn").change(function() {
            $('#hscubject').on('change', function (e) {
                 var optionSelected = $("option:selected", this);
             console.log(optionSelected.text());
-            if(optionSelected.text()==='Other'){
+            if(optionSelected.text()==='অন্যান্য'){
                 $('#hscubject_other').css("display","block")
             }
             else{
@@ -1291,7 +1291,7 @@ $(".nidorbrn").change(function() {
             $('#graduationsubject').on('change', function (e) {
                 var optionSelected = $("option:selected", this);
             console.log(optionSelected.text());
-            if(optionSelected.text()==='Other'){
+            if(optionSelected.text()==='অন্যান্য'){
                 $('#graduationsubject_other').css("display","block")
             }
             else{
@@ -1302,7 +1302,7 @@ $(".nidorbrn").change(function() {
             $('#mastersSubject').on('change', function (e) {
                 var optionSelected = $("option:selected", this);
             console.log(optionSelected.text());
-            if(optionSelected.text()==='Other'){
+            if(optionSelected.text()==='অন্যান্য'){
                 $('#mastersSubject_other').css("display","block")
             }
             else{
