@@ -57,7 +57,7 @@
             <td width="30%">
                 <div class="col-md-3">
                     <img style="float: right; width: 250px" class="img-responsive img-rounded" src="{{URL::to('/assets/applicants')}}/{{ $applicationinfo->picture }}" width="300">
-                    <img src="{{asset('assets/applicants/'.$applicationinfo->picture)}}" alt="Logo" height="75px">
+                    <img src="{{asset('assets/applicants/'.$applicationinfo->signature)}}" alt="Logo" height="75px">
                 </div>
             </td>
         </tr>
