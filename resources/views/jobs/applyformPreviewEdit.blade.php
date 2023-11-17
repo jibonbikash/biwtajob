@@ -598,14 +598,13 @@
                                                                             নাম <span class="text-danger">*</span></label>
                                                                         <div class="col-sm-8">
                                                                             @php
-
                                                                                 $HSCresult= collect($applicationinfo->educations)->whereIn('edu_level', \App\Models\ExamlevelGroup::where('examlevel_id', 3)->pluck('id'));
 
                                                                                     $hsc = \App\Models\Examlevel::join('examlevel_groups', 'examlevels.id', '=', 'examlevel_groups.examlevel_id')
                                                                                   ->where('examlevels.id',3)
                                                                                   ->pluck('examlevel_groups.name','examlevel_groups.id')
                                                                                   ->all();
-                                                                                  //  dd($HSCresult);
+
                                                                                     if(isset($HSCresult[0])){
                                                                                         $HSCresult=$HSCresult[0];
 
@@ -616,12 +615,18 @@
                                                                                     elseif (isset($HSCresult[2])) {
                                                                                         $HSCresult=$HSCresult[2];
                                                                                     }
-                                                                                    else{
+                                                                                      elseif (isset($HSCresult[3])) {
                                                                                         $HSCresult=$HSCresult[3];
+                                                                                    }
+                                                                                     elseif (isset($HSCresult[4])) {
+                                                                                        $HSCresult=$HSCresult[4];
+                                                                                    }
+                                                                                    else{
+                                                                                        $HSCresult=[];
                                                                                     }
 
                                                                                                                                 @endphp
-                                                                            {!! Form::select('hscexamlevel',$hsc,$HSCresult->edu_level,['class'=>'form-control select2','placeholder'=>'', 'id'=>'hscexamlevel']) !!}
+                                                                            {!! Form::select('hscexamlevel',$hsc,$HSCresult->edu_level ?? '',['class'=>'form-control select2','placeholder'=>'', 'id'=>'hscexamlevel']) !!}
                                                                             @if ($errors->has('hscexamlevel'))
                                                                                 <span class="text-danger">{{ $errors->first('hscexamlevel') }}</span>
                                                                             @endif
@@ -633,7 +638,7 @@
                                                                         <label for="inputPassword"
                                                                                class="col-sm-4 col-form-label">শিক্ষা প্রতিষ্ঠান <span class="text-danger">*</span></label>
                                                                         <div class="col-sm-8">
-                                                                            {!! Form::text('hscinstitute_name', $HSCresult->institute_name, array('placeholder' => '','class' => 'form-control banglainput')) !!}
+                                                                            {!! Form::text('hscinstitute_name', $HSCresult->institute_name ??'', array('placeholder' => '','class' => 'form-control banglainput')) !!}
                                                                             @if ($errors->has('hscinstitute_name'))
                                                                                 <span class="text-danger">{{ $errors->first('hscinstitute_name') }}</span>
                                                                             @endif
@@ -649,11 +654,12 @@
                                                                         <label for="inputPassword"
                                                                                class="col-sm-4 col-form-label">গ্রেড/শ্রেণি/বিভাগ <span class="text-danger">*</span></label>
                                                                         <div class="col-sm-8">
-                                                                            {!! Form::select('hscresult',\App\Helpers\StaticValue::RESULTSSC,$HSCresult->result,['class'=>'select2 form-control','id'=>'hscresult']) !!}
+
+                                                                            {!! Form::select('hscresult',\App\Helpers\StaticValue::RESULTSSC,$HSCresult->result ?? '',['class'=>'select2 form-control','id'=>'hscresult']) !!}
                                                                             @if ($errors->has('hscresult'))
                                                                                 <span class="text-danger">{{ $errors->first('hscresult') }}</span>
                                                                             @endif
-                                                                            {!! Form::text('hscresult_score', $HSCresult->cgpa, array('placeholder' => '','class' => 'form-control hscresult_score banglainput','style'=>$HSCresult->result=='জিপিএ/সিজিপিএ(আউট অফ ৪)' || $HSCresult->result=='জিপিএ/সিজিপিএ(আউট অফ ৫)' ? '':'display:none',)) !!}
+                                                                            {!! Form::text('hscresult_score', $HSCresult->cgpa ?? '', array('placeholder' => '','class' => 'form-control hscresult_score banglainput','style'=>$HSCresult ? ($HSCresult->result=='জিপিএ/সিজিপিএ(আউট অফ ৪)' || $HSCresult->result=='জিপিএ/সিজিপিএ(আউট অফ ৫)' ? '':'display:none'):"",)) !!}
                                                                             @if ($errors->has('hscresult_score'))
                                                                                 <span class="text-danger">{{ $errors->first('hscresult_score') }}</span>
                                                                             @endif
@@ -665,11 +671,11 @@
                                                                         <label for="inputPassword"
                                                                                class="col-sm-4 col-form-label">বিষয় <span class="text-danger">*</span></label>
                                                                         <div class="col-sm-8">
-                                                                            {!! Form::select('hscubject',[],$HSCresult->group_subject,['class'=>'form-control select2 hscubject','id'=>'hscubject']) !!}
+                                                                            {!! Form::select('hscubject',[],$HSCresult->group_subject ?? '',['class'=>'form-control select2 hscubject','id'=>'hscubject']) !!}
                                                                             @if ($errors->has('hscubject'))
                                                                                 <span class="text-danger">{{ $errors->first('hscubject') }}</span>
                                                                             @endif
-                                                                            {!! Form::text('hscubject_other', $HSCresult->other, array('placeholder' => '',  'class' => 'form-control banglainput', 'id'=>'hscubject_other', 'required'=>true, 'style'=>'display:none')) !!}
+                                                                            {!! Form::text('hscubject_other', $HSCresult->other ??'', array('placeholder' => '',  'class' => 'form-control banglainput', 'id'=>'hscubject_other', 'required'=>true, 'style'=>'display:none')) !!}
                                                                             @if ($errors->has('hscubject_other'))
                                                                                 <span class="text-danger">{{ $errors->first('hscubject_other') }}</span>
                                                                             @endif
@@ -685,7 +691,7 @@
                                                                                class="col-sm-4 col-form-label">বোর্ড <span class="text-danger">*</span></label>
                                                                         <div class="col-sm-8">
 
-                                                                            {!! Form::select('hscboard',collect($boards)->where('type',1)->pluck('name','id'),$HSCresult->board_university,['class'=>'form-control select2']) !!}
+                                                                            {!! Form::select('hscboard',collect($boards)->where('type',1)->pluck('name','id'),$HSCresult->board_university ??'',['class'=>'form-control select2']) !!}
                                                                             @if ($errors->has('hscboard'))
                                                                                 <span class="text-danger">{{ $errors->first('hscboard') }}</span>
                                                                             @endif
@@ -697,7 +703,7 @@
                                                                         <label for="inputPassword"
                                                                                class="col-sm-4 col-form-label">পাসের সন <span class="text-danger">*</span></label>
                                                                         <div class="col-sm-8">
-                                                                            {!! Form::text('hscpassyear', $HSCresult->passing_year, array('placeholder' => '','class' => 'form-control banglainput','maxlength'=>4, 'maxlength'=>4)) !!}
+                                                                            {!! Form::text('hscpassyear', $HSCresult->passing_year ?? '', array('placeholder' => '','class' => 'form-control banglainput','maxlength'=>4, 'maxlength'=>4)) !!}
                                                                             @if ($errors->has('hscpassyear'))
                                                                                 <span class="text-danger">{{ $errors->first('hscpassyear') }}</span>
                                                                             @endif
@@ -752,14 +758,29 @@
                                                                                     }
 
                                                                                     else{
-                                                                                        $GRADresult=$GRADresult[4];
+                                                                                       $GRADresult = new stdClass();
+                        $GRADresult->institute_name = null;
+                        $GRADresult->edu_level = null;
+                        $GRADresult->cgpa = null;
+                        $GRADresult->result = null;
+                        $GRADresult->other = null;
+                        $GRADresult->board_university = null;
+                        $GRADresult->passing_year = null;
 
                                                                                     }
 
                        }
                        else{
-
-                        $GRADresult=[];
+                        $GRADresult = new stdClass();
+                        $GRADresult->institute_name = null;
+                        $GRADresult->group_subject = null;
+                        $GRADresult->edu_level = null;
+                        $GRADresult->cgpa = null;
+                        $GRADresult->result = null;
+                        $GRADresult->other = null;
+                        $GRADresult->board_university = null;
+                        $GRADresult->passing_year = null;
+                     //   $GRADresult=[];
                      //  dd('dddddddddddddddddddddd');
                        }
                     //   dd($GRADresult);
@@ -807,7 +828,7 @@
                                                                         <label for="graduationsubject"
                                                                                class="col-sm-4 col-form-label">বিষয় <span class="text-danger">*</span></label>
                                                                         <div class="col-sm-8">
-                                                                            {!! Form::select('graduationsubject',[],$GRADresult ? $GRADresult->group_subject:'',['class'=>'form-control graduationsubjecttt','placeholder'=>'','id'=>'graduationsubject']) !!}
+                                                                            {!! Form::select('graduationsubject',[],$GRADresult->group_subject??'',['class'=>'form-control graduationsubjecttt','placeholder'=>'','id'=>'graduationsubject']) !!}
                                                                             @if ($errors->has('graduationsubject'))
                                                                                 <span class="text-danger">{{ $errors->first('graduationsubject') }}</span>
                                                                             @endif
@@ -1444,7 +1465,7 @@ $.ajax({
     url:"{{ route('examSubject') }}",
     type:"GET",
     data: {
-        examgroup: {{$SSresult->edu_level}},
+        examgroup: '{{$SSresult->edu_level}}',
         exam: 2,
         JobID:RndID,
     },
@@ -1506,7 +1527,7 @@ $.ajax({
                 url:"{{ route('examSubject') }}",
                 type:"GET",
                 data: {
-                    examgroup: {{$HSCresult ? $HSCresult->edu_level:''}},
+                    examgroup: '{{$HSCresult ? $HSCresult->edu_level:''}}',
                     exam: 3,
                     JobID:RndID,
                 },
@@ -1565,7 +1586,7 @@ $.ajax({
                 url:"{{ route('examSubject') }}",
                 type:"GET",
                 data: {
-                    examgroup: {{$GRADresult ? $GRADresult->edu_level:''}},
+                    examgroup: '{{$GRADresult->edu_level??''}}',
                     exam: 4,
                     JobID:RndID,
                 },
@@ -1579,7 +1600,7 @@ $.ajax({
                             text: value.name
                         }).appendTo(selectElemGra);
                     });
-                    $(".graduationsubjecttt").val("{{ $GRADresult ? $GRADresult->group_subject:''}}").change();
+                    $(".graduationsubjecttt").val("{{ $GRADresult->group_subject ?? ''}}").change();
 
             }
                 })

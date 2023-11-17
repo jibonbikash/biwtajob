@@ -847,8 +847,8 @@ $validator->after(function ($validator) {
                 return redirect()->route('applicantPreview', ['uuid' => $applicant->uuid]);
             } catch (\Exception $e) {
                 DB::rollback();
-dd($e->getMessage());
 Log::info($e->getMessage());
+                dd($e->getMessage());
             }
 
 
