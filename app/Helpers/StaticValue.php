@@ -328,9 +328,15 @@ class StaticValue
     ];
 
 
-    public static function createDirecrotory($jobid)
+    public static function createDirecrotory($jobid, $year=null)
     {
-        $path = public_path('assets/applicants/'.date("Y-d-m").'/'.$jobid);
+        if($year){
+          $name=$year;
+        }
+        else{
+            $name=date("Y");
+        }
+        $path = public_path('assets/applicants/'.$name.'/'.$jobid);
 
         if(!File::isDirectory($path)){
             File::makeDirectory($path, 0777, true, true);
@@ -366,6 +372,14 @@ class StaticValue
         $englishNumbers = array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
         $bengaliNumbers = array('০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯');
         $bengaliNumber = str_replace($englishNumbers, $bengaliNumbers, $number);
+
+        return $bengaliNumber;
+    }
+
+    public static function  BengaliToenglishNumberConverter($number) {
+        $englishNumbers = array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
+        $bengaliNumbers = array('০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯');
+        $bengaliNumber = str_replace($bengaliNumbers, $englishNumbers, $number);
 
         return $bengaliNumber;
     }

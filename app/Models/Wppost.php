@@ -26,7 +26,7 @@ class Wppost extends Model
 
     public function applyJobs()
     {
-        return $this->hasMany(WpJobApply::class, 'job_id', 'ID')->whereNotNull('txndate')->whereNotNull('txnid')->where('received','!=', 2);
+        return $this->hasMany(WpJobApply::class, 'job_id', 'ID')->whereNotNull('txndate')->whereNotNull('txnid')->where('received','=', 1);
     }
     public function JobMeta()
     {
