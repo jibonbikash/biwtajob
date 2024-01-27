@@ -69,8 +69,10 @@ class ApplicantExport implements FromView
             $query->where('applicants.age', '<=', $maximum_age);
         })
             ->latest()->get();
+
         return view('exports.applicants', [
-            'applicants' =>$applicants
+            'applicants' =>$applicants,
+            'reqdata' =>$request
         ]);
     }
 

@@ -26,7 +26,7 @@ class EligibleController extends Controller
         $experience=$request->input('experience') ?? null;
         $certification=$request->input('certification') ?? null;
         $quota=$request->input('quota') ?? null;
-        DB::enableQueryLog();
+      //  DB::enableQueryLog();
         $applicants=Applicant::with(['educations','job', 'birthplace','zila','upozilla','permanentzila','permanentupozilla','apliyedJob'])
             ->whereNull('deleted_at')
             ->when($request->input('q'), function ($q) use ($request){
@@ -59,16 +59,19 @@ class EligibleController extends Controller
             ->when($maximum_age, function ($query) use ($maximum_age){
                 $query->where('applicants.age', '<=', $maximum_age);
             })
-            ->when($code, function ($query) use ($code){
-                $query->where(function ($query) use ($code){
-                    $query->where('job_applies.token','like', '%'.$code.'%')
-                        ->orWhere('job_applies.txnid', 'like', '%'.$code.'%')
-                        ->orWhere('job_applies.roll', 'like', '%'.$code.'%');
-
-                });
-
-                $query->where('token','like', '%'.$code.'%');
-            })
+//            ->when($code, function ($query) use ($code){
+//                $query->whereRaw('jb18_job_applies.token',  $code);
+//            })
+//            ->when($code, function ($query) use ($code){
+//                $query->where(function ($query) use ($code){
+//                    $query->where('apliyedJob.token','like', '%'.$code.'%')
+//                        ->where('apliyedJob.txnid', 'like', '%'.$code.'%')
+//                        ->orWhere('apliyedJob.roll', 'like', '%'.$code.'%');
+//
+//                });
+//
+//               // $query->where('token','like', '%'.$code.'%');
+//            })
 
             ->whereIn('applicants.eligible',[2])
             ->latest()->paginate(50);

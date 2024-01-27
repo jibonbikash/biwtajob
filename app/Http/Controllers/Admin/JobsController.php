@@ -752,6 +752,7 @@ public function seatPlansetting(Request $request){
 
     public function exportApplicants(Request $request)
     {
+
         return Excel::download(new ApplicantExport($request->all()), 'applicants.xlsx');
     }
 

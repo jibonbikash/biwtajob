@@ -12,6 +12,7 @@ namespace App\Helpers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\URL;
 
 class StaticValue
 {
@@ -343,6 +344,20 @@ class StaticValue
         }
 
     }
+    public static function getDirecrotory($jobid, $year=null)
+    {
+        if($year){
+            $name=$year;
+        }
+        else{
+            $name=date("Y");
+        }
+       return URL::to('/assets/applicants/'.$name.'/'.$jobid);
+
+
+
+    }
+
 
     const QTOTA = [
         'মুক্তিযোদ্ধা / শহীদ মুক্তিযোদ্ধার পুত্র -কন্যা' => 'মুক্তিযোদ্ধা / শহীদ মুক্তিযোদ্ধার পুত্র -কন্যা ',
@@ -383,7 +398,42 @@ class StaticValue
 
         return $bengaliNumber;
     }
-
+    const DYNAMIC_FIELDS=[
+        'job_position'=>'পদের নাম',
+        'name_bn_father_name'=>'প্রার্থীর নাম ও পিতার নাম',
+        'code_name'=>'কোড',
+        'gender_name'=>'জেন্ডার',
+        'pr_house_pr_village_pr_union_pr_postoffice_pr_postcode'=>'স্থায়ী ঠিকানা',
+        'mobile'=>'মোবাইল',
+        'bday'=>'জন্ম তারিখ ও বয়স',
+        'token_name'=>'পেমেন্ট আইডি',
+        'bplace_name'=>'নিজ জেলা',
+        'educations_name'=>'শিক্ষাগত যোগ্যতা',
+        'experience_name'=>'সংশ্লিষ্ট ক্ষেত্রে অভিজ্ঞতা',
+        'experiencemonth_name'=>'অভিজ্ঞতার বিবরণ',
+        'experienceyear_name'=>'অভিজ্ঞতার মেয়াদ',
+        'quota_name'=>'কোটা',
+        'division_appli_name'=>'বিভাগীয়',
+    ];
+    const DYNAMIC_FIELDS_VIVA=[
+        'job_position'=>'পদের নাম',
+        'roll'=>'রোল',
+        'name_bn'=>'প্রার্থীর নাম',
+        'photo'=>'প্রার্থীর ছবি',
+        'father_name'=>'পিতার নাম',
+        'code_name'=>'কোড',
+        'gender_name'=>'জেন্ডার',
+        'exam_time_place'=>'পরীক্ষার সময় ও স্থান',
+        'pr_house_pr_village_pr_union_pr_postoffice_pr_postcode'=>'স্থায়ী ঠিকানা',
+        'mobile'=>'মোবাইল',
+        'bplace_name'=>'নিজ জেলা',
+        'educations_name'=>'শিক্ষাগত যোগ্যতা',
+        'experience_name'=>'সংশ্লিষ্ট ক্ষেত্রে অভিজ্ঞতা',
+        'experiencemonth_name'=>'অভিজ্ঞতার বিবরণ',
+        'experienceyear_name'=>'অভিজ্ঞতার মেয়াদ',
+        'quota_name'=>'কোটা',
+        'division_appli_name'=>'বিভাগীয়',
+    ];
 }
 
 

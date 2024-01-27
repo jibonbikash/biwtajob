@@ -39,7 +39,16 @@ class VivaController extends Controller
 
     public function exportApplicants(Request $request)
     {
-        return \Maatwebsite\Excel\Facades\Excel::download(new ApplicantVivaExport($request->all()), 'applicants_Viva.'.date("Y-m-d").'.xlsx');
+        $job_id=$request->job_id ?? null;
+        $applicants= ApplicantViva::with(['applicant','job'])
+            ->when($job_id, function ($query) use ($job_id){
+                $query->where('job_id', $job_id);
+            })->latest()->get();
+        return view('admin.jobs.applicant_viva_export', [
+            'applicants' =>$applicants
+        ]);
+
+      //  return \Maatwebsite\Excel\Facades\Excel::download(new ApplicantVivaExport($request->all()), 'applicants_Viva.'.date("Y-m-d").'.xlsx');
 
     }
 

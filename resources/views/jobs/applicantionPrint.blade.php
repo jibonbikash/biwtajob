@@ -315,7 +315,7 @@ echo \App\Models\Board::find($education->board_university)->name;
                             }
                             else{
                                 echo $education->cgpa.' - ';
-                                echo  $education->result;
+                            //    echo  $education->result;
                                 echo \App\Helpers\StaticValue::RESULTSSC[$education->result];
                             }
 
